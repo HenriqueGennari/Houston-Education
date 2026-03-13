@@ -1,6 +1,7 @@
 import { Response, Request } from "express";
 
 import { Router } from "express";
+
 import alunoRoutes from "../routes/Aluno/alunoRoutes.js"
 import loginRoutes from "../routes/Paginas/loginRoutes.js"
 import homeRoutes from "../routes/Paginas/homeRoutes.js";

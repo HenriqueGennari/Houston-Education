@@ -21,7 +21,7 @@ form.addEventListener("submit", async (e) => {
         const res = await fetch('/login', {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
         });
 
         const result = await res.json(); // retornar o json e ver se há erros

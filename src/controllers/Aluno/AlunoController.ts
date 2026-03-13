@@ -10,7 +10,7 @@ class AlunoController{
     async getAll(Req : Request, Res : Response) {
         try {
             const alunosDados = await alunoService.getAll();
-            Res.status(200).json(alunosDados)
+            Res.status(200).json(alunosDados)   
 
         } catch (err : any) {
             return Res.status(500).json({error : err.message})

@@ -1,7 +1,6 @@
 import  jwt, { SignOptions }  from "jsonwebtoken"
 import { Perfil } from "@prisma/client";
 import "dotenv/config"; 
-import { Prisma } from "@prisma/client";
 
 export const generateJWT = async (aluno : {id : string, email : string, nome : string, perfil?: string}, expiresIn : string): Promise <string> =>{ // vou adicionar o perfil aqui
     
@@ -10,7 +9,7 @@ export const generateJWT = async (aluno : {id : string, email : string, nome : s
     
     const expiraEm = process.env.JWT_EXPIRES_IN;
 
-        const option : SignOptions = {
+    const option : SignOptions = {
         expiresIn : expiresIn as SignOptions["expiresIn"]
         //aqui eu forço o Ts a aceitar o tipo do expiresIn criado por mim como se fosse o mesmo expiresIn do próprio signOpitons. Então estou dizendo: confia em mim, é do mesmo tipo!
     }
@@ -23,7 +22,7 @@ export const generateJWT = async (aluno : {id : string, email : string, nome : s
         perfil: aluno.perfil
     }
 
-    const token = jwt.sign(payloadDados, secret, option)
+    const token =  jwt.sign(payloadDados, secret, option)
 
 
     return token;
