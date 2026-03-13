@@ -1,6 +1,6 @@
 async function carregarDisciplina(){
     try {
-        const response = await fetch("/monitor", {
+        const response = await fetch("/monitores", {
             headers : {
                 "Authorization" : `Bearer ${localStorage.getItem("token")}`
             }

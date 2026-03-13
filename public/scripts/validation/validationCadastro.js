@@ -16,7 +16,7 @@ form.addEventListener("submit", async (e) => {
 
     try {
 
-        const res = await fetch('/aluno', {
+        const res = await fetch('/alunos', {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),

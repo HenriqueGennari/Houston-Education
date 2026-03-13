@@ -1,6 +1,6 @@
 async function carregarDisciplina(){
     try {
-        const response = await fetch("/disciplina", {
+        const response = await fetch("/disciplinas", {
             headers : {
                 "Authorization" : `Bearer ${localStorage.getItem("token")}`
             }

@@ -25,7 +25,7 @@ form.addEventListener("submit", async (evento)=>{
     } // validação para que um monitor só crie monitorias para ele mesmo 
         
     try {
-        const response = await fetch("/monitoria", {
+        const response = await fetch("/monitorias", {
             method : "POST",
             headers : {
                 "Authorization": `Bearer ${localStorage.getItem("token")}`,

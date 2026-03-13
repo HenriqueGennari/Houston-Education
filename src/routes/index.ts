@@ -1,7 +1,6 @@
 import { Response, Request } from "express";
 
 import { Router } from "express";
-
 import alunoRoutes from "../routes/Aluno/alunoRoutes.js"
 import loginRoutes from "../routes/Paginas/loginRoutes.js"
 import homeRoutes from "../routes/Paginas/homeRoutes.js";
@@ -18,10 +17,10 @@ router.get("/", (req: Request, res: Response) => {
 }); // funciona apenas localmente
 
 
-router.use("/aluno", alunoRoutes);
-router.use("/monitor" , monitorRoutes )
-router.use("/disciplina" , disciplinaRoutes )
-router.use("/monitoria" , monitoriaRoutes )
+router.use("/alunos", alunoRoutes);
+router.use("/monitores" , monitorRoutes )
+router.use("/disciplinas" , disciplinaRoutes )
+router.use("/monitorias" , monitoriaRoutes )
 router.use("/inscricoes" , inscriacaoRoutes)
 
 router.use("/login", loginRoutes);

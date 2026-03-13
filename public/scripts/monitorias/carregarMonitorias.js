@@ -8,7 +8,7 @@ async function carregarMonitorias() {
     try {
         
         // pegar todas as monitorias do backend
-        const response = await fetch("/monitoria" , { 
+        const response = await fetch("/monitorias" , { 
             headers : {
                 "Authorization": `Bearer ${localStorage.getItem("token")}`
             }
@@ -213,7 +213,7 @@ async function carregarMonitorias() {
             delete dadosParaAtualizar.id_monitoria;
 
             try {
-                const response = await fetch(`/monitoria/${idMonitoria}`, {
+                const response = await fetch(`/monitorias/${idMonitoria}`, {
                     method : "PUT", 
                     headers : {
                         "Content-Type": "application/json",
