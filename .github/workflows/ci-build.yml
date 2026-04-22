@@ -1,0 +1,27 @@
+name: CI - Verificação de Build
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout do código
+      uses: actions/checkout@v4
+
+    - name: Configurar Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20' # Versão LTS recomendada para o ecossistema atual
+
+    - name: Instalar dependências
+      run: npm install
+
+    - name: Verificar compilação (Prisma Generate & TypeScript Build)
+      # Aqui chamamos exatamente o script de build que está no seu package.json
+      run: npm run build
