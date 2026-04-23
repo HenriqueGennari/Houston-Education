@@ -32,3 +32,7 @@ export const alunoCreateSchema = yup.object({
     matricula : yup.string().min(8).required(),
 });
 
+export const alunoUpdatePerfilSchema = yup.object({
+    perfilId : yup.number().integer().min(1).max(3).required("PERFIL_ID_OBRIGATORIO"),
+});
+

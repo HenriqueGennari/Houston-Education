@@ -78,9 +78,15 @@ class AlunoPrismaRepository {
 
         return alunoApagado;
     }
+
+    async updatePerfil(id: string, perfilId: number): Promise<Aluno | null> {
+        const alunoAtualizado = await prisma.aluno.update({
+            data: { perfilId },
+            where: { id }
+        });
+
+        return alunoAtualizado;
+    }
 }
-
-
-
 
 export default AlunoPrismaRepository;

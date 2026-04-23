@@ -26,7 +26,7 @@ model Aluno {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  perfilId Int
+  perfilId Int    @default(3)
   perfil   Perfil @relation(fields: [perfilId], references: [id])
 
   monitorias Monitoria[]
