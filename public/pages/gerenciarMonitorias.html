@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Houston Education</title>
+    <title>Gerenciar Monitorias</title>
     <link rel="shortcut icon" href="../assets/img/iconeHoustonEducation.ico" type="image/x-icon">
+
     <link rel="stylesheet" href="../style/style.css">
     <link rel="stylesheet" href="../style/stylePopUp.css">
     <link rel="stylesheet" href="../style/styleNavMenuLateral.css">
@@ -14,10 +15,19 @@
     <!--Isso é para o picker quando atualizar as monitorias-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
 </head>
 
 <body>
+    <script type="module">
+        import { parseJwt } from "../scripts/utils/parseJWT.js";
+
+        const user = parseJwt(localStorage.getItem('token'));
+
+        if (user.perfil !== "MONITOR" && user.perfil !== "ADMIN") {
+            window.location.href = "naoAutorizado.html";
+        }
+    </script> <!--evitar do cara clicar com o botão direito e abrir-->
+
     <nav>
         <div class="icone iconeMenu">
             <a href="#">
@@ -30,8 +40,6 @@
             </a>
         </div>
     </nav>
-
-
 
     <aside id="menuLateral" class="menuLateral">
         <div class="menuConteudo">
@@ -55,6 +63,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="dashboardAdmin.html" id="linkDashboardAdmin.html">
+                        <img src="../assets/img/iconeDashboardAdmin.png" alt="Icone Dashboard Admin">
+                        <span>Dashboard Admin</span>
+                    </a>
+                </li>
+                <li>
                     <a href="logout.html">
                         <span>Sair</span>
                     </a>
@@ -67,7 +81,7 @@
 
     <div class="boasvindas">
         <h1>
-            Bem vindo, <span class="usuarioNome"></span>!
+            Gerenciar Monitorias
         </h1>
 
         <div class="divBuscar">
@@ -153,7 +167,6 @@
     <script type="module" src="../scripts/monitorias/autorizadoMonitorias.js"></script>
     <script type="module" src="../scripts/disciplinas/carregarDisciplinas.js"></script>
     <script src="../scripts/utils/pickerData&Hora.js" type="module"></script>
-
 
 </body>
 

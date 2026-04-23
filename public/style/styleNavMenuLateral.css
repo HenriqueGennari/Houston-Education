@@ -1,0 +1,129 @@
+/* =========================================
+   BARRA DE NAVEGAÇÃO SUPERIOR (NAV)
+   ========================================= */
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center; /* Centraliza a logo */
+  align-items: center;
+  width: 100%;
+  height: 70px;
+  background-color: #024059;
+  z-index: 1000;
+}
+
+.logo img {
+  max-width: 70px;
+  height: auto;
+  display: block; 
+}
+
+.icone {
+  position: absolute;
+  top: 50%; 
+  transform: translateY(-50%);
+}
+
+.icone img {
+  max-width: 40px;
+  height: auto;
+  cursor: pointer;
+  display: block;
+}
+
+.iconeMenu {
+  left: 20px;
+}
+
+.iconeUsuario {
+  right: 20px;
+}
+
+/* =========================================
+   ESTILOS DA BARRA LATERAL (MENU LATERAL)
+   ========================================= */
+
+.menuLateral {
+    position: fixed;
+    top: 70px;
+    left: -280px; /* Começa fora da tela (um pouco mais largo) */
+    width: 280px;
+    height: calc(100vh - 70px);
+    
+    background-color: #024059;
+    color: white;
+    
+    transition: left 0.3s ease;
+    z-index: 1000;
+}
+
+.menuLateral.ativo {
+    left: 0; /* Aparece na tela */
+}
+
+.menuConteudo {
+    margin-top: 10px;
+}
+
+.menuConteudo ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menuConteudo li {
+    margin: 0;
+    padding: 0;
+}
+
+.menuConteudo li img {
+    width: 24px;
+    height: 24px;
+}
+
+.menuConteudo li a {
+    color: #ffffff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 1.3rem;
+    padding: 20px 20px; /* Espaço DENTRO do botão */
+    transition: background-color 0.2s ease;
+    white-space: nowrap; /* Força o texto a não quebrar para a linha de baixo */
+    font-size: 1.15rem;
+}
+
+.menuConteudo li a:hover {
+    background-color: #035a7d;
+}
+
+/* =========================================
+   O OVERLAY (Escurecer e Click-to-close)
+   ========================================= */
+
+.overlay-menu {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 70px);
+    
+    opacity: 0;
+    visibility: hidden;
+
+    background-color: rgba(0, 0, 0, 0.75); 
+    
+    transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
+    will-change: opacity;
+    
+    z-index: 999;
+}
+
+.overlay-menu.ativo {
+    opacity: 1;
+    visibility: visible;
+}
