@@ -8,7 +8,7 @@ async function carregarMonitorias() {
     try {
         
         // pegar todas as monitorias do backend
-        const response = await fetch("/monitorias" , { 
+        const response = await fetch("/monitorias/disponiveis" , { 
             headers : {
                 "Authorization": `Bearer ${localStorage.getItem("token")}`
             }
@@ -66,8 +66,8 @@ async function carregarMonitorias() {
                 <div class="nomemonitoria">${m.nome_monitoria}</div>
                 <div class="disciplinamonitoria">${m.disciplina.nome}</div>
                 <div class="datamonitoria">
-                        ${new Date(m.hora_inicio).toLocaleDateString()} - 
-                        ${new Date(m.hora_inicio).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}
+                        ${new Date(m.inicio).toLocaleDateString()} -
+                        ${new Date(m.inicio).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}
                 </div>
             </div>
             `;
@@ -92,9 +92,9 @@ async function carregarMonitorias() {
                 
                 popupTitulo.textContent = m.nome_monitoria;
                 popupDisciplina.textContent = `Disciplina: ${m.disciplina.nome}`;
-                popupMonitor.textContent = `Monitor: ${m.monitor.aluno.nome}`;
-                popupLocal.textContent = `Local: ${m.local}`;
-                popupDataHora.textContent = `Data/Hora: ${new Date(m.data).toLocaleDateString()} - ${new Date(m.hora_inicio).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}`;
+                popupMonitor.textContent = `Monitor: ${m.monitor.nome}`;
+                popupLocal.textContent = `Local: ${m.local?.nome || 'Não informado'}`;
+                popupDataHora.textContent = `Data/Hora: ${new Date(m.inicio).toLocaleDateString()} - ${new Date(m.inicio).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}`;
 
 
                 popupInfoMonitoria.classList.remove("hidden");
@@ -179,11 +179,11 @@ async function carregarMonitorias() {
                     document.getElementById("id_monitoria_hidden").value = m.id; // pegando o id da monitoria e salvando para o fetch 
 
                     formUpdate.querySelector('input[name="nome_monitoria"]').value = m.nome_monitoria;
-                    formUpdate.querySelector('input[name="data"]').value = new Date(m.data).toISOString().split("T")[0];
-                    formUpdate.querySelector('input[name="hora_inicio"]').value = new Date (m.hora_inicio).toTimeString().slice(0,5);
-                    formUpdate.querySelector('input[name="hora_fim"]').value = new Date (m.hora_fim).toTimeString().slice(0,5);
-                    formUpdate.querySelector('input[name="local"]').value = m.local;
-                    formUpdate.querySelector('select[name="disciplinaId"]').value = m.disciplinaId; // talvez problema de id
+                    formUpdate.querySelector('input[name="data"]').value = new Date(m.inicio).toISOString().split("T")[0];
+                    formUpdate.querySelector('input[name="hora_inicio"]').value = new Date(m.inicio).toTimeString().slice(0,5);
+                    formUpdate.querySelector('input[name="hora_fim"]').value = new Date(m.fim).toTimeString().slice(0,5);
+                    formUpdate.querySelector('select[name="localId"]').value = m.localId;
+                    formUpdate.querySelector('select[name="disciplinaId"]').value = m.disciplinaId;
 
                     modalOverlay.classList.add("open");
 

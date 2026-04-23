@@ -11,6 +11,7 @@ import { Router } from "express";
 const router =  Router();
 
 router.get("/", authMiddleware , MonitoriaController.getAll);
+router.get("/disponiveis", authMiddleware, MonitoriaController.getDisponiveis);
 router.get("/:id", authMiddleware, validateSchema(schema.monitoriaGetByIdSchema, "params"), MonitoriaController.getById);
 
 router.post("/", authMiddleware, autorizado(["ADMIN", "MONITOR"]), validateSchema(schema.monitoriaCreateSchema) , MonitoriaController.create); //adicionar aqui verificação de permissão

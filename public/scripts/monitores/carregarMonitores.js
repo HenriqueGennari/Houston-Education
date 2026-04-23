@@ -1,6 +1,6 @@
-async function carregarDisciplina(){
+async function carregarMonitores(){
     try {
-        const response = await fetch("/monitores", {
+        const response = await fetch("/alunos?perfil=MONITOR", {
             headers : {
                 "Authorization" : `Bearer ${localStorage.getItem("token")}`
             }
@@ -12,7 +12,7 @@ async function carregarDisciplina(){
         monitoresRetornados.forEach((monitor) =>{
             const option = document.createElement("option")
             option.value = monitor.id
-            option.textContent = monitor.aluno.nome
+            option.textContent = monitor.nome
             select.appendChild(option)
         })
     } catch (error) {
@@ -20,4 +20,4 @@ async function carregarDisciplina(){
     }
 }
 
-carregarDisciplina();
+carregarMonitores();

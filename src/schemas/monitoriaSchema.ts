@@ -20,7 +20,8 @@ export const monitoriaUpdateSchema = yup.object({
   data: yup.string().matches(/^\d{4}-\d{2}-\d{2}$/).optional(),
   hora_inicio: yup.string().matches(/^\d{2}:\d{2}$/).optional(),
   hora_fim: yup.string().matches(/^\d{2}:\d{2}$/).optional(),
-  local: yup.string().optional(),
+  descricao: yup.string().max(200).optional(),
+  localId: yup.string().optional(),
   monitorId: yup.string().optional(),
   disciplinaId: yup.string().optional(),
 });
@@ -31,7 +32,8 @@ export const monitoriaCreateSchema = yup.object({
   data: yup.string().matches(/^\d{4}-\d{2}-\d{2}$/).required(),
   hora_inicio: yup.string().matches(/^\d{2}:\d{2}$/).required(),
   hora_fim: yup.string().matches(/^\d{2}:\d{2}$/).required(),
-  local: yup.string().optional(),
+  descricao: yup.string().max(200).optional(),
+  localId: yup.string().optional(),
   monitorId: yup.string().required(),
   disciplinaId: yup.string().required(),
 });

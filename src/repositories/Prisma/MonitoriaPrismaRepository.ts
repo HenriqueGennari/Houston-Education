@@ -16,6 +16,40 @@ class MonitoriaPrismaRepository {
             nome: true,
           },
         },
+        local: {
+          select: {
+            nome: true,
+          },
+        },
+      },
+    });
+    return dadosMonitoria;
+  }
+
+  async getDisponiveis(): Promise<Monitoria[]> {
+    const dadosMonitoria = await prisma.monitoria.findMany({
+      where: {
+        fim: {
+          gte: new Date(),
+        },
+      },
+      include: {
+        disciplina: {
+          select: {
+            descricao: true,
+            nome: true,
+          },
+        },
+        monitor: {
+          select: {
+            nome: true,
+          },
+        },
+        local: {
+          select: {
+            nome: true,
+          },
+        },
       },
     });
     return dadosMonitoria;

@@ -3,10 +3,11 @@ import { Monitoria } from "@prisma/client";
 
 interface MonitoriaInput {
   nome_monitoria: string;
+  descricao?: string;
   data: string;
   hora_inicio: string;
   hora_fim: string;
-  local?: string;
+  localId?: string;
   monitorId: string;
   disciplinaId: string;
 }
@@ -19,18 +20,34 @@ class MonitoriaService {
     return dadosmonitoria;
   }
 
+  async getDisponiveis(): Promise<Monitoria[]> {
+    const dadosmonitoria = await this._monitoriaRepository.getDisponiveis();
+    return dadosmonitoria;
+  }
+
   async create(dados: MonitoriaInput): Promise<Monitoria> {
     const inicio = new Date(`${dados.data}T${dados.hora_inicio}:00`);
     const fim = new Date(`${dados.data}T${dados.hora_fim}:00`);
 
-    const dadosParaPrisma = {
+    if (inicio >= fim) {
+      throw new Error("HORARIO_INVALIDO: O horário de início deve ser anterior ao horário de fim.");
+    }
+
+    const dadosParaPrisma: any = {
       nome_monitoria: dados.nome_monitoria,
       inicio,
       fim,
-      local: dados.local,
       monitorId: dados.monitorId,
       disciplinaId: parseInt(dados.disciplinaId, 10),
     };
+
+    if (dados.descricao) {
+      dadosParaPrisma.descricao = dados.descricao;
+    }
+
+    if (dados.localId) {
+      dadosParaPrisma.localId = parseInt(dados.localId, 10);
+    }
 
     const dadosMonitoria = await this._monitoriaRepository.create(dadosParaPrisma);
     return dadosMonitoria;
@@ -67,6 +84,10 @@ class MonitoriaService {
     const inicio = new Date(`${dataString}T${horaInicioString}:00`);
     const fim = new Date(`${dataString}T${horaFimString}:00`);
 
+    if (inicio >= fim) {
+      throw new Error("HORARIO_INVALIDO: O horário de início deve ser anterior ao horário de fim.");
+    }
+
     const dadosAtualizados: any = {
       ...dados,
       inicio,
@@ -75,6 +96,10 @@ class MonitoriaService {
 
     if (dados.disciplinaId) {
       dadosAtualizados.disciplinaId = parseInt(dados.disciplinaId, 10);
+    }
+
+    if (dados.localId) {
+      dadosAtualizados.localId = parseInt(dados.localId, 10);
     }
 
     delete dadosAtualizados.data;

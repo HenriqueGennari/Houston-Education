@@ -12,8 +12,20 @@ form.addEventListener("submit", async (evento)=>{
     const dadosForm = new FormData(form)
     const dados = Object.fromEntries(dadosForm)
 
-    if(!dados.nome_monitoria || !dados.data || !dados.hora_inicio || !dados.hora_fim || !dados.local || !dados.disciplinaId || !dados.monitorId){
-        mensagem.textContent = "Preencha todos os campos.";
+    const camposFaltantes = [];
+    if(!dados.nome_monitoria) camposFaltantes.push("Nome da monitoria");
+    if(!dados.data) camposFaltantes.push("Data");
+    if(!dados.hora_inicio) camposFaltantes.push("Hora de início");
+    if(!dados.hora_fim) camposFaltantes.push("Hora de fim");
+    if(!dados.disciplinaId) camposFaltantes.push("Disciplina");
+    if(!dados.monitorId) camposFaltantes.push("Monitor");
+
+    const localId = document.getElementById("local-id").value;
+    if(!localId) camposFaltantes.push("Local (selecione um válido da lista)");
+    else dados.localId = localId;
+
+    if(camposFaltantes.length > 0){
+        mensagem.textContent = "Preencha: " + camposFaltantes.join(", ");
         mensagem.style.color = "red";
         return;
     }
@@ -40,8 +52,8 @@ form.addEventListener("submit", async (evento)=>{
             return;
         }
 
-        mensagem.innerHTML = 'Monitoria cadastrada com sucesso!<a href="    home.html">Ver</a>'
-        mensagem.style.color = "blue"
+        const popup = document.getElementById("popupSucesso");
+        popup.classList.remove("hidden");
         form.reset(); // limpar os inputs 
 
 
@@ -50,4 +62,20 @@ form.addEventListener("submit", async (evento)=>{
         mensagem.style.color = "red";
     }
 })
+
+// Fechar popup ao clicar no X ou fora do conteúdo
+const popupSucesso = document.getElementById("popupSucesso");
+const btnFecharPopup = document.getElementById("btnFecharPopup");
+
+if (btnFecharPopup) {
+    btnFecharPopup.addEventListener("click", () => {
+        popupSucesso.classList.add("hidden");
+    });
+}
+
+popupSucesso.addEventListener("click", (e) => {
+    if (e.target === popupSucesso) {
+        popupSucesso.classList.add("hidden");
+    }
+});
 

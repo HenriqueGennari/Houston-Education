@@ -45,18 +45,31 @@ model Disciplina {
   @@map("disciplina")
 }
 
+model Local {
+  id        Int     @id @default(autoincrement())
+  nome      String
+  descricao String?
+
+  monitorias Monitoria[]
+
+  @@map("local")
+}
+
 model Monitoria {
   id             String   @id @default(dbgenerated("gen_random_uuid()"))
-  nome_monitoria String
+  nome_monitoria String   @db.VarChar(200)
+  descricao      String?  @db.VarChar(200)
   inicio         DateTime
   fim            DateTime
-  local          String?
 
   monitorId String
   monitor   Aluno @relation(fields: [monitorId], references: [id])
 
   disciplinaId Int
   disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
+
+  localId Int
+  local   Local @relation(fields: [localId], references: [id])
 
   inscricoes Inscricao[]
 

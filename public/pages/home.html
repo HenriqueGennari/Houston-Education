@@ -131,8 +131,10 @@
                 </div>
 
                 <div class="campo-form-atualizar">
-                    <label>Local</label>
-                    <input type="text" name="local">
+                    <label>Selecione um local</label>
+                    <select name="localId" id="locais">
+                        <option value="" disabled selected>Selecione...</option>
+                    </select>
                 </div>
 
                 <div class="campo-form-atualizar">
@@ -152,6 +154,7 @@
     <script type="module" src="../scripts/monitorias/carregarMonitorias.js"></script>
     <script type="module" src="../scripts/monitorias/autorizadoMonitorias.js"></script>
     <script type="module" src="../scripts/disciplinas/carregarDisciplinas.js"></script>
+    <script type="module" src="../scripts/locais/carregarLocais.js"></script>
     <script src="../scripts/utils/pickerData&Hora.js" type="module"></script>
 
 

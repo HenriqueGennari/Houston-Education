@@ -15,6 +15,14 @@ class MonitoriaController{
             Res.status(500).json({err : err.message})
         }
     }
+    async getDisponiveis(Req : Request, Res : Response){
+        try {
+            const dadosMonitoria = await monitoriaService.getDisponiveis();
+            return Res.status(200).json(dadosMonitoria)
+        } catch (err : any) {
+            Res.status(500).json({err : err.message})
+        }
+    }
     async create(req: Request, res: Response) {
         try {
             const dados = req.body;
@@ -23,7 +31,8 @@ class MonitoriaController{
             return res.status(201).json(monitoriaCriada);
 
         } catch (err: any) {
-            return res.status(500).json({ erro: err.message});
+            const status = err.message?.startsWith("HORARIO_INVALIDO") ? 400 : 500;
+            return res.status(status).json({ erro: err.message});
         }
     }
 
@@ -47,7 +56,8 @@ class MonitoriaController{
 
             return Res.status(200).json(monitoriaDados)
         } catch (err : any) {
-            return Res.status(400).json({error : err.message})
+            const status = err.message?.startsWith("HORARIO_INVALIDO") ? 400 : 400;
+            return Res.status(status).json({error : err.message})
         }
     }
     async delete(Req : Request, Res : Response){

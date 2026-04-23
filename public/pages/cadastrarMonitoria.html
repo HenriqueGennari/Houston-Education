@@ -102,7 +102,9 @@
 
         <div class="campoForm">
             <label>Local da Monitoria</label>
-            <input type="text" name="local" placeholder="Ex: Sala 101">
+            <input type="text" id="local-nome" list="locais-list" placeholder="Digite para buscar...">
+            <input type="hidden" name="localId" id="local-id">
+            <datalist id="locais-list"></datalist>
         </div>
 
         <div class="campoForm">
@@ -129,7 +131,17 @@
         <div id="mensagem"></div>
     </form>
 
+    <div id="popupSucesso" class="popup-sucesso hidden">
+        <div class="popup-sucesso-content">
+            <button class="popup-sucesso-fechar" id="btnFecharPopup">&times;</button>
+            <span class="popup-sucesso-icone">&#10004;</span>
+            <p>Monitoria cadastrada com sucesso!</p>
+            <a href="home.html">Ver monitorias</a>
+        </div>
+    </div>
+
     <script src="../scripts/disciplinas/carregarDisciplinas.js" type="module"></script>
+    <script src="../scripts/locais/carregarLocaisCadastro.js" type="module"></script>
     <script src="../scripts/monitores/carregarMonitores.js" type="module"></script>
     <script src="../scripts/monitorias/cadastrarMonitorias.js" type="module"></script>
     <script src="../scripts/utils/pickerData&Hora.js" type="module"></script>
