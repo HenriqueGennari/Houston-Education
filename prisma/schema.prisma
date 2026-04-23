@@ -4,82 +4,75 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL") //mantendo a linha pq o prisma studio não abre sem ela
+  url      = env("DATABASE_URL")
 }
 
-enum Perfil {
-  ALUNO
-  MONITOR
-  ADMIN
+model Perfil {
+  id        Int     @id @default(autoincrement())
+  nome      String  @unique
+  descricao String?
+
+  alunos Aluno[]
+
+  @@map("perfil")
 }
 
 model Aluno {
-  id         String      @id @default(dbgenerated("gen_random_uuid()"))
-  nome       String
-  email      String      @unique
-  senha      String
-  matricula  String      @unique
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  perfil     Perfil      @default(ALUNO)
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  nome      String
+  email     String   @unique
+  senha     String
+  matricula String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  monitor    Monitor?
+  perfilId Int    @default(3)
+  perfil   Perfil @relation(fields: [perfilId], references: [id])
+
+  monitorias Monitoria[]
   inscricoes Inscricao[]
 
-  @@map("tb_aluno")
+  @@map("aluno")
 }
-
-
-model Monitor {
-  id         String      @id
-  aluno      Aluno       @relation(fields: [id], references: [id])
-  monitorias Monitoria[]
-
-  @@map("tb_monitor")
-}
-
 
 model Disciplina {
-  id         String      @id @default(uuid()) 
-  nome       String
-  descricao  String?
+  id        Int     @id @default(autoincrement())
+  nome      String
+  descricao String?
+
   monitorias Monitoria[]
 
-  @@map("tb_disciplina")
+  @@map("disciplina")
 }
-
-
 
 model Monitoria {
-  id             String      @id @default(dbgenerated("gen_random_uuid()"))
+  id             String   @id @default(dbgenerated("gen_random_uuid()"))
   nome_monitoria String
-  data           DateTime
-  hora_inicio    DateTime
-  hora_fim       DateTime
+  inicio         DateTime
+  fim            DateTime
   local          String?
 
-  monitorId      String
-  monitor        Monitor      @relation(fields: [monitorId], references: [id])
+  monitorId String
+  monitor   Aluno @relation(fields: [monitorId], references: [id])
 
-  disciplinaId   String
-  disciplina     Disciplina   @relation(fields: [disciplinaId], references: [id])
+  disciplinaId Int
+  disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
 
-  inscricoes     Inscricao[]
+  inscricoes Inscricao[]
 
-  @@map("tb_monitoria")
+  @@map("monitoria")
 }
 
-
 model Inscricao {
-  id           String      @id @default(dbgenerated("gen_random_uuid()"))
-  alunoId      String
-  monitoriaId  String
-  criadoEm     DateTime    @default(now())
+  id          Int      @id @default(autoincrement())
+  alunoId     String
+  monitoriaId String
+  criadoEm    DateTime @default(now())
 
-  aluno        Aluno       @relation(fields: [alunoId], references: [id])
-  monitoria    Monitoria   @relation(fields: [monitoriaId], references: [id])
+  aluno     Aluno     @relation(fields: [alunoId], references: [id])
+  monitoria Monitoria @relation(fields: [monitoriaId], references: [id])
 
   @@unique([alunoId, monitoriaId])
 
-  @@map("tb_inscricoes")
+  @@map("inscricao")
 }

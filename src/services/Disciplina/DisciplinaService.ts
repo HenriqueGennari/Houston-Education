@@ -14,7 +14,7 @@ class DisciplinaService {
             const dadosDisciplina = await this._DisciplinaRepository.create(dados)
             return dadosDisciplina;
         }
-    async getById(id : string) : Promise <Disciplina>{
+    async getById(id : number) : Promise <Disciplina>{
         const DisciplinaDados = await this._DisciplinaRepository.getById(id)
 
         if (!DisciplinaDados){
@@ -23,8 +23,8 @@ class DisciplinaService {
 
         return DisciplinaDados;
     }
-    
-    async update(id : string, dados : Disciplina) : Promise <Disciplina>{
+
+    async update(id : number, dados : Disciplina) : Promise <Disciplina>{
         const DisciplinaDados = await this._DisciplinaRepository.update(id, dados)
 
         if (!DisciplinaDados){
@@ -33,7 +33,7 @@ class DisciplinaService {
 
         return DisciplinaDados;
     }
-    async delete(id : string) : Promise <Disciplina>{
+    async delete(id : number) : Promise <Disciplina>{
         const DisciplinaDados = await this._DisciplinaRepository.delete(id)
 
         if (!DisciplinaDados){

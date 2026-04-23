@@ -27,7 +27,7 @@ class InscricaosService{
         const dadosInscricaos = await this._inscricaoPrismaRepository.create(dados)
         return dadosInscricaos;
     }
-    async getById(id : string) : Promise <Inscricao>{
+    async getById(id : number) : Promise <Inscricao>{
         const InscricaoDados = await this._inscricaoPrismaRepository.getById(id)
 
         if (!InscricaoDados){
@@ -36,7 +36,7 @@ class InscricaosService{
         return InscricaoDados;
     }
 
-    async delete(id : string) : Promise <Inscricao>{
+    async delete(id : number) : Promise <Inscricao>{
         const InscricaoDados = await this._inscricaoPrismaRepository.delete(id)
 
         if (!InscricaoDados){

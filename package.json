@@ -3,13 +3,15 @@
   "version": "1.0.0",
   "main": "server.ts",
   "type": "module",
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "scripts": {
     "prisma:generate": "npx prisma generate",
     "prisma:migrate": "prisma migrate deploy",
     "build": "npx prisma generate && tsc",
     "start": "node dist/server.js",
     "dev": "nodemon --watch src --ext ts --exec \"tsx src/server.ts\""
-    
   },
   "keywords": [],
   "author": "",

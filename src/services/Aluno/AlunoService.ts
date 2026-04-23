@@ -8,8 +8,8 @@ class AlunosService{
     // constructor(private _alunoRespository : AlunoRepository){}
     constructor(private _alunoPrismaRepository: AlunoPrismaRepository){}
 
-    async getAll() : Promise<Aluno[]>{
-        const alunosDados = await this._alunoPrismaRepository.getAll()
+    async getAll(perfilNome?: string) : Promise<Aluno[]>{
+        const alunosDados = await this._alunoPrismaRepository.getAll(perfilNome)
         return alunosDados;
     }
     
@@ -56,6 +56,22 @@ class AlunosService{
         }
 
         return alunoDados;
+    }
+
+    async updatePerfilUsuario(id: string, perfilId: number): Promise<Aluno> {
+        const alunoExistente = await this._alunoPrismaRepository.getById(id);
+
+        if (!alunoExistente) {
+            throw new Error("ALUNO_INEXISTENTE");
+        }
+
+        const alunoAtualizado = await this._alunoPrismaRepository.updatePerfil(id, perfilId);
+
+        if (!alunoAtualizado) {
+            throw new Error("ERRO_AO_ATUALIZAR_PERFIL");
+        }
+
+        return alunoAtualizado;
     }
 }
 

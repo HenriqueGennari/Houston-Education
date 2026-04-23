@@ -9,8 +9,9 @@ class AlunoController{
 
     async getAll(Req : Request, Res : Response) {
         try {
-            const alunosDados = await alunoService.getAll();
-            Res.status(200).json(alunosDados)   
+            const perfil = Req.query.perfil as string | undefined;
+            const alunosDados = await alunoService.getAll(perfil);
+            Res.status(200).json(alunosDados)
 
         } catch (err : any) {
             return Res.status(500).json({error : err.message})
@@ -60,9 +61,25 @@ class AlunoController{
             const alunoDados = await alunoService.delete(id)
 
             return Res.status(200).json(alunoDados)
-            
+
         } catch (err : any) {
             return Res.status(400).json({error : err.message})
+        }
+    }
+
+    async updatePerfilUsuario(Req : Request, Res : Response){
+        try {
+            const { id } = Req.params;
+            const { perfilId } = Req.body;
+
+            const alunoDados = await alunoService.updatePerfilUsuario(id, perfilId);
+
+            return Res.status(200).json(alunoDados);
+        } catch (err : any) {
+            if (err.message === "ALUNO_INEXISTENTE") {
+                return Res.status(404).json({ error: err.message });
+            }
+            return Res.status(400).json({ error: err.message });
         }
     }
 }

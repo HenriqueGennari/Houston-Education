@@ -46,7 +46,7 @@ class InscricoesController{
     
     async getById(Req : Request, Res : Response){
         try {
-            const {id} = Req.params;
+            const id = parseInt(Req.params.id, 10);
             const inscricoesDados = await inscricoesService.getById(id)
 
             return Res.status(200).json(inscricoesDados)
@@ -57,11 +57,11 @@ class InscricoesController{
     }
     async delete(Req : Request, Res : Response){
         try {
-            const {id} = Req.params
+            const id = parseInt(Req.params.id, 10);
             const inscricoesDados = await inscricoesService.delete(id)
 
             return Res.status(200).json(inscricoesDados)
-            
+
         } catch (err : any) {
             return Res.status(400).json({error : err.message})
         }

@@ -7,6 +7,8 @@ form.addEventListener("submit", async (e) => {
 
     const formData = new FormData(form);
     const data = Object.fromEntries(formData); // dados que o usuário digitou
+
+    console.log(data)
     
     if (!data.nome || !data.senha || !data.email || !data.matricula) {
         mensagem.textContent = "Preencha todos os campos.";
@@ -21,6 +23,8 @@ form.addEventListener("submit", async (e) => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         });
+
+        
 
         const result = await res.json();
 
