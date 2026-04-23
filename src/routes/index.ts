@@ -4,7 +4,6 @@ import { Router } from "express";
 import alunoRoutes from "./Aluno/alunoRoutes.js"
 import loginRoutes from "./Paginas/loginRoutes.js"
 import homeRoutes from "./Paginas/homeRoutes.js";
-import monitorRoutes from "./Monitor/monitorRoutes.js"
 import monitoriaRoutes from "./Monitoria/monitoriaRoutes.js"
 import disciplinaRoutes from "./Disciplina/disciplinaRoutes.js"
 import inscriacaoRoutes from "./Inscricao/inscricaoRoutes.js"
@@ -18,7 +17,6 @@ router.get("/", (req: Request, res: Response) => {
 
 
 router.use("/alunos", alunoRoutes);
-router.use("/monitores" , monitorRoutes )
 router.use("/disciplinas" , disciplinaRoutes )
 router.use("/monitorias" , monitoriaRoutes )
 router.use("/inscricoes" , inscriacaoRoutes)

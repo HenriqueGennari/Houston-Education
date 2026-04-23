@@ -3,7 +3,6 @@ export interface Alunos {
   nome: string;
   email: string;
   senha: string;
-  telefone: string | null;
   created_At: Date;
   updated_At: Date;
 }

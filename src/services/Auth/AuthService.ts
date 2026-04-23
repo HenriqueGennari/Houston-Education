@@ -20,11 +20,11 @@ class AuthService{
         return user;
     }
 
-    async existeUser(email : string) : Promise<Aluno>{
+    async existeUser(email: string) {
         const user = await this._alunoPrismaRepository.findByEmail(email)
-        
-        if (!user){
-            throw new Error ("USUARIO_INEXISTENTE")
+
+        if (!user) {
+            throw new Error("USUARIO_INEXISTENTE")
         }
 
         return user;

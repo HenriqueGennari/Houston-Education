@@ -1,50 +1,50 @@
-import {prisma} from "../Prisma/client.js";
+import { prisma } from "../Prisma/client.js";
 import { Disciplina } from "@prisma/client";
 
+class DisciplinaPrismaRepository {
+  async getAll(): Promise<Disciplina[]> {
+    const dadosDisciplina = await prisma.disciplina.findMany();
+    return dadosDisciplina;
+  }
 
-class DisciplinaPrismaRepository{
-    
-    async getAll(): Promise <Disciplina[]>{
-        const dadosDisciplina = await prisma.disciplina.findMany();
-        return dadosDisciplina;
-    }
-    async getById(id : string) : Promise <Disciplina | null>{
-        const DisciplinaDados = await prisma.disciplina.findFirst({
-            where : {
-                id : id
-            }
-        })
+  async getById(id: number): Promise<Disciplina | null> {
+    const DisciplinaDados = await prisma.disciplina.findFirst({
+      where: {
+        id: id,
+      },
+    });
 
-        return DisciplinaDados;
-    }
-    async create(data : Disciplina) : Promise <Disciplina>{
-        
-        const novADisciplina = await prisma.disciplina.create({
-            data
-        })
+    return DisciplinaDados;
+  }
 
-        return novADisciplina;
-    }
-    async update(id : string, data : Disciplina) : Promise <Disciplina | null>{
-        const DisciplinaAtualizada = await prisma.disciplina.update({
-            data, where : {
-                id : id
-            }
-        })
+  async create(data: Disciplina): Promise<Disciplina> {
+    const novADisciplina = await prisma.disciplina.create({
+      data,
+    });
 
-        return DisciplinaAtualizada;
+    return novADisciplina;
+  }
 
-    }
-    async delete(id : string) : Promise <Disciplina>{
-        const DisciplinaApagada = await prisma.disciplina.delete({
-            where : {
-                id : id
-            }
-        })
+  async update(id: number, data: Disciplina): Promise<Disciplina | null> {
+    const DisciplinaAtualizada = await prisma.disciplina.update({
+      data,
+      where: {
+        id: id,
+      },
+    });
 
-        return DisciplinaApagada;
-    }
+    return DisciplinaAtualizada;
+  }
+
+  async delete(id: number): Promise<Disciplina> {
+    const DisciplinaApagada = await prisma.disciplina.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    return DisciplinaApagada;
+  }
 }
-
 
 export default DisciplinaPrismaRepository;

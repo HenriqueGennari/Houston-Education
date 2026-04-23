@@ -1,34 +1,53 @@
-import { Perfil, PrismaClient } from "@prisma/client";
-import { Aluno } from "@prisma/client";
+import { PrismaClient, Prisma, Aluno } from "@prisma/client";
 
+const prisma = new PrismaClient();
 
-const prisma = new PrismaClient()
+const alunoWithPerfil = Prisma.validator<Prisma.AlunoDefaultArgs>()({
+    include: { perfil: true }
+});
 
+type AlunoWithPerfil = Prisma.AlunoGetPayload<typeof alunoWithPerfil>;
 
-class AlunoPrismaRepository{
-    async getAll() : Promise <Aluno[]>{
-        const alunos = await prisma.aluno.findMany();
+class AlunoPrismaRepository {
+    async getAll(perfilNome?: string): Promise<AlunoWithPerfil[]> {
+        const alunos = await prisma.aluno.findMany({
+            where: perfilNome ? {
+                perfil: {
+                    nome: perfilNome
+                }
+            } : undefined,
+            include: {
+                perfil: true
+            }
+        });
 
         return alunos;
-
     }
-    async findByEmail(email : string) : Promise <Aluno | null>{
+
+    async findByEmail(email: string): Promise<AlunoWithPerfil | null> {
         const alunoEmail = await prisma.aluno.findFirst({
-            where : {
-                email : email
+            where: {
+                email: email
+            },
+            include: {
+                perfil: true
             }
-        })
+        });
 
         return alunoEmail;
     }
-    async getById(id : string) : Promise <Aluno | null>{
-        const alunoEmail = await prisma.aluno.findFirst({
-            where : {
-                id : id
-            }
-        })
 
-        return alunoEmail;
+    async getById(id: string): Promise<AlunoWithPerfil | null> {
+        const aluno = await prisma.aluno.findFirst({
+            where: {
+                id: id
+            },
+            include: {
+                perfil: true
+            }
+        });
+
+        return aluno;
     }
     async create(data : Aluno) : Promise <Aluno>{
        

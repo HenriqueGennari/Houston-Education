@@ -20,7 +20,8 @@ class LoginController{
 
             const user = await authService.validateUser(dados.email, dados.senha)
 
-            const token = await generateJWT({id : user.id, nome : user.nome, email : user.email, perfil : user.perfil} , "2h"); // o validateUser retorna o usuário do banco ( acessar authService para ver código)
+            const perfilNome = (user.perfil as any)?.nome || "";
+            const token = await generateJWT({id : user.id, nome : user.nome, email : user.email, perfil : perfilNome} , "2h");
             
             Res.status(200).json({user, token})
 

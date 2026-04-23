@@ -1,7 +1,7 @@
 import * as yup from 'yup'
 
 
-const idSchema = yup.string().uuid().required("ID_OBRIGATORIO");
+const idSchema = yup.number().required("ID_OBRIGATORIO");
 
 export const disciplinaGetByIdSchema = yup.object({
     id : idSchema
@@ -24,4 +24,3 @@ export const disciplinaCreateSchema = yup.object({
     nome : yup.string().required(),
     descricao : yup.string().optional()
 });
-

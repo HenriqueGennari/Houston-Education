@@ -29,7 +29,7 @@ class DisciplinaController{
 
     async getById(Req : Request, Res : Response){
         try {
-            const {id} = Req.params;
+            const id = parseInt(Req.params.id, 10);
             const disciplinaDados = await disciplinaService.getById(id)
 
             return Res.status(200).json(disciplinaDados)
@@ -40,7 +40,7 @@ class DisciplinaController{
     }
     async update(Req : Request, Res : Response){
         try {
-            const {id} = Req.params
+            const id = parseInt(Req.params.id, 10);
             const dados = Req.body
 
             const disciplinaDados = await disciplinaService.update(id, dados)
@@ -52,11 +52,11 @@ class DisciplinaController{
     }
     async delete(Req : Request, Res : Response){
         try {
-            const {id} = Req.params
+            const id = parseInt(Req.params.id, 10);
             const disciplinaDados = await disciplinaService.delete(id)
 
             return Res.status(200).json(disciplinaDados)
-            
+
         } catch (err : any) {
             return Res.status(400).json({error : err.message})
         }
