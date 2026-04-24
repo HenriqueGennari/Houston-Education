@@ -2,22 +2,26 @@
 import { Router } from "express";
 import AlunoController from "../../controllers/Aluno/AlunoController.js";
 import { validateSchema } from "../../middlewares/validateSchemaMiddleware.js";
-import { authMiddleware, AuthRequest } from "../../middlewares/authMiddleware.js";
-import { autorizado } from "../../middlewares/authorizationMiddleware.js";
+import { autenticado, AuthRequest } from "../../middlewares/autenticadoMiddleware.js";
+import { autorizado } from "../../middlewares/autorizadoMiddleware.js";
 
 import * as schema from "../../schemas/alunoSchema.js";
 
 const alunoController = new AlunoController();
 const router = Router();
 
-router.get("/", authMiddleware,  alunoController.getAll);
-router.get("/:id", authMiddleware,  validateSchema(schema.alunoGetByIdSchema, "params"), alunoController.getById);
+router.get("/", autenticado, autorizado(["ADMIN", "MONITOR"]) , alunoController.getAll);
+router.get("/:id", autenticado, autorizado(["ADMIN"]), validateSchema(schema.alunoGetByIdSchema, "params"), alunoController.getById);
 
-router.post("/",  validateSchema(schema.alunoCreateSchema) , alunoController.create);
+router.post("/", validateSchema(schema.alunoCreateSchema), alunoController.create); // cadastro
 
-router.put("/:id", authMiddleware,  validateSchema(schema.alunoUpdateIdSchema, "params"), validateSchema(schema.alunoUpdateSchema, "body") , alunoController.update);
-router.delete("/:id", authMiddleware,  validateSchema(schema.alunoDeleteSchema, "params"), alunoController.delete);
+router.put("/:id", autenticado, validateSchema(schema.alunoUpdateIdSchema, "params"), validateSchema(schema.alunoUpdateSchema, "body"), alunoController.update); // atualização que o aluno pode fazer
 
-router.patch("/:id/perfil", authMiddleware, autorizado(["ADMIN"]), validateSchema(schema.alunoUpdatePerfilSchema, "body"), alunoController.updatePerfilUsuario);
+router.patch("/:id/perfil", autenticado, autorizado(["ADMIN"]), validateSchema(schema.alunoUpdatePerfilSchema, "body"), alunoController.updatePerfilUsuario); // alteração exclusiva do perfil
+
+router.delete("/:id", autenticado , autorizado(["ADMIN"]), validateSchema(schema.alunoDeleteSchema, "params"), alunoController.delete);
+
+
 
 export default router;
+    

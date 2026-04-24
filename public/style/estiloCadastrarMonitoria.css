@@ -128,6 +128,12 @@ h1 {
     background-color: #035a7d;
 }
 
+#mensagem {
+    margin-top: 15px;
+    text-align: center;
+    font-weight: 600;
+}
+
 /* =========================================
    RESPONSIVIDADE (CELULARES E TABLETS)
    ========================================= */

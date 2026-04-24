@@ -1,9 +1,16 @@
+import { getCookie } from "../utils/getCookie.js";
+
 async function carregarDisciplina(){
     try {
+        const token = localStorage.getItem("token") || getCookie("token");
+        const headers = {};
+        if (token) {
+            headers["Authorization"] = `Bearer ${token}`;
+        }
+
         const response = await fetch("/disciplinas", {
-            headers : {
-                "Authorization" : `Bearer ${localStorage.getItem("token")}`
-            }
+            headers,
+            credentials: "same-origin"
         });
 
         const disciplinasRetornadas = await response.json();

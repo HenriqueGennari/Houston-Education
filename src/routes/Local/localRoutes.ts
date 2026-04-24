@@ -1,10 +1,10 @@
 import LocalController from "../../controllers/Local/LocalController.js";
 import { Router } from "express";
-import { authMiddleware } from "../../middlewares/authMiddleware.js";
-import { autorizado } from "../../middlewares/authorizationMiddleware.js";
+import { autenticado } from "../../middlewares/autenticadoMiddleware.js";
+import { autorizado } from "../../middlewares/autorizadoMiddleware.js";
 
 const router = Router();
 
-router.get("/", authMiddleware, autorizado(["ADMIN", "MONITOR", "ALUNO"]), LocalController.getAll);
+router.get("/", autenticado, autorizado(["ADMIN", "MONITOR", "ALUNO"]), LocalController.getAll);
 
 export default router;

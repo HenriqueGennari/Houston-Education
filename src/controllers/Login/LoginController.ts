@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import AuthService from "../../services/Auth/AuthService.js";
+import AuthService from "../../services/Login/LoginService.js";
 import AlunoPrismaRepository from "../../repositories/Prisma/AlunoPrismaRepository.js";
 import { generateJWT } from "../../utils/jwt/jwt.js";
 
@@ -22,7 +22,14 @@ class LoginController{
 
             const perfilNome = (user.perfil as any)?.nome || "";
             const token = await generateJWT({id : user.id, nome : user.nome, email : user.email, perfil : perfilNome} , "2h");
-            
+
+            Res.cookie("token", token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+                maxAge: 2 * 60 * 60 * 1000 // 2 horas
+            });
+
             Res.status(200).json({user, token})
 
 

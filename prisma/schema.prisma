@@ -18,13 +18,14 @@ model Perfil {
 }
 
 model Aluno {
-  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  id        String    @id @default(dbgenerated("gen_random_uuid()"))
   nome      String
-  email     String   @unique
+  email     String    @unique
   senha     String
-  matricula String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  matricula String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
   perfilId Int    @default(3)
   perfil   Perfil @relation(fields: [perfilId], references: [id])

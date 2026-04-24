@@ -23,6 +23,15 @@ class MonitoriaController{
             Res.status(500).json({err : err.message})
         }
     }
+    async getByMonitor(Req : Request, Res : Response){
+        try {
+            const { monitorId } = Req.params;
+            const dadosMonitoria = await monitoriaService.getByMonitor(monitorId);
+            return Res.status(200).json(dadosMonitoria)
+        } catch (err : any) {
+            Res.status(500).json({err : err.message})
+        }
+    }
     async create(req: Request, res: Response) {
         try {
             const dados = req.body;

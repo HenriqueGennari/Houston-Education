@@ -3,6 +3,7 @@ import path from "path";
 import routes from "./routes/index.js";
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 
 
@@ -23,6 +24,7 @@ server.use(cors({
 
 server.use(express.json());
 server.use(express.urlencoded({extended : true}));
+server.use(cookieParser());
 server.use(express.static(path.join(process.cwd(), "public"))); // criando um caminho direto para a pasta public, o current working directory pega a raiz e faz o caminho
 
 server.use(routes);

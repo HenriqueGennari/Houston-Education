@@ -1,10 +1,14 @@
+import { getCookie } from "../utils/getCookie.js";
+
 async function carregarLocais(){
     try {
-        const response = await fetch("/locais", {
-            headers : {
-                "Authorization" : `Bearer ${localStorage.getItem("token")}`
-            }
-        });
+        const token = localStorage.getItem("token") || getCookie("token");
+        const headers = {};
+        if (token) {
+            headers["Authorization"] = `Bearer ${token}`;
+        }
+
+        const response = await fetch("/locais", { headers, credentials: "same-origin" });
 
         const locaisRetornados = await response.json();
         const select = document.getElementById("locais")

@@ -1,6 +1,6 @@
 import { NextFunction } from "express";
 import { Request, Response } from "express";
-import { AuthRequest } from "./authMiddleware.js";
+import { AuthRequest } from "./autenticadoMiddleware.js";
 
 export const autorizado = (perfisPermitidos: string[]) => {
   return (req: AuthRequest, res: Response, next: NextFunction) => {

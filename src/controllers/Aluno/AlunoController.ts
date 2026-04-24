@@ -10,7 +10,11 @@ class AlunoController{
     async getAll(Req : Request, Res : Response) {
         try {
             const perfil = Req.query.perfil as string | undefined;
-            const alunosDados = await alunoService.getAll(perfil);
+
+            const skip = parseInt(Req.query.skip as string) || 0;
+            const take = parseInt(Req.query.take as string) || 50;
+            
+            const alunosDados = await alunoService.getAll(perfil, skip, take);
             Res.status(200).json(alunosDados)
 
         } catch (err : any) {

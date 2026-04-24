@@ -35,7 +35,7 @@
             </a>
         </div>
         <div class="logo">
-            <a href="home.html">
+            <a href="/pages/home.html">
                 <img src="../assets/img/iconeHoustonEducation.ico" alt="logo Houston Education">
             </a>
         </div>
@@ -45,31 +45,31 @@
         <div class="menuConteudo">
             <ul>
                 <li>
-                    <a href="home.html">
+                    <a href="/pages/home.html">
                         <img src="../assets/img/iconeHome.png" alt="Icone Home">
                         <span>Home</span>
                     </a>
                 </li>
                 <li>
-                    <a href="cadastrarMonitoria.html" id="linkCadastrarMonitoria">
+                    <a href="/pages/cadastrarMonitoria.html" id="linkCadastrarMonitoria">
                         <img src="../assets/img/iconeCadastrarMonitoria.png" alt="Icone Cadastrar Monitoria">
                         <span>Cadastrar Monitoria</span>
                     </a>
                 </li>
                 <li>
-                    <a href="gerenciarMonitorias.html" id="linkGerenciarMonitoria">
+                    <a href="/gerenciar-monitorias" id="linkGerenciarMonitoria">
                         <img src="../assets/img/iconeGerenciarMonitorias.png" alt="Icone Gerenciar Monitorias">
                         <span>Gerenciar Monitorias</span>
                     </a>
                 </li>
                 <li>
-                    <a href="dashboardAdmin.html" id="linkDashboardAdmin.html">
+                    <a href="/dashboard-admin" id="linkDashboardAdmin.html">
                         <img src="../assets/img/iconeDashboardAdmin.png" alt="Icone Dashboard Admin">
                         <span>Dashboard Admin</span>
                     </a>
                 </li>
                 <li>
-                    <a href="logout.html">
+                    <a href="/pages/logout.html">
                         <span>Sair</span>
                     </a>
                 </li>
@@ -92,7 +92,7 @@
 
     <section class="sectionmonitorias">.
         <div class="exibirmonitorias">
-            <h2 id="titulomonitorias">Monitorias Disponíveis</h2>
+            <h2 id="titulomonitorias">Suas monitorias</h2>
             <ul id="listamonitorias">
                 <li>Carregando monitorias...</li>
             </ul>
@@ -111,6 +111,16 @@
         </div>
     </div>
 
+
+    <!-- POPUP DE SUCESSO -->
+    <div id="popupSucessoAtualizar" class="popup-sucesso hidden">
+        <div class="popup-sucesso-content">
+            <button class="popup-sucesso-fechar" id="btnFecharPopupSucesso">&times;</button>
+            <span class="popup-sucesso-icone">&#10004;</span>
+            <p>Monitoria atualizada com sucesso!</p>
+            <a href="/gerenciar-monitorias">Ver monitorias</a>
+        </div>
+    </div>
 
     <!--MODAL PARA ATUALIZAR AS MONITORIAS-->
 
@@ -145,8 +155,10 @@
                 </div>
 
                 <div class="campo-form-atualizar">
-                    <label>Local</label>
-                    <input type="text" name="local">
+                    <label>Selecione um local</label>
+                    <select name="localId" id="locais">
+                        <option value="" disabled selected>Selecione...</option>
+                    </select>
                 </div>
 
                 <div class="campo-form-atualizar">
@@ -163,9 +175,10 @@
 
 
     <script type="module" src="../scripts/carregarNomeUsuario.js"></script>
-    <script type="module" src="../scripts/monitorias/carregarMonitorias.js"></script>
+    <script type="module" src="../scripts/monitorias/gerenciarMonitorias.js"></script>
     <script type="module" src="../scripts/monitorias/autorizadoMonitorias.js"></script>
     <script type="module" src="../scripts/disciplinas/carregarDisciplinas.js"></script>
+    <script type="module" src="../scripts/locais/carregarLocais.js"></script>
     <script src="../scripts/utils/pickerData&Hora.js" type="module"></script>
 
 </body>

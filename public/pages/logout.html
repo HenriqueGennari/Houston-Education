@@ -7,9 +7,12 @@
 </head>
 <body>
     <script>
-        localStorage.clear()
-        sessionStorage.clear()
-        window.location.href = "login.html"
+        fetch("/logout", { method: "POST" })
+            .finally(() => {
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = "login.html";
+            });
     </script>
 </body>
 </html>

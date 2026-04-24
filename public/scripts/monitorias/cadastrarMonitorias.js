@@ -1,5 +1,6 @@
 import { getAlunoId } from "../utils/getAlunoId.js";
 import { getPerfil } from "../utils/getPerfil.js";
+import { getAuthHeaders } from "../utils/getAuthHeaders.js";
 const form = document.getElementById("monitoriaForm");
 const mensagem = document.getElementById("mensagem");
 
@@ -40,14 +41,15 @@ form.addEventListener("submit", async (evento)=>{
         const response = await fetch("/monitorias", {
             method : "POST",
             headers : {
-                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                ...getAuthHeaders(),
                 "Content-Type": "application/json"
             },
+            credentials: "same-origin",
             body : JSON.stringify(dados)
         })
 
         if (!response.ok){
-            mensagem.textContent = "Erro ao criar monitoria. Verifique a data";
+            mensagem.textContent = "Erro ao criar monitoria. Verifique a data e hora!";
             mensagem.style.color = "red";
             return;
         }

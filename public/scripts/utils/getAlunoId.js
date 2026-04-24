@@ -1,9 +1,10 @@
 import { parseJwt } from "./parseJWT.js";
+import { getToken } from "./getToken.js";
 
 export function getAlunoId(){
-  const token = localStorage.getItem('token');
+  const token = getToken();
   if (!token) return null;
 
   const payload = parseJwt(token);
-  return payload?.id || null; 
+  return payload?.id || null;
 }

@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
@@ -22,25 +23,27 @@ async function main() {
   console.log("Seed concluído: 3 perfis inseridos/atualizados.");
 
   // 2. Alunos
+  const senhaHash = await bcrypt.hash("123456", 10);
+
   const alunos = [
     {
       nome: "Houston",
       email: "houston@email.com",
-      senha: "123456",
+      senha: senhaHash,
       matricula: "2024001",
       perfilId: 1,
     },
     {
       nome: "Monitor Paulo",
       email: "paulo@email.com",
-      senha: "123456",
+      senha: senhaHash,
       matricula: "2024002",
       perfilId: 2,
     },
     {
       nome: "João",
       email: "joao@email.com",
-      senha: "123456",
+      senha: senhaHash,
       matricula: "2024003",
       perfilId: 3,
     },

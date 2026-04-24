@@ -1,9 +1,10 @@
+import { getAuthHeaders } from "../utils/getAuthHeaders.js";
+
 async function carregarMonitores(){
     try {
         const response = await fetch("/alunos?perfil=MONITOR", {
-            headers : {
-                "Authorization" : `Bearer ${localStorage.getItem("token")}`
-            }
+            headers: getAuthHeaders(),
+            credentials: "same-origin"
         });
 
         const monitoresRetornados = await response.json();

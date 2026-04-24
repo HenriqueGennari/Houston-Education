@@ -9,16 +9,21 @@ const alunoWithPerfil = Prisma.validator<Prisma.AlunoDefaultArgs>()({
 type AlunoWithPerfil = Prisma.AlunoGetPayload<typeof alunoWithPerfil>;
 
 class AlunoPrismaRepository {
-    async getAll(perfilNome?: string): Promise<AlunoWithPerfil[]> {
+    async getAll(perfilNome?: string, skip?: number, take?: number): Promise<AlunoWithPerfil[]> {
         const alunos = await prisma.aluno.findMany({
-            where: perfilNome ? {
-                perfil: {
-                    nome: perfilNome
-                }
-            } : undefined,
+            where: {
+                deletedAt: null,
+                ...(perfilNome ? {
+                    perfil: {
+                        nome: perfilNome
+                    }
+                } : {})
+            },
             include: {
                 perfil: true
-            }
+            },
+            skip: skip || 0,
+            take: take || 50
         });
 
         return alunos;
@@ -27,7 +32,8 @@ class AlunoPrismaRepository {
     async findByEmail(email: string): Promise<AlunoWithPerfil | null> {
         const alunoEmail = await prisma.aluno.findFirst({
             where: {
-                email: email
+                email: email,
+                deletedAt: null
             },
             include: {
                 perfil: true
@@ -40,7 +46,8 @@ class AlunoPrismaRepository {
     async getById(id: string): Promise<AlunoWithPerfil | null> {
         const aluno = await prisma.aluno.findFirst({
             where: {
-                id: id
+                id: id,
+                deletedAt: null
             },
             include: {
                 perfil: true
@@ -69,12 +76,11 @@ class AlunoPrismaRepository {
         return alunoAtualizado;
 
     }
-    async delete(id : string) : Promise <Aluno>{
-        const alunoApagado = await prisma.aluno.delete({
-            where : {
-                id : id
-            }
-        })
+    async delete(id: string): Promise<Aluno> {
+        const alunoApagado = await prisma.aluno.update({
+            where: { id },
+            data: { deletedAt: new Date() }
+        });
 
         return alunoApagado;
     }

@@ -8,8 +8,8 @@ class AlunosService{
     // constructor(private _alunoRespository : AlunoRepository){}
     constructor(private _alunoPrismaRepository: AlunoPrismaRepository){}
 
-    async getAll(perfilNome?: string) : Promise<Aluno[]>{
-        const alunosDados = await this._alunoPrismaRepository.getAll(perfilNome)
+    async getAll(perfilNome?: string, skip?: number, take?: number) : Promise<Aluno[]>{
+        const alunosDados = await this._alunoPrismaRepository.getAll(perfilNome, skip, take)
         return alunosDados;
     }
     

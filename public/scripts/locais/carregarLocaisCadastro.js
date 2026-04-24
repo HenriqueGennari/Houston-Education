@@ -1,9 +1,10 @@
+import { getAuthHeaders } from "../utils/getAuthHeaders.js";
+
 async function carregarLocaisCadastro() {
   try {
     const response = await fetch("/locais", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
+      headers: getAuthHeaders(),
+      credentials: "same-origin",
     });
 
     const locaisRetornados = await response.json();

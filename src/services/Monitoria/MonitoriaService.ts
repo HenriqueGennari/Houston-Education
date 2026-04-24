@@ -25,6 +25,11 @@ class MonitoriaService {
     return dadosmonitoria;
   }
 
+  async getByMonitor(monitorId: string): Promise<Monitoria[]> {
+    const dadosmonitoria = await this._monitoriaRepository.getByMonitor(monitorId);
+    return dadosmonitoria;
+  }
+
   async create(dados: MonitoriaInput): Promise<Monitoria> {
     const inicio = new Date(`${dados.data}T${dados.hora_inicio}:00`);
     const fim = new Date(`${dados.data}T${dados.hora_fim}:00`);
@@ -100,7 +105,7 @@ class MonitoriaService {
 
     if (dados.localId) {
       dadosAtualizados.localId = parseInt(dados.localId, 10);
-    }
+      }
 
     delete dadosAtualizados.data;
     delete dadosAtualizados.hora_inicio;

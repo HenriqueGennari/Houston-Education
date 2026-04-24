@@ -1,5 +1,6 @@
 import { getAlunoId } from "../utils/getAlunoId.js";
 import { getPerfil } from "../utils/getPerfil.js";
+import { getAuthHeaders } from "../utils/getAuthHeaders.js";
 
 
 async function carregarMonitorias() {
@@ -9,16 +10,14 @@ async function carregarMonitorias() {
         
         // pegar todas as monitorias do backend
         const response = await fetch("/monitorias/disponiveis" , { 
-            headers : {
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
-            }
-        }) 
+            headers: getAuthHeaders(),
+            credentials: "same-origin"
+        })
 
         // pegar inscricoes do aluno em alguma monitoria
-        const respInscricao = await fetch(`/inscricoes/aluno`, { 
-            headers: {
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
-            }
+        const respInscricao = await fetch(`/inscricoes/aluno`, {
+            headers: getAuthHeaders(),
+            credentials: "same-origin"
         })
 
         if (!response.ok){
@@ -137,8 +136,9 @@ async function carregarMonitorias() {
                         method : "POST",
                         headers : {
                             "Content-Type": "application/json",
-                            "Authorization": `Bearer ${localStorage.getItem("token")}`
+                            ...getAuthHeaders()
                         },
+                        credentials: "same-origin",
                         body : JSON.stringify({alunoId : alunoId, monitoriaId : m.id})
                     })
 
@@ -217,12 +217,14 @@ async function carregarMonitorias() {
                     method : "PUT", 
                     headers : {
                         "Content-Type": "application/json",
-                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                        ...getAuthHeaders()
                     },
+                    credentials: "same-origin",
                     body : JSON.stringify(dadosParaAtualizar)
                 })
                 if (response.ok){
-                    alert("Monitoria atualizada com sucesso!")
+                    const popupSucesso = document.getElementById("popupSucessoAtualizar");
+                    popupSucesso.classList.remove("hidden");
                     const modalOverlay = document.getElementById("modalOverlay");
                     modalOverlay.classList.remove("open");
                     formAtualizar.reset();
@@ -233,6 +235,20 @@ async function carregarMonitorias() {
             }
         })
         
+
+        //FECHAR POPUP DE SUCESSO
+        const btnFecharPopupSucesso = document.getElementById("btnFecharPopupSucesso");
+        const popupSucessoAtualizar = document.getElementById("popupSucessoAtualizar");
+        if (btnFecharPopupSucesso) {
+            btnFecharPopupSucesso.addEventListener("click", () => {
+                popupSucessoAtualizar.classList.add("hidden");
+            });
+        }
+        popupSucessoAtualizar.addEventListener("click", (e) => {
+            if (e.target === popupSucessoAtualizar) {
+                popupSucessoAtualizar.classList.add("hidden");
+            }
+        });
 
         //FECHAR A MODAL
         const modalOverlay = document.getElementById("modalOverlay");
@@ -265,9 +281,8 @@ async function carregarMonitorias() {
             try {
                 const responseCancelarInscricao = await fetch(`/inscricoes/${inscricaoId}` , { // fetch para a rota de deletar uma inscrição, pegando o id da inscrição e passando nos params da rota
                     method : "DELETE",
-                    headers : {
-                        "Authorization" : `Bearer ${localStorage.getItem("token")}`
-                    }
+                    headers: getAuthHeaders(),
+                    credentials: "same-origin"
                 });
 
                 if(!responseCancelarInscricao.ok){

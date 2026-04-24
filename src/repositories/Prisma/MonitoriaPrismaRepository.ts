@@ -2,7 +2,7 @@ import { prisma } from "../Prisma/client.js";
 import { Monitoria, Prisma } from "@prisma/client";
 
 class MonitoriaPrismaRepository {
-  async getAll(): Promise<Monitoria[]> {
+  async getAll(): Promise<any[]> {
     const dadosMonitoria = await prisma.monitoria.findMany({
       include: {
         disciplina: {
@@ -21,12 +21,17 @@ class MonitoriaPrismaRepository {
             nome: true,
           },
         },
+        _count: {
+          select: {
+            inscricoes: true,
+          },
+        },
       },
     });
     return dadosMonitoria;
   }
 
-  async getDisponiveis(): Promise<Monitoria[]> {
+  async getDisponiveis(): Promise<any[]> {
     const dadosMonitoria = await prisma.monitoria.findMany({
       where: {
         fim: {
@@ -48,6 +53,43 @@ class MonitoriaPrismaRepository {
         local: {
           select: {
             nome: true,
+          },
+        },
+        _count: {
+          select: {
+            inscricoes: true,
+          },
+        },
+      },
+    });
+    return dadosMonitoria;
+  }
+
+  async getByMonitor(monitorId: string): Promise<any[]> {
+    const dadosMonitoria = await prisma.monitoria.findMany({
+      where: {
+        monitorId: monitorId,
+      },
+      include: {
+        disciplina: {
+          select: {
+            descricao: true,
+            nome: true,
+          },
+        },
+        monitor: {
+          select: {
+            nome: true,
+          },
+        },
+        local: {
+          select: {
+            nome: true,
+          },
+        },
+        _count: {
+          select: {
+            inscricoes: true,
           },
         },
       },
