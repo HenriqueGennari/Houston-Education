@@ -19,6 +19,11 @@ class MonitoriaPrismaRepository {
         local: {
           select: {
             nome: true,
+            campus: {
+              select: {
+                nome: true,
+              },
+            },
           },
         },
         _count: {
@@ -53,6 +58,11 @@ class MonitoriaPrismaRepository {
         local: {
           select: {
             nome: true,
+            campus: {
+              select: {
+                nome: true,
+              },
+            },
           },
         },
         _count: {
@@ -85,6 +95,11 @@ class MonitoriaPrismaRepository {
         local: {
           select: {
             nome: true,
+            campus: {
+              select: {
+                nome: true,
+              },
+            },
           },
         },
         _count: {

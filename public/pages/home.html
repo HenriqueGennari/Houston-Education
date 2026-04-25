@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../style/stylePopUp.css">
     <link rel="stylesheet" href="../style/styleNavMenuLateral.css">
     <script type="module" src="../scripts/menuLateral/menuLateral.js"></script>
+    <script type="module" src="../scripts/menuLateral/ocultarAbasPorPerfil.js"></script>
 
     <!--Isso é para o picker quando atualizar as monitorias-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -85,6 +86,9 @@
     <section class="sectionmonitorias">.
         <div class="exibirmonitorias">
             <h2 id="titulomonitorias">Monitorias Disponíveis</h2>
+            <div class="tabs-campus" id="tabsCampus">
+                <button class="tab-btn active" data-campus="todas">Todas</button>
+            </div>
             <ul id="listamonitorias">
                 <li>Carregando monitorias...</li>
             </ul>

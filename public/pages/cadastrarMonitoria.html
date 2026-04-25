@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../style/estiloCadastrarMonitoria.css">
     <link rel="stylesheet" href="../style/styleNavMenuLateral.css">
     <script type="module" src="../scripts/menuLateral/menuLateral.js"></script>
+    <script type="module" src="../scripts/menuLateral/ocultarAbasPorPerfil.js"></script>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -24,7 +25,7 @@
         if (user.perfil !== "MONITOR" && user.perfil !== "ADMIN") {
             window.location.href = "naoAutorizado.html";
         }
-    </script> <!--evitar do cara clicar com o botão direito e abrir-->
+    </script>
 
     <nav>
         <div class="icone iconeMenu">
@@ -77,59 +78,84 @@
 
     <div id="overlay" class="overlay-menu"></div>
 
-    <h1>Cadastrar Monitoria</h1>
+    <main class="container-cadastro">
+        <header class="form-header">
+            <h1>Cadastrar Monitoria</h1>
+            <p>Preencha os dados abaixo para criar uma nova monitoria</p>
+        </header>
 
-    <form id="monitoriaForm">
-        <div class="campoForm">
-            <label>Nome da Monitoria</label>
-            <input type="text" name="nome_monitoria" placeholder="Ex: Monitoria de Cálculo I">
-        </div>
+        <form id="monitoriaForm" class="formulario-grid">
+            <section class="secao">
+                <h2 class="secao-titulo">Informacoes da Monitoria</h2>
+                <div class="campo full">
+                    <label for="nome_monitoria">Nome da Monitoria</label>
+                    <input type="text" id="nome_monitoria" name="nome_monitoria" placeholder="Ex: Monitoria de Calculo I">
+                </div>
+                <div class="campo full">
+                    <label for="descricao">Descricao da Monitoria</label>
+                    <textarea id="descricao" name="descricao" rows="3" placeholder="Adicione detalhes, topicos ou observacoes sobre a monitoria..."></textarea>
+                </div>
+            </section>
 
-        <div class="campoForm">
-            <label>Data da Monitoria</label>
-            <input type="text" class="datepicker" name="data" placeholder="Selecione a data...">
-        </div>
+            <section class="secao">
+                <h2 class="secao-titulo">Data e Horario</h2>
+                <div class="grid-3">
+                    <div class="campo">
+                        <label for="data">Data da Monitoria</label>
+                        <input type="text" id="data" class="datepicker" name="data" placeholder="Selecione a data...">
+                    </div>
+                    <div class="campo">
+                        <label for="hora_inicio">Hora de Inicio</label>
+                        <input type="text" id="hora_inicio" class="timepicker" name="hora_inicio" placeholder="Selecione o horario...">
+                    </div>
+                    <div class="campo">
+                        <label for="hora_fim">Hora de Fim</label>
+                        <input type="text" id="hora_fim" class="timepicker" name="hora_fim" placeholder="Selecione o horario...">
+                    </div>
+                </div>
+            </section>
 
-        <div class="campoForm">
-            <label>Hora de Início</label>
-            <input type="text" class="timepicker" name="hora_inicio" placeholder="Selecione o horário...">
-        </div>
+            <section class="secao">
+                <h2 class="secao-titulo">Local</h2>
+                <div class="grid-2">
+                    <div class="campo">
+                        <label for="campus">Campus</label>
+                        <select id="campus" name="campus">
+                            <option value="" disabled selected>Selecione o campus...</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label for="locais">Local da Monitoria</label>
+                        <select id="locais">
+                            <option value="" disabled selected>Selecione o local...</option>
+                        </select>
+                        <input type="hidden" name="localId" id="local-id">
+                    </div>
+                </div>
+            </section>
 
-        <div class="campoForm">
-            <label>Hora de Fim</label>
-            <input type="text" class="timepicker" name="hora_fim" placeholder="Selecione o horário...">
-        </div>
+            <section class="secao">
+                <h2 class="secao-titulo">Detalhes</h2>
+                <div class="grid-2">
+                    <div class="campo">
+                        <label for="disciplinas">Disciplina</label>
+                        <select id="disciplinas" name="disciplinaId">
+                            <option value="" disabled selected>Selecione...</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label for="monitores">Monitor(a)</label>
+                        <select id="monitores" name="monitorId">
+                            <option value="" disabled selected>Selecione...</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
 
-        <div class="campoForm">
-            <label>Local da Monitoria</label>
-            <input type="text" id="local-nome" list="locais-list" placeholder="Digite para buscar...">
-            <input type="hidden" name="localId" id="local-id">
-            <datalist id="locais-list"></datalist>
-        </div>
-
-        <div class="campoForm">
-            <label>Descrição da Monitoria</label>
-            <textarea name="descricao" rows="4"
-                placeholder="Adicione detalhes, tópicos ou observações sobre a monitoria..."></textarea>
-        </div>
-
-        <div class="campoForm">
-            <label>Selecione uma Disciplina</label>
-            <select name="disciplinaId" id="disciplinas">
-                <option value="" disabled selected>Selecione...</option>
-            </select>
-        </div>
-
-        <div class="campoForm">
-            <label>Selecione um(a) Monitor(a)</label>
-            <select name="monitorId" id="monitores">
-                <option value="" disabled selected>Selecione...</option>
-            </select>
-        </div>
-
-        <button type="submit" id="botaoCriarMonitoria">Cadastrar Monitoria</button>
-        <div id="mensagem"></div>
-    </form>
+            <button type="submit" id="botaoCriarMonitoria">Cadastrar Monitoria</button>
+            <div id="mensagem"></div>
+        </form>
+    </main>
 
     <div id="popupSucesso" class="popup-sucesso hidden">
         <div class="popup-sucesso-content">
@@ -141,8 +167,8 @@
     </div>
 
     <script src="../scripts/disciplinas/carregarDisciplinas.js" type="module"></script>
-    <script src="../scripts/locais/carregarLocaisCadastro.js" type="module"></script>
     <script src="../scripts/monitores/carregarMonitores.js" type="module"></script>
+    <script src="../scripts/campus/carregarCampus.js" type="module"></script>
     <script src="../scripts/monitorias/cadastrarMonitorias.js" type="module"></script>
     <script src="../scripts/utils/pickerData&Hora.js" type="module"></script>
 

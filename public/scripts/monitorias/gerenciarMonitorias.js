@@ -57,7 +57,8 @@ async function carregarMonitorias() {
                     ${new Date(m.inicio).toLocaleDateString()} -
                     ${new Date(m.inicio).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </div>
-                <div class="qtdinscricoes">${qtdInscricoes} inscrição${qtdInscricoes !== 1 ? 'es' : ''}</div>
+                <div class="qtdinscricoes" style="color: #1e3a8a;">${qtdInscricoes} inscrição${qtdInscricoes !== 1 ? 'es' : ''}</div>
+                <div class="descricaomonitoria">${m.descricao || 'Sem descrição'}</div>
             </div>
             `;
 
@@ -81,6 +82,8 @@ async function carregarMonitorias() {
                 popupMonitor.textContent = `Monitor: ${m.monitor.nome}`;
                 popupLocal.textContent = `Local: ${m.local?.nome || 'Não informado'}`;
                 popupDataHora.textContent = `Data/Hora: ${new Date(m.inicio).toLocaleDateString()} - ${new Date(m.inicio).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+                const popupDescricao = document.getElementById("popupDescricao");
+                if (popupDescricao) popupDescricao.textContent = `Descrição: ${m.descricao || 'Sem descrição'}`;
 
                 popupInfoMonitoria.classList.remove("hidden");
             });

@@ -3,8 +3,17 @@ import { Local, Prisma } from "@prisma/client";
 
 class LocalPrismaRepository {
   async getAll(): Promise<Local[]> {
-    const locais = await prisma.local.findMany();
+    const locais = await prisma.local.findMany({
+      include: { campus: { select: { nome: true } } }
+    });
     return locais;
+  }
+
+  async findByNomeAndCampus(nome: string, campusId: number): Promise<Local | null> {
+    const local = await prisma.local.findUnique({
+      where: { nome_campusId: { nome, campusId } }
+    });
+    return local;
   }
 
   async create(data: Prisma.LocalCreateInput): Promise<Local> {
