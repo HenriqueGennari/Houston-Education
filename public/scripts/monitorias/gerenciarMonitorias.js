@@ -57,7 +57,7 @@ async function carregarMonitorias() {
                     ${new Date(m.inicio).toLocaleDateString()} -
                     ${new Date(m.inicio).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </div>
-                <div class="qtdinscricoes" style="color: #1e3a8a;">${qtdInscricoes} inscrição${qtdInscricoes !== 1 ? 'es' : ''}</div>
+                <div class="qtdinscricoes" style="color: #1e3a8a;">${qtdInscricoes} ${qtdInscricoes === 1 ? 'Inscrição' : 'Inscrições'}</div>
                 <div class="descricaomonitoria">${m.descricao || 'Sem descrição'}</div>
             </div>
             `;
@@ -69,6 +69,7 @@ async function carregarMonitorias() {
             const popupMonitor = document.getElementById("popupMonitor");
             const popupLocal = document.getElementById("popupLocal");
             const popupDataHora = document.getElementById("popupDataHora");
+            const popupDescricao = document.getElementById("popupDescricao");
 
             popupInfoMonitoria.addEventListener("click", (e) => {
                 if (e.target === popupInfoMonitoria) popupInfoMonitoria.classList.add("hidden");
@@ -82,8 +83,7 @@ async function carregarMonitorias() {
                 popupMonitor.textContent = `Monitor: ${m.monitor.nome}`;
                 popupLocal.textContent = `Local: ${m.local?.nome || 'Não informado'}`;
                 popupDataHora.textContent = `Data/Hora: ${new Date(m.inicio).toLocaleDateString()} - ${new Date(m.inicio).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-                const popupDescricao = document.getElementById("popupDescricao");
-                if (popupDescricao) popupDescricao.textContent = `Descrição: ${m.descricao || 'Sem descrição'}`;
+                popupDescricao.textContent = `Descrição: ${m.descricao || 'Sem descrição'}`;
 
                 popupInfoMonitoria.classList.remove("hidden");
             });
@@ -107,6 +107,7 @@ async function carregarMonitorias() {
                     document.getElementById("id_monitoria_hidden").value = m.id;
 
                     formUpdate.querySelector('input[name="nome_monitoria"]').value = m.nome_monitoria;
+                    formUpdate.querySelector('input[name="descricao"]').value = m.descricao;
                     formUpdate.querySelector('input[name="data"]').value = new Date(m.inicio).toISOString().split("T")[0];
                     formUpdate.querySelector('input[name="hora_inicio"]').value = new Date(m.inicio).toTimeString().slice(0, 5);
                     formUpdate.querySelector('input[name="hora_fim"]').value = new Date(m.fim).toTimeString().slice(0, 5);

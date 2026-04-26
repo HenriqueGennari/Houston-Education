@@ -36,6 +36,9 @@
                 <img src="../assets/img/iconeHoustonEducation.ico" alt="logo Houston Education">
             </a>
         </div>
+        <div class="menu-usuario">
+            <a href="logout.html" class="btn-sair">Sair</a>
+        </div>
     </nav>
 
     <aside id="menuLateral" class="menuLateral">
@@ -65,11 +68,6 @@
                         <span>Dashboard Admin</span>
                     </a>
                 </li>
-                <li>
-                    <a href="/pages/logout.html">
-                        <span>Sair</span>
-                    </a>
-                </li>
             </ul>
         </div>
     </aside>
@@ -84,7 +82,7 @@
     <div class="dashboard-container">
         <div class="stats-grid">
             <div class="stat-card total">
-                <div class="stat-label">Total de Usuarios</div>
+                <div class="stat-label">Total de Usuários</div>
                 <div class="stat-value" id="statTotal">0</div>
             </div>
         </div>
@@ -103,15 +101,17 @@
             <table id="tabelaUsuarios">
                 <thead>
                     <tr>
-                        <th>Usuario</th>
+                        <th>Usuário</th>
                         <th>Email</th>
-                        <th>Matricula</th>
+                        <th>Matrícula</th>
                         <th>Perfil</th>
-                        <th>Acoes</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td colspan="5">Carregando usuarios...</td></tr>
+                    <tr>
+                        <td colspan="5">Carregando usuários...</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -136,7 +136,7 @@
             <form id="formEditarPerfil">
                 <input type="hidden" id="idUsuarioEditar" name="idUsuario">
                 <div class="campo-form-atualizar">
-                    <label>Usuario</label>
+                    <label>Usuário</label>
                     <input type="text" id="nomeUsuarioEditar" readonly>
                 </div>
                 <div class="campo-form-atualizar">
@@ -151,7 +151,7 @@
                         <option value="3">Aluno</option>
                     </select>
                 </div>
-                <button type="submit" id="btnSalvarPerfil">Salvar Alteracao</button>
+                <button type="submit" id="btnSalvarPerfil">Salvar Alteração</button>
             </form>
         </div>
     </div>

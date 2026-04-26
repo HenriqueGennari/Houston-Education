@@ -60,14 +60,15 @@ body {
 .campo {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 10px;
+    margin-bottom: 15px;
 }
 
 .campo.full {
     grid-column: 1 / -1;
 }
 
-.campo label {
+.campo label {  
     font-size: 0.85rem;
     font-weight: 600;
     color: #334155;
@@ -133,7 +134,7 @@ body {
     font-weight: 700;
     cursor: pointer;
     transition: transform 0.15s, box-shadow 0.15s;
-    align-self: flex-start;
+    align-self: center;
     box-shadow: 0 4px 12px rgba(2, 64, 89, 0.25);
 }
 

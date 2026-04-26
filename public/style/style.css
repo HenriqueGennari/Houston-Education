@@ -210,7 +210,7 @@ h2#titulomonitorias{
 }
 
 /* Dar destaque ao nome da disciplina e do monitor */
-#popupDisciplina, #popupMonitor {
+#popupDisciplina, #popupMonitor, #popupDescricao {
   font-weight: 600;
   color: #34495e;
 }
@@ -630,10 +630,12 @@ transform: scale(1.05);
 .acoes-botoes {
     display: flex;
     gap: 8px;
+    margin-top: 25px;
     flex-wrap: wrap;
 }
 
 .acoes-botoes button {
+    flex: 1;
     padding: 6px 12px;
     border: none;
     border-radius: 6px;
@@ -775,4 +777,8 @@ transform: scale(1.05);
         font-size: 0.9rem;
         white-space: nowrap;
     }
+}
+
+.pagina-home .btn-update {
+    display: none !important;
 }
