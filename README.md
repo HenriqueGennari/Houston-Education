@@ -64,6 +64,7 @@ O projeto foi construído com base em uma stack moderna e escalável, empregando
 4.  **Rode as migrações e o Seed (Dados Iniciais):**
     ```bash
     npx prisma migrate dev
+    npx prisma db seed
     ```
 5.  **Inicie o servidor:**
     ```bash
