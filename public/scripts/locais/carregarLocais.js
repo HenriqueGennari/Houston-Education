@@ -16,7 +16,7 @@ async function carregarLocais(){
         locaisRetornados.forEach((local) =>{
             const option = document.createElement("option")
             option.value = local.id
-            option.textContent = local.nome
+            option.textContent = `${local.nome} (${local.campus?.nome || ""})`
             select.appendChild(option)
         })
     } catch (error) {

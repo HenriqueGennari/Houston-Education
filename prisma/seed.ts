@@ -74,16 +74,33 @@ async function main() {
   }
   console.log("Seed concluído: 2 disciplinas inseridas/atualizadas.");
 
-  // 4. Locais
+  // 4. Campus
+  const campusList = [
+    { id: 1, nome: "Asa norte", descricao: "Campus localizado na Asa Norte" },
+    { id: 2, nome: "Taguatinga", descricao: "Campus localizado em Taguatinga" },
+  ];
+
+  for (const campus of campusList) {
+    await prisma.campus.upsert({
+      where: { id: campus.id },
+      update: {},
+      create: campus,
+    });
+  }
+
+  await prisma.$executeRaw`SELECT setval('campus_id_seq', 2)`;
+  console.log("Seed concluído: 2 campus inseridos/atualizados.");
+
+  // 5. Locais
   const locais = [
-    { id: 1, nome: "Sala 170" },
-    { id: 2, nome: "Sala 160" },
+    { id: 1, nome: "Sala 170", campusId: 1 },
+    { id: 2, nome: "Sala 160", campusId: 2 },
   ];
 
   for (const local of locais) {
     await prisma.local.upsert({
       where: { id: local.id },
-      update: {},
+      update: { campusId: local.campusId },
       create: local,
     });
   }
@@ -91,7 +108,7 @@ async function main() {
   await prisma.$executeRaw`SELECT setval('local_id_seq', 2)`;
   console.log("Seed concluído: 2 locais inseridos/atualizados.");
 
-  // 5. Monitorias
+  // 6. Monitorias
   const monitor = await prisma.aluno.findUnique({ where: { email: "paulo@email.com" } });
   const bd = await prisma.disciplina.findFirst({ where: { nome: "Banco de dados" } });
   const logica = await prisma.disciplina.findFirst({ where: { nome: "Lógica de programação" } });

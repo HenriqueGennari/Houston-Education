@@ -2,41 +2,80 @@ import { getAlunoId } from "../utils/getAlunoId.js";
 import { getPerfil } from "../utils/getPerfil.js";
 import { getAuthHeaders } from "../utils/getAuthHeaders.js";
 
+let todasMonitorias = [];
+let campusList = [];
 
-async function carregarMonitorias() {
-    const lista = document.getElementById("listamonitorias")
-
+async function carregarCampusTabs() {
     try {
-        
-        // pegar todas as monitorias do backend
-        const response = await fetch("/monitorias/disponiveis" , { 
+        const response = await fetch("/campus", {
             headers: getAuthHeaders(),
             credentials: "same-origin"
-        })
+        });
+        campusList = await response.json();
 
-        // pegar inscricoes do aluno em alguma monitoria
+        const tabsContainer = document.getElementById("tabsCampus");
+        campusList.forEach(campus => {
+            const btn = document.createElement("button");
+            btn.classList.add("tab-btn");
+            btn.dataset.campus = campus.nome;
+            btn.textContent = campus.nome;
+            tabsContainer.appendChild(btn);
+        });
+
+        tabsContainer.addEventListener("click", (e) => {
+            if (e.target.classList.contains("tab-btn")) {
+                tabsContainer.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+                e.target.classList.add("active");
+                filtrarPorCampus(e.target.dataset.campus);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+function filtrarPorCampus(campusNome) {
+    const cards = document.querySelectorAll(".cardmonitoria");
+    cards.forEach(card => {
+        const cardCampus = card.dataset.campus;
+        const deveMostrar = campusNome === "todas" || cardCampus === campusNome;
+        if (deveMostrar) {
+            card.classList.remove("tab-hidden");
+        } else {
+            card.classList.add("tab-hidden");
+        }
+    });
+}
+
+async function carregarMonitorias() {
+    const lista = document.getElementById("listamonitorias");
+
+    try {
+        const response = await fetch("/monitorias/disponiveis", {
+            headers: getAuthHeaders(),
+            credentials: "same-origin"
+        });
+
         const respInscricao = await fetch(`/inscricoes/aluno`, {
             headers: getAuthHeaders(),
             credentials: "same-origin"
-        })
+        });
 
-        if (!response.ok){
-            throw new Error ("ERRO_AO_CARREGAR");
+        if (!response.ok) {
+            throw new Error("ERRO_AO_CARREGAR");
         }
 
-        // pegando o objeto json que retornar para manipular informações, como dados da monitoria ( local, data, disciplina) e dados da inscricao (principalmente o id da inscricao para depois podermos excluir )
         const monitorias = await response.json();
+        todasMonitorias = monitorias;
 
         const inscricoes = await respInscricao.json();
 
-        if (monitorias.length === 0){
-            lista.innerHTML = "Nenhuma monitoria encontrada!"
+        if (monitorias.length === 0) {
+            lista.innerHTML = "Nenhuma monitoria encontrada!";
             return;
         }
 
-        lista.innerHTML = ""; 
-
-        // 🔹 Cria o popup global - popup relacionado a inscrição 
+        lista.innerHTML = "";
 
         const popup = document.createElement("div");
         popup.classList.add("popup", "hidden");
@@ -50,15 +89,13 @@ async function carregarMonitorias() {
         `;
         document.body.appendChild(popup);
 
-        // 🔹 Seleciona botões do popup
         const btnCancelarInscricaoPopup = popup.querySelector(".btn-cancelar");
         const btnFecharPopup = popup.querySelector(".btn-fechar");
 
-        // 🔹 Renderizar as monitorias
         monitorias.forEach((m) => {
-           
             const li = document.createElement("li");
             li.classList.add("cardmonitoria");
+            li.dataset.campus = m.local?.campus?.nome || "";
 
             li.innerHTML = `
             <div class="informacoesmonitoria">
@@ -66,12 +103,11 @@ async function carregarMonitorias() {
                 <div class="disciplinamonitoria">${m.disciplina.nome}</div>
                 <div class="datamonitoria">
                         ${new Date(m.inicio).toLocaleDateString()} -
-                        ${new Date(m.inicio).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}
+                        ${new Date(m.inicio).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </div>
+                <div class="campusmonitoria">${m.local?.campus?.nome || ''}</div>
             </div>
             `;
-
-            // lógica para o popup ao clicar nas monitorias e mostrar informações 
 
             const popupInfoMonitoria = document.getElementById("popupInfoMonitoria");
             const popupTitulo = document.getElementById("popupTitulo");
@@ -80,40 +116,33 @@ async function carregarMonitorias() {
             const popupLocal = document.getElementById("popupLocal");
             const popupDataHora = document.getElementById("popupDataHora");
 
-
             popupInfoMonitoria.addEventListener("click", (e) => {
-            if (e.target === popupInfoMonitoria) popupInfoMonitoria.classList.add("hidden"); // fecha clicando fora do conteúdo
+                if (e.target === popupInfoMonitoria) popupInfoMonitoria.classList.add("hidden");
             });
-
 
             li.addEventListener("click", (e) => {
                 if (e.target.tagName.toLowerCase() === "button") return;
-                
+
                 popupTitulo.textContent = m.nome_monitoria;
                 popupDisciplina.textContent = `Disciplina: ${m.disciplina.nome}`;
                 popupMonitor.textContent = `Monitor: ${m.monitor.nome}`;
-                popupLocal.textContent = `Local: ${m.local?.nome || 'Não informado'}`;
-                popupDataHora.textContent = `Data/Hora: ${new Date(m.inicio).toLocaleDateString()} - ${new Date(m.inicio).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}`;
-
+                popupLocal.textContent = `Local: ${m.local?.nome || 'Não informado'} (${m.local?.campus?.nome || ''})`;
+                popupDataHora.textContent = `Data/Hora: ${new Date(m.inicio).toLocaleDateString()} - ${new Date(m.inicio).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
                 popupInfoMonitoria.classList.remove("hidden");
             });
 
-
-
-            // 🔹 Botão de inscrição
             const divBotao = document.createElement("div");
-            divBotao.classList.add("divbotao")
+            divBotao.classList.add("divbotao");
             const botaoInscrever = document.createElement("button");
             botaoInscrever.dataset.id = m.id;
 
-            const jaInscrito = inscricoes.find((i) => i.monitoriaId === m.id)
-
+            const jaInscrito = inscricoes.find((i) => i.monitoriaId === m.id);
 
             if (jaInscrito) {
                 botaoInscrever.textContent = "Inscrito";
                 botaoInscrever.classList.add("btn-inscrito");
-                botaoInscrever.dataset.inscricaoId = jaInscrito.id // salvando o id da inscrição no button `
+                botaoInscrever.dataset.inscricaoId = jaInscrito.id;
             } else {
                 botaoInscrever.textContent = "Inscreva-se";
                 botaoInscrever.classList.add("btn-inscrever");
@@ -122,28 +151,27 @@ async function carregarMonitorias() {
             divBotao.appendChild(botaoInscrever);
             li.appendChild(divBotao);
 
-            // 🔹 Evento do botão de se inscrever
-            botaoInscrever.addEventListener("click", async () => { // lógica da inscrição
-                const alunoId = getAlunoId()
-                
-                if (botaoInscrever.classList.contains("btn-inscrito")){
-                    popup.classList.remove("hidden")
+            botaoInscrever.addEventListener("click", async () => {
+                const alunoId = getAlunoId();
+
+                if (botaoInscrever.classList.contains("btn-inscrito")) {
+                    popup.classList.remove("hidden");
                     popup.dataset.targetButtonId = m.id;
                     return;
                 }
                 try {
                     const responseFazerInscricao = await fetch(`/inscricoes`, {
-                        method : "POST",
-                        headers : {
+                        method: "POST",
+                        headers: {
                             "Content-Type": "application/json",
                             ...getAuthHeaders()
                         },
                         credentials: "same-origin",
-                        body : JSON.stringify({alunoId : alunoId, monitoriaId : m.id})
-                    })
+                        body: JSON.stringify({ alunoId: alunoId, monitoriaId: m.id })
+                    });
 
-                    if (!responseFazerInscricao.ok){
-                        throw new Error ("ERRO_AO_FAZER_INSCRICAO")
+                    if (!responseFazerInscricao.ok) {
+                        throw new Error("ERRO_AO_FAZER_INSCRICAO");
                     }
 
                     const dadosDaInscricao = await responseFazerInscricao.json();
@@ -151,78 +179,67 @@ async function carregarMonitorias() {
                     botaoInscrever.textContent = "Inscrito";
                     botaoInscrever.classList.remove("btn-inscrever");
                     botaoInscrever.classList.add("btn-inscrito");
-                    botaoInscrever.dataset.inscricaoId = dadosDaInscricao.id; // aqui a gente pega o id da inscricao para poder mandar nos params do delete depois 
+                    botaoInscrever.dataset.inscricaoId = dadosDaInscricao.id;
                 } catch (err) {
-                    lista.innerHTML = `<li>Erro ao carregar inscricao: ${err.message}</li>`;
+                    lista.innerHTML = `<li>Erro ao carregar inscrição: ${err.message}</li>`;
                 }
             });
 
-            // LÓGICA PARA ATUALIZAR UMA MONITORIA -----------
-
-            // CRIANDO A MODAL E COLOCANDO OS VALORES NOS INPUTS
             const idDoUsuario = getAlunoId();
             const perfilDoUsuario = getPerfil();
 
-            if(m.monitorId == idDoUsuario || perfilDoUsuario == "ADMIN"){
-
-                console.log("entrou!")
-                const botaoUpdate = document.createElement("button")
-                botaoUpdate.textContent = "Atualizar Monitoria"
-                botaoUpdate.classList.add("btn-update")
+            if (m.monitorId == idDoUsuario || perfilDoUsuario == "ADMIN") {
+                const botaoUpdate = document.createElement("button");
+                botaoUpdate.textContent = "Atualizar Monitoria";
+                botaoUpdate.classList.add("btn-update");
 
                 botaoUpdate.addEventListener("click", (e) => {
                     e.stopPropagation();
 
-                    const formUpdate = document.getElementById("formAtualizarMonitoria")
+                    const formUpdate = document.getElementById("formAtualizarMonitoria");
                     const modalOverlay = document.getElementById("modalOverlay");
 
-                    document.getElementById("id_monitoria_hidden").value = m.id; // pegando o id da monitoria e salvando para o fetch 
+                    document.getElementById("id_monitoria_hidden").value = m.id;
 
                     formUpdate.querySelector('input[name="nome_monitoria"]').value = m.nome_monitoria;
+                    formUpdate.querySelector('input[name="descricao"]').value = m.descricao;
                     formUpdate.querySelector('input[name="data"]').value = new Date(m.inicio).toISOString().split("T")[0];
-                    formUpdate.querySelector('input[name="hora_inicio"]').value = new Date(m.inicio).toTimeString().slice(0,5);
-                    formUpdate.querySelector('input[name="hora_fim"]').value = new Date(m.fim).toTimeString().slice(0,5);
+                    formUpdate.querySelector('input[name="hora_inicio"]').value = new Date(m.inicio).toTimeString().slice(0, 5);
+                    formUpdate.querySelector('input[name="hora_fim"]').value = new Date(m.fim).toTimeString().slice(0, 5);
                     formUpdate.querySelector('select[name="localId"]').value = m.localId;
                     formUpdate.querySelector('select[name="disciplinaId"]').value = m.disciplinaId;
 
                     modalOverlay.classList.add("open");
-
                 });
 
-                divBotao.appendChild(botaoUpdate)
+                divBotao.appendChild(botaoUpdate);
             }
 
             lista.appendChild(li);
         });
 
-
-       
-
-        //ATUALIZANDO A MONITORIA THE FATO
-        const formAtualizar = document.getElementById("formAtualizarMonitoria")
-        formAtualizar.addEventListener("submit", async(e) =>{
+        const formAtualizar = document.getElementById("formAtualizarMonitoria");
+        formAtualizar.addEventListener("submit", async (e) => {
             e.preventDefault();
 
             const idMonitoria = document.getElementById("id_monitoria_hidden").value;
-            console.log(idMonitoria)
 
-            const formData = new FormData(formAtualizar)
-            const dadosParaAtualizar = Object.fromEntries(formData)
-
+            const formData = new FormData(formAtualizar);
+            const dadosParaAtualizar = Object.fromEntries(formData);
 
             delete dadosParaAtualizar.id_monitoria;
 
             try {
                 const response = await fetch(`/monitorias/${idMonitoria}`, {
-                    method : "PUT", 
-                    headers : {
+                    method: "PUT",
+                    headers: {
                         "Content-Type": "application/json",
                         ...getAuthHeaders()
                     },
                     credentials: "same-origin",
-                    body : JSON.stringify(dadosParaAtualizar)
-                })
-                if (response.ok){
+                    body: JSON.stringify(dadosParaAtualizar)
+                });
+                if (response.ok) {
                     const popupSucesso = document.getElementById("popupSucessoAtualizar");
                     popupSucesso.classList.remove("hidden");
                     const modalOverlay = document.getElementById("modalOverlay");
@@ -231,12 +248,10 @@ async function carregarMonitorias() {
                     carregarMonitorias();
                 }
             } catch (error) {
-                console.log(error)
+                console.log(error);
             }
-        })
-        
+        });
 
-        //FECHAR POPUP DE SUCESSO
         const btnFecharPopupSucesso = document.getElementById("btnFecharPopupSucesso");
         const popupSucessoAtualizar = document.getElementById("popupSucessoAtualizar");
         if (btnFecharPopupSucesso) {
@@ -250,43 +265,35 @@ async function carregarMonitorias() {
             }
         });
 
-        //FECHAR A MODAL
         const modalOverlay = document.getElementById("modalOverlay");
         const btnFecharModal = document.querySelector(".close-btn");
 
-        const fecharModal = () =>{
+        const fecharModal = () => {
             modalOverlay.classList.remove("open");
         };
-
 
         if (btnFecharModal) {
             btnFecharModal.addEventListener("click", fecharModal);
         }
 
-
-
-
-
-        // 🔹 Eventos globais do popup
         btnFecharPopup.addEventListener("click", () => {
             popup.classList.add("hidden");
         });
 
-        //Cancelar uma inscricao
         btnCancelarInscricaoPopup.addEventListener("click", async () => {
             const monitoriaAtiva = popup.dataset.targetButtonId;
             const botao = document.querySelector(`button[data-id="${monitoriaAtiva}"]`);
             const inscricaoId = botao.dataset.inscricaoId;
 
             try {
-                const responseCancelarInscricao = await fetch(`/inscricoes/${inscricaoId}` , { // fetch para a rota de deletar uma inscrição, pegando o id da inscrição e passando nos params da rota
-                    method : "DELETE",
+                const responseCancelarInscricao = await fetch(`/inscricoes/${inscricaoId}`, {
+                    method: "DELETE",
                     headers: getAuthHeaders(),
                     credentials: "same-origin"
                 });
 
-                if(!responseCancelarInscricao.ok){
-                    throw new Error ("ERRO_AO_CANCELAR")
+                if (!responseCancelarInscricao.ok) {
+                    throw new Error("ERRO_AO_CANCELAR");
                 }
 
                 botao.textContent = "Inscreva-se";
@@ -297,14 +304,9 @@ async function carregarMonitorias() {
 
             } catch (err) {
                 alert("Erro ao cancelar inscrição. Tente novamente.");
-
             }
         });
 
-
-
-
-        // Lógica para filtrar as monitorias
         const buscarMonitoria = document.getElementById("buscaMonitoria");
         const filtrar = () => {
             const termo = buscarMonitoria.value.toLowerCase();
@@ -319,6 +321,7 @@ async function carregarMonitorias() {
     } catch (err) {
         lista.innerHTML = `<li>Erro ao carregar monitorias: ${err.message}</li>`;
     }
-}   
+}
 
+carregarCampusTabs();
 carregarMonitorias();

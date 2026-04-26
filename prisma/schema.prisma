@@ -46,13 +46,26 @@ model Disciplina {
   @@map("disciplina")
 }
 
-model Local {
+model Campus {
   id        Int     @id @default(autoincrement())
   nome      String
   descricao String?
 
+  locais Local[]
+
+  @@map("campus")
+}
+
+model Local {
+  id        Int     @id @default(autoincrement())
+  nome      String
+  descricao String?
+  campusId  Int
+  campus    Campus  @relation(fields: [campusId], references: [id])
+
   monitorias Monitoria[]
 
+  @@unique([nome, campusId])
   @@map("local")
 }
 

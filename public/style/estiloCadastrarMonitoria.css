@@ -1,185 +1,152 @@
 body {
-    /* 1. A MÁGICA PRA DESENCAVALAR DA NAV: */
-    /* Como a nav tem 70px de altura, a gente empurra o conteúdo 90px pra baixo */
-    padding-top: 75px; 
+    padding-top: 75px;
     margin: 0;
-    
-    /* 2. PRA DEIXAR TUDO NO MEIO: */
-    display: flex;
-    flex-direction: column; /* Coloca o título em cima e o form embaixo */
-    align-items: center; /* Centraliza tudo horizontalmente */
-    
-    background-color: #f7f7f7; /* Cor de fundo clarinha */
-    font-family: 'Inter', sans-serif;
+    background-color: #f0f4f8;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #1e293b;
 }
 
-/* Estilo do Título H1 */
-h1 {
-    color: #024059;
-    margin-bottom: 20px;
+.container-cadastro {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.form-header {
     text-align: center;
+    margin-bottom: 30px;
 }
 
-/* Estilo do Formulário*/
-#monitoriaForm {
-    width: 100%;
-    max-width: 500px;
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.05); /* Uma sombrinha bem leve em volta */
-
-    margin-bottom: 20px;
-}
-
-/*Estrutura de cada campo */
-.campoForm {
-    margin-bottom: 25px; /* Aumenta esse número pra dar mais espaço entre um campo e outro */
-    display: flex;
-    flex-direction: column; /* Garante que a label fica perfeitamente em cima do input */
-    text-align: left;
-}
-
-/*Estilo da Label*/
-.campoForm label {
-    margin-bottom: 6px;
-    font-size: 0.9rem;
-    font-weight: 600;
+.form-header h1 {
     color: #024059;
+    font-size: 1.8rem;
+    margin: 0 0 8px 0;
 }
 
-.campoForm select {
-    /* 1. Mata o estilo e a setinha padrão do navegador (adeus quadradinho!) */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
+.form-header p {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin: 0;
+}
 
-    /* 2. Cria uma setinha nova e limpa usando SVG no background */
+.formulario-grid {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.secao {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    background: #fafbfc;
+}
+
+.secao-titulo {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #024059;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 18px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #024059;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.campo.full {
+    grid-column: 1 / -1;
+}
+
+.campo label {  
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #334155;
+}
+
+.campo input[type="text"],
+.campo select,
+.campo textarea {
+    padding: 12px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: #1e293b;
+    background: #ffffff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+    outline: none;
+    border-color: #024059;
+    box-shadow: 0 0 0 3px rgba(2, 64, 89, 0.1);
+}
+
+.campo select {
+    cursor: pointer;
+    appearance: none;
     background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23024059' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 15px center; /* Alinha na direita, centralizado na vertical */
-    background-size: 16px; /* Tamanho da nossa nova seta */
-    
-    /* 3. Garante que o texto selecionado não vai atropelar a setinha */
-    padding-right: 40px; 
-    
-    /* Mantenha o resto do seu estilo (bordas, cores, padding, etc) que já tava aqui */
-    cursor: pointer;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 38px;
 }
 
-.campoForm textarea {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    background-color: #f0f0f0; 
-    border-radius: 8px;
-    font-size: 1rem; 
-    font-family: inherit; 
-    color: #333;
-    box-sizing: border-box;
-    resize: vertical; /* Permite que o usuário estique a caixa apenas para baixo, não pros lados */
+.campo textarea {
+    resize: vertical;
+    min-height: 80px;
 }
 
-.campoForm textarea:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #024059;
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
 }
 
-/* Estilo unificado para TODOS os inputs e selects */
-#monitoriaForm input[type='text'],
-#monitoriaForm input[type='date'],
-#monitoriaForm input[type='time'],
-#monitoriaForm select {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    background-color: #f0f0f0; 
-    border-radius: 8px;
-    font-size: 1rem;
-    font-family: inherit;
-    color: #333;
-    box-sizing: border-box; 
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
 }
 
-/* Estilo de foco (borda azul) */
-#monitoriaForm input:focus,
-#monitoriaForm select:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #024059;
-}
-
-/* Estilo do botão*/
 #botaoCriarMonitoria {
-    background-color: #024059;
+    background: linear-gradient(135deg, #024059 0%, #035a7d 100%);
     color: white;
     border: none;
-    width: 100%;
-    padding: 15px;
-    margin-top: 10px;
-    border-radius: 8px;
-    font-size: 1.1rem;
+    padding: 14px 28px;
+    border-radius: 10px;
+    font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
-    transition: background-color 0.2s;
-    margin-top: 10px;
+    transition: transform 0.15s, box-shadow 0.15s;
+    align-self: center;
+    box-shadow: 0 4px 12px rgba(2, 64, 89, 0.25);
 }
 
 #botaoCriarMonitoria:hover {
-    background-color: #035a7d;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(2, 64, 89, 0.35);
 }
 
 #mensagem {
-    margin-top: 15px;
-    text-align: center;
+    margin-top: 10px;
     font-weight: 600;
-}
-
-/* =========================================
-   RESPONSIVIDADE (CELULARES E TABLETS)
-   ========================================= */
-
-@media (max-width: 768px) {
-    body {
-        /* Ajusta o espaçamento do corpo para telas menores */
-        padding-top: 80px; /* Mantém espaço pra nav */
-        padding-left: 15px;
-        padding-right: 15px;
-    }
-
-    h1 {
-        font-size: 1.6rem; /* Diminui o título principal */
-        margin-bottom: 15px;
-    }
-
-    #monitoriaForm {
-        /* Reduz o respiro interno do cartão branco para aproveitar mais a tela do celular */
-        padding: 20px 15px; 
-        margin-bottom: 30px;
-        box-sizing: border-box; /* Garante que o padding não estoure a largura da tela */
-    }
-
-    .campoForm {
-        margin-bottom: 20px; /* Aproxima um pouco mais os campos */
-    }
-
-    .campoForm label {
-        font-size: 0.9rem; /* Dá uma leve diminuída nas labels */
-    }
-
-    .campoForm input, 
-    .campoForm select, 
-    .campoForm textarea {
-        padding: 10px; /* Ajusta a área de toque dos campos */
-        font-size: 0.95rem;
-    }
-
-    /* Se você escolheu a Opção B (Botão esticado) da última vez, ele já vai se adaptar bem. 
-       Mas se escolheu a Opção A, isso aqui garante que ele fique num tamanho bom pro dedo: */
-    #botaoCriarMonitoria {
-        width: 100%;
-        padding: 15px;
-        font-size: 1rem;
-    }
+    font-size: 0.9rem;
 }
 
 /* Popup de Sucesso */
@@ -204,13 +171,14 @@ h1 {
 }
 
 .popup-sucesso-content {
+    position: relative;
     background: #ffffff;
     padding: 40px 50px;
-    border-radius: 12px;
+    border-radius: 16px;
     text-align: center;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-    border-top: 6px solid #22c55e;
-    max-width: 400px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    border-top: 5px solid #22c55e;
+    max-width: 380px;
     width: 90%;
 }
 
@@ -218,17 +186,17 @@ h1 {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 60px;
-    height: 60px;
+    width: 56px;
+    height: 56px;
     background: #22c55e;
     color: white;
-    font-size: 2rem;
+    font-size: 1.8rem;
     border-radius: 50%;
-    margin-bottom: 15px;
+    margin-bottom: 16px;
 }
 
 .popup-sucesso-content p {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 600;
     color: #166534;
     margin: 0 0 20px 0;
@@ -238,7 +206,7 @@ h1 {
     display: inline-block;
     background: #024059;
     color: white;
-    padding: 12px 24px;
+    padding: 10px 24px;
     border-radius: 8px;
     text-decoration: none;
     font-weight: 600;
@@ -251,20 +219,46 @@ h1 {
 
 .popup-sucesso-fechar {
     position: absolute;
-    top: 15px;
-    right: 20px;
+    top: 12px;
+    right: 16px;
     background: none;
     border: none;
-    font-size: 1.5rem;
-    color: #666;
+    font-size: 1.4rem;
+    color: #94a3b8;
     cursor: pointer;
     line-height: 1;
 }
 
 .popup-sucesso-fechar:hover {
-    color: #333;
+    color: #475569;
 }
 
-.popup-sucesso-content {
-    position: relative;
+/* Responsividade */
+@media (max-width: 768px) {
+    .container-cadastro {
+        padding: 12px;
+    }
+
+    .formulario-grid {
+        padding: 20px;
+        gap: 20px;
+    }
+
+    .secao {
+        padding: 16px;
+    }
+
+    .grid-2,
+    .grid-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .form-header h1 {
+        font-size: 1.5rem;
+    }
+
+    #botaoCriarMonitoria {
+        width: 100%;
+        align-self: stretch;
+    }
 }

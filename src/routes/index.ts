@@ -7,6 +7,7 @@ import homeRoutes from "./Paginas/homeRoutes.js";
 import monitoriaRoutes from "./Monitoria/monitoriaRoutes.js"
 import disciplinaRoutes from "./Disciplina/disciplinaRoutes.js"
 import localRoutes from "./Local/localRoutes.js"
+import campusRoutes from "./Campus/campusRoutes.js"
 import inscriacaoRoutes from "./Inscricao/inscricaoRoutes.js"
 import { autenticadoCookie } from "../middlewares/autenticadoMiddleware.js";
 const router = Router();
@@ -37,6 +38,7 @@ router.get("/gerenciar-monitorias", autenticadoCookie, (req: any, res: Response,
 router.use("/alunos", alunoRoutes);
 router.use("/disciplinas" , disciplinaRoutes )
 router.use("/locais" , localRoutes )
+router.use("/campus" , campusRoutes )
 router.use("/monitorias" , monitoriaRoutes )
 router.use("/inscricoes" , inscriacaoRoutes)
 

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../style/stylePopUp.css">
     <link rel="stylesheet" href="../style/styleNavMenuLateral.css">
     <script type="module" src="../scripts/menuLateral/menuLateral.js"></script>
+    <script type="module" src="../scripts/menuLateral/ocultarAbasPorPerfil.js"></script>
 
     <!--Isso é para o picker quando atualizar as monitorias-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -24,7 +25,7 @@
         const user = parseJwt(localStorage.getItem('token'));
 
         if (user.perfil !== "MONITOR" && user.perfil !== "ADMIN") {
-            window.location.href = "naoAutorizado.html";
+            window.location.href = "/pages/naoAutorizado.html";
         }
     </script> <!--evitar do cara clicar com o botão direito e abrir-->
 
@@ -38,6 +39,9 @@
             <a href="/pages/home.html">
                 <img src="../assets/img/iconeHoustonEducation.ico" alt="logo Houston Education">
             </a>
+        </div>
+        <div class="menu-usuario">
+            <a href="/pages/logout.html" class="btn-sair">Sair</a>
         </div>
     </nav>
 
@@ -66,11 +70,6 @@
                     <a href="/dashboard-admin" id="linkDashboardAdmin.html">
                         <img src="../assets/img/iconeDashboardAdmin.png" alt="Icone Dashboard Admin">
                         <span>Dashboard Admin</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/pages/logout.html">
-                        <span>Sair</span>
                     </a>
                 </li>
             </ul>
@@ -108,6 +107,7 @@
             <p id="popupMonitor"></p>
             <p id="popupLocal"></p>
             <p id="popupDataHora"></p>
+            <p id="popupDescricao"></p>
         </div>
     </div>
 
@@ -137,6 +137,10 @@
                 <div class="campo-form-atualizar">
                     <label>Nome</label>
                     <input type="text" name="nome_monitoria">
+                </div>
+                <div class="campo-form-atualizar">
+                    <label>Descrição</label>
+                    <input name="descricao" placeholder="Adicione detalhes, tópicos ou observações..."></input>
                 </div>
 
                 <div class="campo-form-atualizar">

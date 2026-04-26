@@ -3,11 +3,20 @@ import { Local, Prisma } from "@prisma/client";
 
 class LocalPrismaRepository {
   async getAll(): Promise<Local[]> {
-    const locais = await prisma.local.findMany();
+    const locais = await prisma.local.findMany({
+      include: { campus: { select: { nome: true } } }
+    });
     return locais;
   }
 
-  async create(data: Prisma.LocalCreateInput): Promise<Local> {
+  async findByNomeAndCampus(nome: string, campusId: number): Promise<Local | null> {
+    const local = await prisma.local.findUnique({
+      where: { nome_campusId: { nome, campusId } }
+    });
+    return local;
+  }
+
+  async create(data: Prisma.LocalUncheckedCreateInput): Promise<Local> {
     const novoLocal = await prisma.local.create({ data });
     return novoLocal;
   }
@@ -17,7 +26,7 @@ class LocalPrismaRepository {
     return local;
   }
 
-  async update(id: number, data: Prisma.LocalUpdateInput): Promise<Local | null> {
+  async update(id: number, data: Prisma.LocalUncheckedUpdateInput): Promise<Local | null> {
     const localAtualizado = await prisma.local.update({ where: { id }, data });
     return localAtualizado;
   }
