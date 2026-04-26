@@ -16,7 +16,7 @@ class LocalPrismaRepository {
     return local;
   }
 
-  async create(data: Prisma.LocalCreateInput): Promise<Local> {
+  async create(data: Prisma.LocalUncheckedCreateInput): Promise<Local> {
     const novoLocal = await prisma.local.create({ data });
     return novoLocal;
   }
@@ -26,7 +26,7 @@ class LocalPrismaRepository {
     return local;
   }
 
-  async update(id: number, data: Prisma.LocalUpdateInput): Promise<Local | null> {
+  async update(id: number, data: Prisma.LocalUncheckedUpdateInput): Promise<Local | null> {
     const localAtualizado = await prisma.local.update({ where: { id }, data });
     return localAtualizado;
   }

@@ -9,7 +9,7 @@ class LocalService {
     return locais;
   }
 
-  async create(dados: Prisma.LocalCreateInput): Promise<Local> {
+  async create(dados: Prisma.LocalUncheckedCreateInput): Promise<Local> {
     const campusId = typeof dados.campusId === "string" ? parseInt(dados.campusId, 10) : dados.campusId;
     if (!campusId || isNaN(campusId)) {
       throw new Error("CAMPUS_INVALIDO");
@@ -32,7 +32,7 @@ class LocalService {
     return local;
   }
 
-  async update(id: number, dados: Prisma.LocalUpdateInput): Promise<Local> {
+  async update(id: number, dados: Prisma.LocalUncheckedUpdateInput): Promise<Local> {
     await this.getById(id);
 
     if (dados.nome && dados.campusId) {
