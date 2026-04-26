@@ -23,7 +23,6 @@ O projeto utiliza uma arquitetura moderna e robusta, garantindo performance e se
 
 * **Backend:** [Node.js](https://nodejs.org/) com [TypeScript](https://www.typescriptlang.org/) (Tipagem forte para evitar erros em tempo de execução).
 * **Banco de Dados:** [PostgreSQL](https://www.postgresql.org/) gerenciado pelo [Prisma ORM](https://www.prisma.io/).
-* **Segurança:** Autenticação via **JWT** (JSON Web Token) e criptografia de passwords com **Bcrypt**.
 * **Frontend:** HTML5, CSS3 e JavaScript (Design focado na experiência do usuário - UX).
 * **Arquitetura:** Padrão **MVC** (Model-View-Controller) para uma organização de código limpa e modular.
 ## 🚀 Tecnologias Utilizadas
@@ -70,9 +69,6 @@ O projeto foi construído com base em uma stack moderna e escalável, empregando
     ```bash
     npm run dev
     ```
-6.  **Acesse o Frontend:**
-    Abra o arquivo `pages/login.html` utilizando a extensão **Live Server** do VS Code.
-
 ---
 
 ## 👨‍💻 Devs
