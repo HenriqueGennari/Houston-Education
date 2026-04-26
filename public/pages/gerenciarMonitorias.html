@@ -25,7 +25,7 @@
         const user = parseJwt(localStorage.getItem('token'));
 
         if (user.perfil !== "MONITOR" && user.perfil !== "ADMIN") {
-            window.location.href = "naoAutorizado.html";
+            window.location.href = "/pages/naoAutorizado.html";
         }
     </script> <!--evitar do cara clicar com o botão direito e abrir-->
 
@@ -41,7 +41,7 @@
             </a>
         </div>
         <div class="menu-usuario">
-            <a href="logout.html" class="btn-sair">Sair</a>
+            <a href="/pages/logout.html" class="btn-sair">Sair</a>
         </div>
     </nav>
 
