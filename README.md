@@ -12,8 +12,6 @@ O projeto foi construído com base em uma stack moderna e escalável, empregando
 - **PostgreSQL** – Banco de dados escolhido.
 - **Arquitetura MVC** – Organização e separação clara de responsabilidades.  
 - **HTML, CSS e JavaScript** – Construção do frontend com design responsivo.  
-- **JWT (JSON Web Token)** – Implementação de autenticação e segurança.  
-- **Criptografia de dados** – Proteção de informações sensíveis dos usuários.
 
 ---
 
