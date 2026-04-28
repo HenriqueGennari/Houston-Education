@@ -77,25 +77,59 @@ async function main() {
   console.log("Seed concluído: 3 cursos inseridos/atualizados.");
 
   // 4. Disciplinas
-  const disciplinas = [
-    { nome: "Banco de dados", cursoId: 1 },
-    { nome: "Lógica de programação", cursoId: 1 },
+  const disciplinasNomes = [
+    "Banco de dados",
+    "Lógica de programação",
+    "Desenho Arquitetônico",
+    "Teoria da Arquitetura",
+    "Direito Constitucional",
+    "Direito Penal",
   ];
 
-  for (const disciplina of disciplinas) {
+  for (const nome of disciplinasNomes) {
     const existe = await prisma.disciplina.findFirst({
-      where: { nome: disciplina.nome },
+      where: { nome },
     });
     if (!existe) {
-      await prisma.disciplina.create({ data: disciplina });
-    } else {
-      await prisma.disciplina.update({
-        where: { id: existe.id },
-        data: { cursoId: disciplina.cursoId },
-      });
+      await prisma.disciplina.create({ data: { nome } });
     }
   }
-  console.log("Seed concluído: 2 disciplinas inseridas/atualizadas.");
+  console.log("Seed concluído: 6 disciplinas inseridas/atualizadas.");
+
+  // 4.1 Relação Disciplina-Curso (N:M)
+  const disciplinaCursoLinks = [
+    { disciplinaNome: "Banco de dados", cursoId: 1 },
+    { disciplinaNome: "Lógica de programação", cursoId: 1 },
+    { disciplinaNome: "Desenho Arquitetônico", cursoId: 2 },
+    { disciplinaNome: "Teoria da Arquitetura", cursoId: 2 },
+    { disciplinaNome: "Direito Constitucional", cursoId: 3 },
+    { disciplinaNome: "Direito Penal", cursoId: 3 },
+  ];
+
+  for (const link of disciplinaCursoLinks) {
+    const disciplina = await prisma.disciplina.findFirst({
+      where: { nome: link.disciplinaNome },
+    });
+    if (disciplina) {
+      const existe = await prisma.disciplinaCurso.findUnique({
+        where: {
+          disciplinaId_cursoId: {
+            disciplinaId: disciplina.id,
+            cursoId: link.cursoId,
+          },
+        },
+      });
+      if (!existe) {
+        await prisma.disciplinaCurso.create({
+          data: {
+            disciplinaId: disciplina.id,
+            cursoId: link.cursoId,
+          },
+        });
+      }
+    }
+  }
+  console.log("Seed concluído: vínculos disciplina-curso criados.");
 
   // 5. Campus
   const campusList = [

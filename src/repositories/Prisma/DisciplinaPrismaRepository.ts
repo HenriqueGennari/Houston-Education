@@ -7,6 +7,17 @@ class DisciplinaPrismaRepository {
     return dadosDisciplina;
   }
 
+  async getByCurso(cursoId: number): Promise<Disciplina[]> {
+    const dadosDisciplina = await prisma.disciplina.findMany({
+      where: {
+        cursos: {
+          some: { cursoId },
+        },
+      },
+    });
+    return dadosDisciplina;
+  }
+
   async getById(id: number): Promise<Disciplina | null> {
     const DisciplinaDados = await prisma.disciplina.findFirst({
       where: {

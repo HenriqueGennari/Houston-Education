@@ -6,7 +6,11 @@ class DisciplinaService {
 
     constructor (private _DisciplinaRepository : DisciplinaPrismaRespository){}
 
-    async getAll() : Promise <Disciplina[]>{
+    async getAll(cursoId?: number) : Promise <Disciplina[]>{
+        if (cursoId) {
+            const dadosDisciplina = await this._DisciplinaRepository.getByCurso(cursoId);
+            return dadosDisciplina;
+        }
         const dadosDisciplina = await this._DisciplinaRepository.getAll();
         return dadosDisciplina;
     }

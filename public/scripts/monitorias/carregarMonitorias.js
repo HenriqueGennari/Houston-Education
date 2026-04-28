@@ -101,9 +101,10 @@ async function carregarMonitorias() {
         // Agrupar monitorias por curso
         const monitoriasPorCurso = {};
         monitorias.forEach((m) => {
-            const cursoNome = m.disciplina?.curso?.nome || "Sem curso";
-            const cursoSigla = m.disciplina?.curso?.nome
-                ? m.disciplina.curso.nome.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase()
+            const primeiroCurso = m.disciplina?.cursos?.[0]?.curso;
+            const cursoNome = primeiroCurso?.nome || "Sem curso";
+            const cursoSigla = primeiroCurso?.nome
+                ? primeiroCurso.nome.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase()
                 : "?";
             if (!monitoriasPorCurso[cursoNome]) {
                 monitoriasPorCurso[cursoNome] = { sigla: cursoSigla, monitorias: [] };
@@ -131,6 +132,7 @@ async function carregarMonitorias() {
             const li = document.createElement("li");
             li.classList.add("cardmonitoria");
             li.dataset.campus = m.local?.campus?.nome || "";
+            li.dataset.curso = cursoNome.toLowerCase();
 
             li.innerHTML = `
             <div class="informacoesmonitoria">
@@ -351,7 +353,9 @@ async function carregarMonitorias() {
             const termo = buscarMonitoria.value.toLowerCase();
             document.querySelectorAll(".cardmonitoria").forEach(card => {
                 const nomeMonitoria = card.querySelector(".nomemonitoria").textContent.toLowerCase();
-                card.style.display = nomeMonitoria.includes(termo) ? "" : "none";
+                const nomeCurso = card.dataset.curso || "";
+                const match = nomeMonitoria.includes(termo) || nomeCurso.includes(termo);
+                card.style.display = match ? "" : "none";
             });
 
             // Esconder containers de curso vazios apos busca

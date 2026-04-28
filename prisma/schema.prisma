@@ -46,25 +46,35 @@ model Aluno {
 }
 
 model Curso {
-  id          Int         @id @default(autoincrement())
+  id          Int               @id @default(autoincrement())
   nome        String
   descricao   String?
 
-  disciplinas Disciplina[]
+  disciplinas DisciplinaCurso[]
 
   @@map("curso")
 }
 
 model Disciplina {
-  id        Int     @id @default(autoincrement())
+  id        Int               @id @default(autoincrement())
   nome      String
   descricao String?
-  cursoId   Int
-  curso     Curso   @relation(fields: [cursoId], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
+  cursos     DisciplinaCurso[]
   monitorias Monitoria[]
 
   @@map("disciplina")
+}
+
+model DisciplinaCurso {
+  disciplinaId Int
+  cursoId      Int
+
+  disciplina Disciplina @relation(fields: [disciplinaId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  curso      Curso      @relation(fields: [cursoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([disciplinaId, cursoId])
+  @@map("disciplina_curso")
 }
 
 model Campus {

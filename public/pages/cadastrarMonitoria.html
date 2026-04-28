@@ -140,17 +140,23 @@
                 <h2 class="secao-titulo">Detalhes</h2>
                 <div class="grid-2">
                     <div class="campo">
+                        <label for="cursos">Curso</label>
+                        <select id="cursos">
+                            <option value="" disabled selected>Selecione o curso...</option>
+                        </select>
+                    </div>
+                    <div class="campo">
                         <label for="disciplinas">Disciplina</label>
                         <select id="disciplinas" name="disciplinaId">
                             <option value="" disabled selected>Selecione...</option>
                         </select>
                     </div>
-                    <div class="campo">
-                        <label for="monitores">Monitor(a)</label>
-                        <select id="monitores" name="monitorId">
-                            <option value="" disabled selected>Selecione...</option>
-                        </select>
-                    </div>
+                </div>
+                <div class="campo full">
+                    <label for="monitores">Monitor(a)</label>
+                    <select id="monitores" name="monitorId">
+                        <option value="" disabled selected>Selecione...</option>
+                    </select>
                 </div>
             </section>
 
@@ -168,7 +174,7 @@
         </div>
     </div>
 
-    <script src="../scripts/disciplinas/carregarDisciplinas.js" type="module"></script>
+    <script src="../scripts/cursos/carregarCursos.js" type="module"></script>
     <script src="../scripts/monitores/carregarMonitores.js" type="module"></script>
     <script src="../scripts/campus/carregarCampus.js" type="module"></script>
     <script src="../scripts/monitorias/cadastrarMonitorias.js" type="module"></script>
