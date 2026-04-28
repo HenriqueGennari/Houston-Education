@@ -112,12 +112,11 @@ h2#titulomonitorias{
 
 
 #listamonitorias {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);  /* 4 por linha */
-  gap: 20px; 
+  display: block;
   list-style: none;
   padding: 0;
   margin: 0;
+  width: 100%;
 }
 
 
@@ -281,16 +280,6 @@ h2#titulomonitorias{
 
   .popup-content h2 {
     font-size: 1.3rem;
-  }
-}
-@media (max-width: 900px) {
-  #listamonitorias {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-@media (max-width: 600px) {
-  #listamonitorias {
-    grid-template-columns: 1fr;
   }
 }
 
@@ -717,6 +706,59 @@ transform: scale(1.05);
     .acoes-botoes {
         flex-direction: column;
     }
+}
+
+/* Container de Curso */
+.curso-container {
+  border: 1px solid #024059;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  background: #fff;
+}
+
+.curso-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.curso-sigla {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #024059, #035a7d);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+.curso-nome {
+  font-weight: bold;
+  color: #024059;
+  font-size: 1.1rem;
+}
+
+.curso-monitorias {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .curso-monitorias {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .curso-monitorias {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Tabs de Campus */

@@ -66,9 +66,12 @@ async function main() {
   ];
 
   for (const curso of cursos) {
-    await prisma.curso.create({
-      data: curso,
+    const existe = await prisma.curso.findFirst({
+      where: { nome: curso.nome },
     });
+    if (!existe) {
+      await prisma.curso.create({ data: curso });
+    }
   }
   await prisma.$executeRaw`SELECT setval('curso_id_seq', 3)`;
   console.log("Seed concluído: 3 cursos inseridos/atualizados.");
@@ -136,15 +139,23 @@ async function main() {
   const sala160 = await prisma.local.findUnique({ where: { id: 2 } });
 
   if (monitor && bd && sala170) {
-    const existe1 = await prisma.monitoria.findFirst({
+    const m1 = await prisma.monitoria.findFirst({
       where: { nome_monitoria: "Monitoria de Banco de Dados" },
     });
-    if (!existe1) {
+    if (m1) {
+      await prisma.monitoria.update({
+        where: { id: m1.id },
+        data: {
+          inicio: new Date("2026-04-29T14:00:00Z"),
+          fim: new Date("2026-04-29T16:00:00Z"),
+        },
+      });
+    } else {
       await prisma.monitoria.create({
         data: {
           nome_monitoria: "Monitoria de Banco de Dados",
-          inicio: new Date("2026-04-23T14:00:00Z"),
-          fim: new Date("2026-04-23T16:00:00Z"),
+          inicio: new Date("2026-04-29T14:00:00Z"),
+          fim: new Date("2026-04-29T16:00:00Z"),
           monitorId: monitor.id,
           disciplinaId: bd.id,
           localId: sala170.id,
@@ -154,15 +165,23 @@ async function main() {
   }
 
   if (monitor && logica && sala160) {
-    const existe2 = await prisma.monitoria.findFirst({
+    const m2 = await prisma.monitoria.findFirst({
       where: { nome_monitoria: "Monitoria de Lógica de Programação" },
     });
-    if (!existe2) {
+    if (m2) {
+      await prisma.monitoria.update({
+        where: { id: m2.id },
+        data: {
+          inicio: new Date("2026-04-30T10:00:00Z"),
+          fim: new Date("2026-04-30T12:00:00Z"),
+        },
+      });
+    } else {
       await prisma.monitoria.create({
         data: {
           nome_monitoria: "Monitoria de Lógica de Programação",
-          inicio: new Date("2026-04-24T10:00:00Z"),
-          fim: new Date("2026-04-24T12:00:00Z"),
+          inicio: new Date("2026-04-30T10:00:00Z"),
+          fim: new Date("2026-04-30T12:00:00Z"),
           monitorId: monitor.id,
           disciplinaId: logica.id,
           localId: sala160.id,
