@@ -76,11 +76,7 @@ A API `/monitorias/disponiveis` precisa retornar, para cada monitoria:
 
 ### Cores dos Cursos
 
-Inicialmente, cores fixas por curso (baseadas no nome):
-- Ciencia da Computacao: gradiente azul (#024059)
-- Arquitetura: gradiente marrom (#6b4c35)
-- Direito: gradiente bordô (#722f37)
-- Outros: gerado a partir de hash do nome
+Todos os cursos usam a mesma cor no header (azul do tema `#024059`). Nao ha diferenciacao visual por curso.
 
 ## Arquivos Afetados
 
