@@ -6,7 +6,10 @@ generator erd {
   provider        = "prisma-erd-generator"
   output          = "./erd.svg"
   puppeteerConfig = "prisma/puppeteer-config.json"
-}
+} //pode ser comentado toda essa configuração para não dar erro no prisma ao fazer o reset das migrations, ou usar: npx prisma migrate reset --skip-generate, caso queira instalar: npm install -D prisma-erd-generator @mermaid-js/mermaid-cli. Se o client estiver errado, use: npx prisma migrate reset --force, vai gerar o client de novo 
+
+
+
 
 datasource db {
   provider = "postgresql"
@@ -42,10 +45,22 @@ model Aluno {
   @@map("aluno")
 }
 
+model Curso {
+  id          Int         @id @default(autoincrement())
+  nome        String
+  descricao   String?
+
+  disciplinas Disciplina[]
+
+  @@map("curso")
+}
+
 model Disciplina {
   id        Int     @id @default(autoincrement())
   nome      String
   descricao String?
+  cursoId   Int
+  curso     Curso   @relation(fields: [cursoId], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
   monitorias Monitoria[]
 

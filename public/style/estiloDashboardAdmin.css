@@ -12,15 +12,57 @@ body {
     font-family: 'Inter', sans-serif;
 }
 
+/* Sub-abas do Dashboard - reset de propriedades herdadas do nav global */
+.dashboard-tabs {
+    position: static;
+    top: auto;
+    left: auto;
+    width: auto;
+    height: auto;
+    z-index: auto;
+}
+
 /* Header do Dashboard */
 .dashboard-header {
     background: linear-gradient(135deg, #024059 0%, #035a7d 100%);
     color: white;
-    padding: 40px 20px;
+    padding: 40px 20px 20px;
     margin-top: 70px;
     text-align: center;
     box-shadow: 0 4px 20px rgba(2, 64, 89, 0.3);
     width: 100%;
+}
+
+/* Sub-abas do Dashboard */
+.dashboard-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 20px 20px;
+    background: linear-gradient(135deg, #024059 0%, #035a7d 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.dashboard-tabs a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.dashboard-tabs a:hover {
+    color: white;
+    background: rgba(255,255,255,0.1);
+}
+
+.dashboard-tabs a.active {
+    color: white;
+    background: rgba(255,255,255,0.2);
+    font-weight: 600;
 }
 
 .dashboard-header h1 {

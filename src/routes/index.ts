@@ -26,6 +26,33 @@ router.get("/dashboard-admin", autenticadoCookie, (req: any, res: Response, next
   res.sendFile("dashboardAdmin.html", { root: "public/pages" });
 });
 
+router.get("/dashboard-locais", autenticadoCookie, (req: any, res: Response, next: any) => {
+  if (req.user?.perfil !== "ADMIN") {
+    return res.redirect("/pages/naoAutorizado.html");
+  }
+  next();
+}, (_req: Request, res: Response) => {
+  res.sendFile("dashboardLocais.html", { root: "public/pages" });
+});
+
+router.get("/dashboard-disciplinas", autenticadoCookie, (req: any, res: Response, next: any) => {
+  if (req.user?.perfil !== "ADMIN") {
+    return res.redirect("/pages/naoAutorizado.html");
+  }
+  next();
+}, (_req: Request, res: Response) => {
+  res.sendFile("dashboardDisciplinas.html", { root: "public/pages" });
+});
+
+router.get("/dashboard-campus", autenticadoCookie, (req: any, res: Response, next: any) => {
+  if (req.user?.perfil !== "ADMIN") {
+    return res.redirect("/pages/naoAutorizado.html");
+  }
+  next();
+}, (_req: Request, res: Response) => {
+  res.sendFile("dashboardCampus.html", { root: "public/pages" });
+});
+
 router.get("/gerenciar-monitorias", autenticadoCookie, (req: any, res: Response, next: any) => {
   if (req.user?.perfil !== "ADMIN" && req.user?.perfil !== "MONITOR") {
     return res.redirect("/pages/naoAutorizado.html");

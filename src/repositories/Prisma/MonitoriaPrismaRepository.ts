@@ -9,6 +9,12 @@ class MonitoriaPrismaRepository {
           select: {
             descricao: true,
             nome: true,
+            curso: {
+              select: {
+                id: true,
+                nome: true,
+              },
+            },
           },
         },
         monitor: {
@@ -48,6 +54,12 @@ class MonitoriaPrismaRepository {
           select: {
             descricao: true,
             nome: true,
+            curso: {
+              select: {
+                id: true,
+                nome: true,
+              },
+            },
           },
         },
         monitor: {
@@ -85,6 +97,12 @@ class MonitoriaPrismaRepository {
           select: {
             descricao: true,
             nome: true,
+            curso: {
+              select: {
+                id: true,
+                nome: true,
+              },
+            },
           },
         },
         monitor: {

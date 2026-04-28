@@ -58,10 +58,25 @@ async function main() {
   }
   console.log("Seed concluído: 3 alunos inseridos/atualizados.");
 
-  // 3. Disciplinas
+  // 3. Cursos
+  const cursos = [
+    { nome: "Ciência da Computação" },
+    { nome: "Arquitetura" },
+    { nome: "Direito" },
+  ];
+
+  for (const curso of cursos) {
+    await prisma.curso.create({
+      data: curso,
+    });
+  }
+  await prisma.$executeRaw`SELECT setval('curso_id_seq', 3)`;
+  console.log("Seed concluído: 3 cursos inseridos/atualizados.");
+
+  // 4. Disciplinas
   const disciplinas = [
-    { nome: "Banco de dados" },
-    { nome: "Lógica de programação" },
+    { nome: "Banco de dados", cursoId: 1 },
+    { nome: "Lógica de programação", cursoId: 1 },
   ];
 
   for (const disciplina of disciplinas) {
@@ -70,11 +85,16 @@ async function main() {
     });
     if (!existe) {
       await prisma.disciplina.create({ data: disciplina });
+    } else {
+      await prisma.disciplina.update({
+        where: { id: existe.id },
+        data: { cursoId: disciplina.cursoId },
+      });
     }
   }
   console.log("Seed concluído: 2 disciplinas inseridas/atualizadas.");
 
-  // 4. Campus
+  // 5. Campus
   const campusList = [
     { id: 1, nome: "Asa norte", descricao: "Campus localizado na Asa Norte" },
     { id: 2, nome: "Taguatinga", descricao: "Campus localizado em Taguatinga" },
@@ -91,7 +111,7 @@ async function main() {
   await prisma.$executeRaw`SELECT setval('campus_id_seq', 2)`;
   console.log("Seed concluído: 2 campus inseridos/atualizados.");
 
-  // 5. Locais
+  // 6. Locais
   const locais = [
     { id: 1, nome: "Sala 170", campusId: 1 },
     { id: 2, nome: "Sala 160", campusId: 2 },
@@ -108,7 +128,7 @@ async function main() {
   await prisma.$executeRaw`SELECT setval('local_id_seq', 2)`;
   console.log("Seed concluído: 2 locais inseridos/atualizados.");
 
-  // 6. Monitorias
+  // 7. Monitorias
   const monitor = await prisma.aluno.findUnique({ where: { email: "paulo@email.com" } });
   const bd = await prisma.disciplina.findFirst({ where: { nome: "Banco de dados" } });
   const logica = await prisma.disciplina.findFirst({ where: { nome: "Lógica de programação" } });

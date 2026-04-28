@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Locais</title>
+    <link rel="shortcut icon" href="../assets/img/iconeHoustonEducation.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="../style/styleNavMenuLateral.css">
+    <link rel="stylesheet" href="../style/estiloDashboardAdmin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script type="module" src="../scripts/menuLateral/menuLateral.js"></script>
+    <script type="module" src="../scripts/menuLateral/ocultarAbasPorPerfil.js"></script>
+</head>
+
+<body>
+    <script type="module">
+        import { parseJwt } from "../scripts/utils/parseJWT.js";
+
+        const user = parseJwt(localStorage.getItem('token'));
+
+        if (user.perfil !== "MONITOR" && user.perfil !== "ADMIN") {
+            window.location.href = "/pages/naoAutorizado.html";
+        }
+    </script>
+
+    <nav>
+        <div class="icone iconeMenu">
+            <a href="#">
+                <img src="../assets/img/iconeMenu.png" alt="icone menu">
+            </a>
+        </div>
+        <div class="logo">
+            <a href="/pages/home.html">
+                <img src="../assets/img/iconeHoustonEducation.ico" alt="logo Houston Education">
+            </a>
+        </div>
+        <div class="menu-usuario">
+            <a href="/pages/logout.html" class="btn-sair">Sair</a>
+        </div>
+    </nav>
+
+    <aside id="menuLateral" class="menuLateral">
+        <div class="menuConteudo">
+            <ul>
+                <li>
+                    <a href="/pages/home.html">
+                        <img src="../assets/img/iconeHome.png" alt="Icone Home">
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/pages/cadastrarMonitoria.html" id="linkCadastrarMonitoria">
+                        <img src="../assets/img/iconeCadastrarMonitoria.png" alt="Icone Cadastrar Monitoria">
+                        <span>Cadastrar Monitoria</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/gerenciar-monitorias" id="linkGerenciarMonitoria">
+                        <img src="../assets/img/iconeGerenciarMonitorias.png" alt="Icone Gerenciar Monitorias">
+                        <span>Gerenciar Monitorias</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard-admin" id="linkDashboardAdmin.html">
+                        <img src="../assets/img/iconeDashboardAdmin.png" alt="Icone Dashboard Admin">
+                        <span>Dashboard Admin</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <div id="overlay" class="overlay-menu"></div>
+
+    <div class="dashboard-header">
+        <h1>Dashboard Admin</h1>
+        <p>Gerencie os locais das monitorias</p>
+    </div>
+
+    <nav class="dashboard-tabs">
+        <a href="/dashboard-admin">Usuarios</a>
+        <a href="/dashboard-locais" class="active">Locais</a>
+        <a href="/dashboard-disciplinas">Disciplinas</a>
+        <a href="/dashboard-campus">Campus</a>
+    </nav>
+
+    <div class="dashboard-container">
+        <!-- Conteudo de locais sera implementado futuramente -->
+    </div>
+</body>
+
+</html>

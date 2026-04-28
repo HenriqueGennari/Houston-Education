@@ -9,8 +9,8 @@ CREATE TABLE "campus" (
 
 -- Insert default campuses
 INSERT INTO "campus" ("nome", "descricao") VALUES
-('Campus Principal', 'Campus principal da instituição'),
-('Campus Secundário', 'Campus secundário da instituição');
+('Asa Norte', 'Campus da Asa Norte da instituição'),
+('Taguatinga', 'Campus de Taguatinga da instituição');
 
 -- Add campusId to local with default 1
 ALTER TABLE "local" ADD COLUMN "campusId" INTEGER NOT NULL DEFAULT 1;
