@@ -83,12 +83,110 @@
         <a href="/dashboard-admin">Usuarios</a>
         <a href="/dashboard-locais">Locais</a>
         <a href="/dashboard-disciplinas" class="active">Disciplinas</a>
-        <a href="/dashboard-campus">Campus</a>
+        <a href="/dashboard-cursos">Cursos</a>
     </nav>
 
     <div class="dashboard-container">
-        <!-- Conteudo de disciplinas sera implementado futuramente -->
+        <div class="stats-grid">
+            <div class="stat-card total">
+                <div class="stat-label">Total de Disciplinas</div>
+                <div class="stat-value" id="statTotal">0</div>
+            </div>
+        </div>
+
+        <div class="filtros-dashboard">
+            <input type="text" id="buscaDisciplina" placeholder="Buscar por nome...">
+            <button id="btnAbrirModalCriar" class="btn-adicionar-usuario">
+                <i class="fas fa-plus"></i> Adicionar Disciplina
+            </button>
+        </div>
+
+        <div class="tabela-container">
+            <table id="tabelaDisciplinas">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Cursos</th>
+                        <th>Acoes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="3">Carregando disciplinas...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+
+    <div id="popupConfirmacao" class="popup hidden">
+        <div class="popup-content">
+            <p id="popupConfirmacaoTexto"></p>
+            <div class="popup-botoes">
+                <button id="btnConfirmarAcao" class="btn-confirmar">Confirmar</button>
+                <button id="btnCancelarAcao" class="btn-fechar">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalCriarDisciplina" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Adicionar Disciplina</h2>
+                <span class="close-btn" id="btnFecharModalCriar">&times;</span>
+            </div>
+            <form id="formCriarDisciplina">
+                <div class="campo-form-atualizar">
+                    <label>Nome</label>
+                    <input type="text" name="nome" placeholder="Nome da disciplina" required>
+                </div>
+                <div class="campo-form-atualizar">
+                    <label>Descricao</label>
+                    <input type="text" name="descricao" placeholder="Descricao da disciplina">
+                </div>
+                <div class="campo-form-atualizar">
+                    <label>Cursos</label>
+                    <select name="cursoIds" id="cursosSelectCriar" multiple style="display:none">
+                        <option value="" disabled>Selecione os cursos...</option>
+                    </select>
+                    <div class="lista-cursos" id="listaCursosCriar"></div>
+                    <div class="tags-selecionadas" id="tagsCriar"></div>
+                </div>
+                <button type="submit" id="btnSalvarDisciplina" class="btn-salvar-modal">Criar Disciplina</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalEditarDisciplina" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editar Disciplina</h2>
+                <span class="close-btn" id="btnFecharModalEditar">&times;</span>
+            </div>
+            <form id="formEditarDisciplina">
+                <input type="hidden" id="idDisciplinaEditar">
+                <div class="campo-form-atualizar">
+                    <label>Nome</label>
+                    <input type="text" name="nome" id="nomeDisciplinaEditar" placeholder="Nome da disciplina" required>
+                </div>
+                <div class="campo-form-atualizar">
+                    <label>Descricao</label>
+                    <input type="text" name="descricao" id="descricaoDisciplinaEditar" placeholder="Descricao da disciplina">
+                </div>
+                <div class="campo-form-atualizar">
+                    <label>Cursos</label>
+                    <select name="cursoIds" id="cursosSelectEditar" multiple style="display:none">
+                        <option value="" disabled>Selecione os cursos...</option>
+                    </select>
+                    <div class="lista-cursos" id="listaCursosEditar"></div>
+                    <div class="tags-selecionadas" id="tagsEditar"></div>
+                </div>
+                <button type="submit" id="btnSalvarEdicao" class="btn-salvar-modal">Salvar Alteracao</button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="../scripts/dashboardAdmin/dashboardDisciplinas.js"></script>
 </body>
 
 </html>

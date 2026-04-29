@@ -16,6 +16,11 @@ const nomeUsuarioEditar = document.getElementById("nomeUsuarioEditar");
 const perfilAtualEditar = document.getElementById("perfilAtualEditar");
 const novoPerfilEditar = document.getElementById("novoPerfilEditar");
 
+const btnAbrirModalCriar = document.getElementById("btnAbrirModalCriar");
+const modalCriarUsuario = document.getElementById("modalCriarUsuario");
+const btnFecharModalCriar = document.getElementById("btnFecharModalCriar");
+const formCriarUsuario = document.getElementById("formCriarUsuario");
+
 let usuarios = [];
 let acaoPendente = null;
 let usuarioPendente = null;
@@ -187,6 +192,44 @@ async function executarAcao() {
     }
 }
 
+function abrirModalCriar() {
+    modalCriarUsuario.classList.add("open");
+}
+
+function fecharModalCriar() {
+    modalCriarUsuario.classList.remove("open");
+    formCriarUsuario.reset();
+}
+
+async function criarUsuario(e) {
+    e.preventDefault();
+
+    const formData = new FormData(formCriarUsuario);
+    const dados = Object.fromEntries(formData);
+
+    try {
+        const response = await fetch("/alunos", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                ...getAuthHeaders()
+            },
+            credentials: "same-origin",
+            body: JSON.stringify(dados)
+        });
+
+        if (!response.ok) {
+            const erro = await response.json();
+            throw new Error(erro.erro || erro.errors?.[0] || "Erro ao criar usuário");
+        }
+
+        fecharModalCriar();
+        carregarUsuarios();
+    } catch (err) {
+        alert(err.message);
+    }
+}
+
 buscaInput.addEventListener("input", renderizarTabela);
 filtroPerfil.addEventListener("change", carregarUsuarios);
 btnConfirmarAcao.addEventListener("click", executarAcao);
@@ -194,12 +237,20 @@ btnCancelarAcao.addEventListener("click", fecharConfirmacao);
 btnFecharModalEditar.addEventListener("click", fecharModalEditar);
 formEditarPerfil.addEventListener("submit", salvarPerfil);
 
+btnAbrirModalCriar.addEventListener("click", abrirModalCriar);
+btnFecharModalCriar.addEventListener("click", fecharModalCriar);
+formCriarUsuario.addEventListener("submit", criarUsuario);
+
 popupConfirmacao.addEventListener("click", (e) => {
     if (e.target === popupConfirmacao) fecharConfirmacao();
 });
 
 modalEditarPerfil.addEventListener("click", (e) => {
     if (e.target === modalEditarPerfil) fecharModalEditar();
+});
+
+modalCriarUsuario.addEventListener("click", (e) => {
+    if (e.target === modalCriarUsuario) fecharModalCriar();
 });
 
 carregarUsuarios();

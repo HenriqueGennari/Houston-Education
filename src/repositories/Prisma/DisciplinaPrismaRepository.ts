@@ -2,8 +2,18 @@ import { prisma } from "../Prisma/client.js";
 import { Disciplina } from "@prisma/client";
 
 class DisciplinaPrismaRepository {
-  async getAll(): Promise<Disciplina[]> {
-    const dadosDisciplina = await prisma.disciplina.findMany();
+  async getAll(): Promise<(Disciplina & { cursos: { curso: { id: number; nome: string } }[] })[]> {
+    const dadosDisciplina = await prisma.disciplina.findMany({
+      include: {
+        cursos: {
+          include: {
+            curso: {
+              select: { id: true, nome: true }
+            }
+          }
+        }
+      }
+    });
     return dadosDisciplina;
   }
 
@@ -28,23 +38,57 @@ class DisciplinaPrismaRepository {
     return DisciplinaDados;
   }
 
-  async create(data: Disciplina): Promise<Disciplina> {
-    const novADisciplina = await prisma.disciplina.create({
-      data,
+  async create(data: { nome: string; descricao?: string; cursoIds?: number[] }): Promise<Disciplina> {
+    const { cursoIds, ...disciplinaData } = data;
+
+    const novaDisciplina = await prisma.$transaction(async (tx) => {
+      const disciplina = await tx.disciplina.create({
+        data: disciplinaData,
+      });
+
+      if (cursoIds && cursoIds.length > 0) {
+        await tx.disciplinaCurso.createMany({
+          data: cursoIds.map((cursoId) => ({
+            disciplinaId: disciplina.id,
+            cursoId,
+          })),
+        });
+      }
+
+      return disciplina;
     });
 
-    return novADisciplina;
+    return novaDisciplina;
   }
 
-  async update(id: number, data: Disciplina): Promise<Disciplina | null> {
-    const DisciplinaAtualizada = await prisma.disciplina.update({
-      data,
-      where: {
-        id: id,
-      },
+  async update(id: number, data: { nome?: string; descricao?: string; cursoIds?: number[] }): Promise<Disciplina | null> {
+    const { cursoIds, ...disciplinaData } = data;
+
+    const disciplinaAtualizada = await prisma.$transaction(async (tx) => {
+      const disciplina = await tx.disciplina.update({
+        data: disciplinaData,
+        where: { id },
+      });
+
+      if (cursoIds !== undefined) {
+        await tx.disciplinaCurso.deleteMany({
+          where: { disciplinaId: id },
+        });
+
+        if (cursoIds.length > 0) {
+          await tx.disciplinaCurso.createMany({
+            data: cursoIds.map((cursoId) => ({
+              disciplinaId: id,
+              cursoId,
+            })),
+          });
+        }
+      }
+
+      return disciplina;
     });
 
-    return DisciplinaAtualizada;
+    return disciplinaAtualizada;
   }
 
   async delete(id: number): Promise<Disciplina> {

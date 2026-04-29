@@ -34,42 +34,35 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
-## [1.0.0] - 2026-04-28
+## [1.0.0] - 2026-04-28 - Primeira Versão oficial 
 
-### Added
+### Added / Structure
 
 - Estrutura inicial do projeto em Node.js com TypeScript
-- Configuração do servidor Express com suporte a EJS como template engine
-- Integração com Prisma ORM para gerenciamento do banco de dados
-- Sistema de autenticação com JWT e middleware de autorização por perfil
-- CRUD completo para as entidades: Aluno, Disciplina, Monitoria, Inscrições, Campus e Local
-- Validação de schemas com Yup para todas as rotas de entrada
-- Páginas de login, home e logout renderizadas via EJS
-- Repositórios Prisma para persistência de dados
+- Configuração do servidor Express
+- Uso do Prisma como ORM para gerenciamento do banco de dados em conjunto com o banco criado no PostgresSQL.
+- Criação do schema do Prisma refletindo todas as tabelas e tabelas de relacionamento do banco de dados 
+- Criação de middlewares de segurança para autenticação e autorização e para validação do próprio YUP
+- Sistema de autenticação com uso do JWT
+- Validação de schemas com Yup para todas as rotas da aplicação
+- Páginas de login, home e logout, gerenciamento, cadastro de monitorias e dashboard
+- CRUD completo para as entidades: Aluno, Disciplina, Monitoria, Inscrições, e Local e suas regras de negócio definidas 
+- Separção MVC do código: Controller -> Service -> Repository
 - Repositórios InMemory para testes isolados
 - CI/CD com GitHub Actions para build automatizado
-- Geração de diagrama ERD do banco via Prisma ERD Generator
-- Seed de popularização das tabelas
-- Middleware de validação de schemas reutilizável
+- Branchs main e dev - Main para produção, Dev para desenvolvimento de novas versões
+- Aplicação hospedada no Render
 
-### Changed
+--- 
 
-- Teste
+### SCREENS
 
-### Deprecated
-
-- Teste
-### Removed
-
-- Teste
-
-### Fixed
-
-- Teste
-
-### Security
-
-- Teste
+#### LOGIN
+#### Cadastro
+#### Home
+#### Gerenciamento de Monitorias
+#### Dashboard Admin
+#### Cadastro de monitorias
 
 ---
 

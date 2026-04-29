@@ -45,13 +45,13 @@ router.get("/dashboard-disciplinas", autenticadoCookie, (req: any, res: Response
   res.sendFile("dashboardDisciplinas.html", { root: "public/pages" });
 });
 
-router.get("/dashboard-campus", autenticadoCookie, (req: any, res: Response, next: any) => {
+router.get("/dashboard-cursos", autenticadoCookie, (req: any, res: Response, next: any) => {
   if (req.user?.perfil !== "ADMIN") {
     return res.redirect("/pages/naoAutorizado.html");
   }
   next();
 }, (_req: Request, res: Response) => {
-  res.sendFile("dashboardCampus.html", { root: "public/pages" });
+  res.sendFile("dashboardCursos.html", { root: "public/pages" });
 });
 
 router.get("/gerenciar-monitorias", autenticadoCookie, (req: any, res: Response, next: any) => {

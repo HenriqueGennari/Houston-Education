@@ -47,7 +47,7 @@ model Aluno {
 
 model Curso {
   id          Int               @id @default(autoincrement())
-  nome        String
+  nome        String            @unique
   descricao   String?
 
   disciplinas DisciplinaCurso[]
@@ -57,7 +57,7 @@ model Curso {
 
 model Disciplina {
   id        Int               @id @default(autoincrement())
-  nome      String
+  nome      String            @unique
   descricao String?
 
   cursos     DisciplinaCurso[]
