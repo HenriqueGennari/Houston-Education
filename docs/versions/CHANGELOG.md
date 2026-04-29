@@ -58,11 +58,17 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 ### SCREENS
 
 #### LOGIN
+![Tela de Login](../img/TELAS-V1.0.0/loginV1.png)
 #### Cadastro
+![Tela de Cadastro](../img/TELAS-V1.0.0/cadastroV1.png)
 #### Home
+![Tela Home](../img/TELAS-V1.0.0/homeV1.png)
 #### Gerenciamento de Monitorias
+![Tela de Gerenciamento](../img/TELAS-V1.0.0/gerenciamentoMonitoriasV1.png)
 #### Dashboard Admin
+![Tela Dashboard Admin](../img/TELAS-V1.0.0/dashboardAdminV1.png)
 #### Cadastro de monitorias
+![Tela de Cadastro de Monitorias](../img/TELAS-V1.0.0/cadastroMonitoriasV1.png)
 
 ---
 
