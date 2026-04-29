@@ -6,9 +6,17 @@ class MonitoriaPrismaRepository {
     const dadosMonitoria = await prisma.monitoria.findMany({
       include: {
         disciplina: {
-          select: {
-            descricao: true,
-            nome: true,
+          include: {
+            cursos: {
+              include: {
+                curso: {
+                  select: {
+                    id: true,
+                    nome: true,
+                  },
+                },
+              },
+            },
           },
         },
         monitor: {
@@ -45,9 +53,17 @@ class MonitoriaPrismaRepository {
       },
       include: {
         disciplina: {
-          select: {
-            descricao: true,
-            nome: true,
+          include: {
+            cursos: {
+              include: {
+                curso: {
+                  select: {
+                    id: true,
+                    nome: true,
+                  },
+                },
+              },
+            },
           },
         },
         monitor: {
@@ -82,9 +98,17 @@ class MonitoriaPrismaRepository {
       },
       include: {
         disciplina: {
-          select: {
-            descricao: true,
-            nome: true,
+          include: {
+            cursos: {
+              include: {
+                curso: {
+                  select: {
+                    id: true,
+                    nome: true,
+                  },
+                },
+              },
+            },
           },
         },
         monitor: {

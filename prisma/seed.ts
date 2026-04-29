@@ -58,23 +58,80 @@ async function main() {
   }
   console.log("Seed concluído: 3 alunos inseridos/atualizados.");
 
-  // 3. Disciplinas
-  const disciplinas = [
-    { nome: "Banco de dados" },
-    { nome: "Lógica de programação" },
+  // 3. Cursos
+  const cursos = [
+    { nome: "Ciência da Computação" },
+    { nome: "Arquitetura" },
+    { nome: "Direito" },
   ];
 
-  for (const disciplina of disciplinas) {
-    const existe = await prisma.disciplina.findFirst({
-      where: { nome: disciplina.nome },
+  for (const curso of cursos) {
+    const existe = await prisma.curso.findFirst({
+      where: { nome: curso.nome },
     });
     if (!existe) {
-      await prisma.disciplina.create({ data: disciplina });
+      await prisma.curso.create({ data: curso });
     }
   }
-  console.log("Seed concluído: 2 disciplinas inseridas/atualizadas.");
+  await prisma.$executeRaw`SELECT setval('curso_id_seq', 3)`;
+  console.log("Seed concluído: 3 cursos inseridos/atualizados.");
 
-  // 4. Campus
+  // 4. Disciplinas
+  const disciplinasNomes = [
+    "Banco de dados",
+    "Lógica de programação",
+    "Desenho Arquitetônico",
+    "Teoria da Arquitetura",
+    "Direito Constitucional",
+    "Direito Penal",
+  ];
+
+  for (const nome of disciplinasNomes) {
+    const existe = await prisma.disciplina.findFirst({
+      where: { nome },
+    });
+    if (!existe) {
+      await prisma.disciplina.create({ data: { nome } });
+    }
+  }
+  console.log("Seed concluído: 6 disciplinas inseridas/atualizadas.");
+
+  // 4.1 Relação Disciplina-Curso (N:M)
+  const disciplinaCursoLinks = [
+    { disciplinaNome: "Banco de dados", cursoId: 1 },
+    { disciplinaNome: "Lógica de programação", cursoId: 1 },
+    { disciplinaNome: "Desenho Arquitetônico", cursoId: 2 },
+    { disciplinaNome: "Teoria da Arquitetura", cursoId: 2 },
+    { disciplinaNome: "Direito Constitucional", cursoId: 3 },
+    { disciplinaNome: "Direito Penal", cursoId: 3 },
+  ];
+
+  for (const link of disciplinaCursoLinks) {
+    const disciplina = await prisma.disciplina.findFirst({
+      where: { nome: link.disciplinaNome },
+    });
+    if (disciplina) {
+      const existe = await prisma.disciplinaCurso.findUnique({
+        where: {
+          disciplinaId_cursoId: {
+            disciplinaId: disciplina.id,
+            cursoId: link.cursoId,
+          },
+        },
+      });
+      if (!existe) {
+        await prisma.disciplinaCurso.create({
+          data: {
+            disciplinaId: disciplina.id,
+            cursoId: link.cursoId,
+          },
+        });
+      }
+    }
+  }
+  console.log("Seed concluído: vínculos disciplina-curso criados.");
+
+  // 5. Campus
   const campusList = [
     { id: 1, nome: "Asa norte", descricao: "Campus localizado na Asa Norte" },
     { id: 2, nome: "Taguatinga", descricao: "Campus localizado em Taguatinga" },
@@ -91,7 +148,7 @@ async function main() {
   await prisma.$executeRaw`SELECT setval('campus_id_seq', 2)`;
   console.log("Seed concluído: 2 campus inseridos/atualizados.");
 
-  // 5. Locais
+  // 6. Locais
   const locais = [
     { id: 1, nome: "Sala 170", campusId: 1 },
     { id: 2, nome: "Sala 160", campusId: 2 },
@@ -108,7 +165,7 @@ async function main() {
   await prisma.$executeRaw`SELECT setval('local_id_seq', 2)`;
   console.log("Seed concluído: 2 locais inseridos/atualizados.");
 
-  // 6. Monitorias
+  // 7. Monitorias
   const monitor = await prisma.aluno.findUnique({ where: { email: "paulo@email.com" } });
   const bd = await prisma.disciplina.findFirst({ where: { nome: "Banco de dados" } });
   const logica = await prisma.disciplina.findFirst({ where: { nome: "Lógica de programação" } });
@@ -116,15 +173,23 @@ async function main() {
   const sala160 = await prisma.local.findUnique({ where: { id: 2 } });
 
   if (monitor && bd && sala170) {
-    const existe1 = await prisma.monitoria.findFirst({
+    const m1 = await prisma.monitoria.findFirst({
       where: { nome_monitoria: "Monitoria de Banco de Dados" },
     });
-    if (!existe1) {
+    if (m1) {
+      await prisma.monitoria.update({
+        where: { id: m1.id },
+        data: {
+          inicio: new Date("2026-04-29T14:00:00Z"),
+          fim: new Date("2026-04-29T16:00:00Z"),
+        },
+      });
+    } else {
       await prisma.monitoria.create({
         data: {
           nome_monitoria: "Monitoria de Banco de Dados",
-          inicio: new Date("2026-04-23T14:00:00Z"),
-          fim: new Date("2026-04-23T16:00:00Z"),
+          inicio: new Date("2026-04-29T14:00:00Z"),
+          fim: new Date("2026-04-29T16:00:00Z"),
           monitorId: monitor.id,
           disciplinaId: bd.id,
           localId: sala170.id,
@@ -134,15 +199,23 @@ async function main() {
   }
 
   if (monitor && logica && sala160) {
-    const existe2 = await prisma.monitoria.findFirst({
+    const m2 = await prisma.monitoria.findFirst({
       where: { nome_monitoria: "Monitoria de Lógica de Programação" },
     });
-    if (!existe2) {
+    if (m2) {
+      await prisma.monitoria.update({
+        where: { id: m2.id },
+        data: {
+          inicio: new Date("2026-04-30T10:00:00Z"),
+          fim: new Date("2026-04-30T12:00:00Z"),
+        },
+      });
+    } else {
       await prisma.monitoria.create({
         data: {
           nome_monitoria: "Monitoria de Lógica de Programação",
-          inicio: new Date("2026-04-24T10:00:00Z"),
-          fim: new Date("2026-04-24T12:00:00Z"),
+          inicio: new Date("2026-04-30T10:00:00Z"),
+          fim: new Date("2026-04-30T12:00:00Z"),
           monitorId: monitor.id,
           disciplinaId: logica.id,
           localId: sala160.id,

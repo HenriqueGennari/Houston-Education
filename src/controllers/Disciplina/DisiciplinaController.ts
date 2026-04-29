@@ -9,7 +9,8 @@ class DisciplinaController{
 
     async getAll(Req : Request, Res : Response){
         try {
-            const dadosDisciplina = await disciplinaService.getAll();
+            const cursoId = Req.query.cursoId ? parseInt(Req.query.cursoId as string, 10) : undefined;
+            const dadosDisciplina = await disciplinaService.getAll(cursoId);
             return Res.status(200).json(dadosDisciplina)
         } catch (err : any) {
             Res.status(500).json({err : err.message})

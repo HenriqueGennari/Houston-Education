@@ -45,6 +45,12 @@ function filtrarPorCampus(campusNome) {
             card.classList.add("tab-hidden");
         }
     });
+
+    // Esconder containers de curso vazios
+    document.querySelectorAll(".curso-container").forEach(container => {
+        const visibleCards = container.querySelectorAll(".cardmonitoria:not(.tab-hidden)");
+        container.style.display = visibleCards.length > 0 ? "" : "none";
+    });
 }
 
 async function carregarMonitorias() {
@@ -92,10 +98,41 @@ async function carregarMonitorias() {
         const btnCancelarInscricaoPopup = popup.querySelector(".btn-cancelar");
         const btnFecharPopup = popup.querySelector(".btn-fechar");
 
+        // Agrupar monitorias por curso
+        const monitoriasPorCurso = {};
         monitorias.forEach((m) => {
+            const primeiroCurso = m.disciplina?.cursos?.[0]?.curso;
+            const cursoNome = primeiroCurso?.nome || "Sem curso";
+            const cursoSigla = primeiroCurso?.nome
+                ? primeiroCurso.nome.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase()
+                : "?";
+            if (!monitoriasPorCurso[cursoNome]) {
+                monitoriasPorCurso[cursoNome] = { sigla: cursoSigla, monitorias: [] };
+            }
+            monitoriasPorCurso[cursoNome].monitorias.push(m);
+        });
+
+        // Renderizar cada curso
+        Object.entries(monitoriasPorCurso).forEach(([cursoNome, cursoData]) => {
+            const cursoContainer = document.createElement("div");
+            cursoContainer.classList.add("curso-container");
+
+            const cursoHeader = document.createElement("div");
+            cursoHeader.classList.add("curso-header");
+            cursoHeader.innerHTML = `
+                <div class="curso-sigla">${cursoData.sigla}</div>
+                <div class="curso-nome">${cursoNome}</div>
+            `;
+            cursoContainer.appendChild(cursoHeader);
+
+            const cursoMonitorias = document.createElement("div");
+            cursoMonitorias.classList.add("curso-monitorias");
+
+            cursoData.monitorias.forEach((m) => {
             const li = document.createElement("li");
             li.classList.add("cardmonitoria");
             li.dataset.campus = m.local?.campus?.nome || "";
+            li.dataset.curso = cursoNome.toLowerCase();
 
             li.innerHTML = `
             <div class="informacoesmonitoria">
@@ -215,7 +252,11 @@ async function carregarMonitorias() {
                 divBotao.appendChild(botaoUpdate);
             }
 
-            lista.appendChild(li);
+            cursoMonitorias.appendChild(li);
+            });
+
+            cursoContainer.appendChild(cursoMonitorias);
+            lista.appendChild(cursoContainer);
         });
 
         const formAtualizar = document.getElementById("formAtualizarMonitoria");
@@ -312,7 +353,16 @@ async function carregarMonitorias() {
             const termo = buscarMonitoria.value.toLowerCase();
             document.querySelectorAll(".cardmonitoria").forEach(card => {
                 const nomeMonitoria = card.querySelector(".nomemonitoria").textContent.toLowerCase();
-                card.style.display = nomeMonitoria.includes(termo) ? "" : "none";
+                const nomeCurso = card.dataset.curso || "";
+                const match = nomeMonitoria.includes(termo) || nomeCurso.includes(termo);
+                card.style.display = match ? "" : "none";
+            });
+
+            // Esconder containers de curso vazios apos busca
+            document.querySelectorAll(".curso-container").forEach(container => {
+                const hasVisible = Array.from(container.querySelectorAll(".cardmonitoria"))
+                    .some(card => card.style.display !== "none" && !card.classList.contains("tab-hidden"));
+                container.style.display = hasVisible ? "" : "none";
             });
         };
 

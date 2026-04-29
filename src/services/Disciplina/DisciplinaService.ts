@@ -6,11 +6,15 @@ class DisciplinaService {
 
     constructor (private _DisciplinaRepository : DisciplinaPrismaRespository){}
 
-    async getAll() : Promise <Disciplina[]>{
+    async getAll(cursoId?: number) : Promise <Disciplina[]>{
+        if (cursoId) {
+            const dadosDisciplina = await this._DisciplinaRepository.getByCurso(cursoId);
+            return dadosDisciplina;
+        }
         const dadosDisciplina = await this._DisciplinaRepository.getAll();
         return dadosDisciplina;
     }
-    async create(dados : Disciplina) : Promise<Disciplina>{
+    async create(dados : { nome: string; descricao?: string; cursoIds?: number[] }) : Promise<Disciplina>{
             const dadosDisciplina = await this._DisciplinaRepository.create(dados)
             return dadosDisciplina;
         }
@@ -24,7 +28,7 @@ class DisciplinaService {
         return DisciplinaDados;
     }
 
-    async update(id : number, dados : Disciplina) : Promise <Disciplina>{
+    async update(id : number, dados : { nome?: string; descricao?: string; cursoIds?: number[] }) : Promise <Disciplina>{
         const DisciplinaDados = await this._DisciplinaRepository.update(id, dados)
 
         if (!DisciplinaDados){

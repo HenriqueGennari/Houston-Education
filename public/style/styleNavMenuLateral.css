@@ -79,12 +79,12 @@ nav {
     left: -280px; /* Começa fora da tela (um pouco mais largo) */
     width: 280px;
     height: calc(100vh - 70px);
-    
+
     background-color: #024059;
     color: white;
-    
+
     transition: left 0.3s ease;
-    z-index: 1000;
+    z-index: 2000;
 }
 
 .menuLateral.ativo {
@@ -147,7 +147,7 @@ nav {
     transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
     will-change: opacity;
     
-    z-index: 999;
+    z-index: 1999;
 }
 
 .overlay-menu.ativo {

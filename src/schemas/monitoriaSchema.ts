@@ -5,16 +5,16 @@ const idSchema = yup.string().uuid().required("ID_OBRIGATORIO");
 
 export const monitoriaGetByIdSchema = yup.object({
   id: idSchema,
-});
+}).noUnknown();
 
 export const monitoriaDeleteSchema = yup.object({
   id: idSchema,
-});
+}).noUnknown();
 
 
 export const monitoriaUpdateIdSchema = yup.object({
   id: idSchema,
-});
+}).noUnknown();
 export const monitoriaUpdateSchema = yup.object({
   nome_monitoria: yup.string().optional(),
   data: yup.string().matches(/^\d{4}-\d{2}-\d{2}$/).optional(),
@@ -24,7 +24,7 @@ export const monitoriaUpdateSchema = yup.object({
   localId: yup.string().optional(),
   monitorId: yup.string().optional(),
   disciplinaId: yup.string().optional(),
-});
+}).noUnknown();
 
 
 export const monitoriaCreateSchema = yup.object({
@@ -36,4 +36,4 @@ export const monitoriaCreateSchema = yup.object({
   localId: yup.string().optional(),
   monitorId: yup.string().required(),
   disciplinaId: yup.string().required(),
-});
+}).noUnknown();

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin</title>
+    <title>Dashboard Admin - Locais</title>
     <link rel="shortcut icon" href="../assets/img/iconeHoustonEducation.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="../style/styleNavMenuLateral.css">
@@ -23,7 +23,7 @@
         if (user.perfil !== "MONITOR" && user.perfil !== "ADMIN") {
             window.location.href = "/pages/naoAutorizado.html";
         }
-    </script> <!--evitar do cara clicar com o botão direito e abrir-->
+    </script>
 
     <nav>
         <div class="icone iconeMenu">
@@ -76,12 +76,12 @@
 
     <div class="dashboard-header">
         <h1>Dashboard Admin</h1>
-        <p>Gerencie usuarios, perfis e permissoes do sistema</p>
+        <p>Gerencie os locais das monitorias</p>
     </div>
 
     <nav class="dashboard-tabs">
-        <a href="/dashboard-admin" class="active">Usuarios</a>
-        <a href="/dashboard-locais">Locais</a>
+        <a href="/dashboard-admin">Usuarios</a>
+        <a href="/dashboard-locais" class="active">Locais</a>
         <a href="/dashboard-disciplinas">Disciplinas</a>
         <a href="/dashboard-cursos">Cursos</a>
     </nav>
@@ -89,38 +89,31 @@
     <div class="dashboard-container">
         <div class="stats-grid">
             <div class="stat-card total">
-                <div class="stat-label">Total de Usuários</div>
+                <div class="stat-label">Total de Locais</div>
                 <div class="stat-value" id="statTotal">0</div>
             </div>
         </div>
 
         <div class="filtros-dashboard">
-            <input type="text" id="buscaUsuario" placeholder="Buscar por nome, email ou matricula...">
-            <select id="filtroPerfil">
-                <option value="">Todos os perfis</option>
-                <option value="ADMIN">Admin</option>
-                <option value="MONITOR">Monitor</option>
-                <option value="ALUNO">Aluno</option>
-            </select>
+            <input type="text" id="buscaLocal" placeholder="Buscar por nome...">
             <button id="btnAbrirModalCriar" class="btn-adicionar-usuario">
-                <i class="fas fa-plus"></i> Adicionar Usuário
+                <i class="fas fa-plus"></i> Adicionar Local
             </button>
         </div>
 
         <div class="tabela-container">
-            <table id="tabelaUsuarios">
+            <table id="tabelaLocais">
                 <thead>
                     <tr>
-                        <th>Usuário</th>
-                        <th>Email</th>
-                        <th>Matrícula</th>
-                        <th>Perfil</th>
-                        <th>Ações</th>
+                        <th>Nome</th>
+                        <th>Descricao</th>
+                        <th>Campus</th>
+                        <th>Acoes</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="5">Carregando usuários...</td>
+                        <td colspan="4">Carregando locais...</td>
                     </tr>
                 </tbody>
             </table>
@@ -137,64 +130,60 @@
         </div>
     </div>
 
-    <div id="modalEditarPerfil" class="modal-overlay">
+    <div id="modalCriarLocal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Editar Perfil</h2>
-                <span class="close-btn" id="btnFecharModalEditar">&times;</span>
-            </div>
-            <form id="formEditarPerfil">
-                <input type="hidden" id="idUsuarioEditar" name="idUsuario">
-                <div class="campo-form-atualizar">
-                    <label>Usuário</label>
-                    <input type="text" id="nomeUsuarioEditar" readonly>
-                </div>
-                <div class="campo-form-atualizar">
-                    <label>Perfil Atual</label>
-                    <input type="text" id="perfilAtualEditar" readonly>
-                </div>
-                <div class="campo-form-atualizar">
-                    <label>Novo Perfil</label>
-                    <select id="novoPerfilEditar" name="perfilId">
-                        <option value="1">Admin</option>
-                        <option value="2">Monitor</option>
-                        <option value="3">Aluno</option>
-                    </select>
-                </div>
-                <button type="submit" id="btnSalvarPerfil" class="btn-salvar-modal">Salvar Alteração</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="modalCriarUsuario" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Adicionar Usuário</h2>
+                <h2>Adicionar Local</h2>
                 <span class="close-btn" id="btnFecharModalCriar">&times;</span>
             </div>
-            <form id="formCriarUsuario">
+            <form id="formCriarLocal">
                 <div class="campo-form-atualizar">
                     <label>Nome</label>
-                    <input type="text" name="nome" placeholder="Nome completo" required>
+                    <input type="text" name="nome" placeholder="Nome do local" required>
                 </div>
                 <div class="campo-form-atualizar">
-                    <label>Email</label>
-                    <input type="email" name="email" placeholder="email@exemplo.com" required>
+                    <label>Descricao</label>
+                    <input type="text" name="descricao" placeholder="Descricao do local">
                 </div>
                 <div class="campo-form-atualizar">
-                    <label>Matrícula</label>
-                    <input type="text" name="matricula" placeholder="Matrícula (8 a 11 dígitos)" required minlength="8" maxlength="11">
+                    <label>Campus</label>
+                    <select name="campusId" id="campusSelectCriar" required>
+                        <option value="" disabled selected>Selecione o campus...</option>
+                    </select>
                 </div>
-                <div class="campo-form-atualizar">
-                    <label>Senha</label>
-                    <input type="password" name="senha" placeholder="Senha" required>
-                </div>
-                <button type="submit" id="btnSalvarUsuario" class="btn-salvar-modal">Criar Usuário</button>
+                <button type="submit" id="btnSalvarLocal" class="btn-salvar-modal">Criar Local</button>
             </form>
         </div>
     </div>
 
-    <script type="module" src="../scripts/dashboardAdmin/dashboardAdmin.js"></script>
+    <div id="modalEditarLocal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editar Local</h2>
+                <span class="close-btn" id="btnFecharModalEditar">&times;</span>
+            </div>
+            <form id="formEditarLocal">
+                <input type="hidden" id="idLocalEditar" name="id">
+                <div class="campo-form-atualizar">
+                    <label>Nome</label>
+                    <input type="text" name="nome" id="nomeLocalEditar" placeholder="Nome do local" required>
+                </div>
+                <div class="campo-form-atualizar">
+                    <label>Descricao</label>
+                    <input type="text" name="descricao" id="descricaoLocalEditar" placeholder="Descricao do local">
+                </div>
+                <div class="campo-form-atualizar">
+                    <label>Campus</label>
+                    <select name="campusId" id="campusSelectEditar" required>
+                        <option value="" disabled selected>Selecione o campus...</option>
+                    </select>
+                </div>
+                <button type="submit" id="btnSalvarEdicao" class="btn-salvar-modal">Salvar Alteracao</button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="../scripts/dashboardAdmin/dashboardLocais.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,271 @@
+import { getAuthHeaders } from "../utils/getAuthHeaders.js";
+
+const tabelaBody = document.querySelector("#tabelaLocais tbody");
+const buscaInput = document.getElementById("buscaLocal");
+const popupConfirmacao = document.getElementById("popupConfirmacao");
+const popupConfirmacaoTexto = document.getElementById("popupConfirmacaoTexto");
+const btnConfirmarAcao = document.getElementById("btnConfirmarAcao");
+const btnCancelarAcao = document.getElementById("btnCancelarAcao");
+
+const modalCriarLocal = document.getElementById("modalCriarLocal");
+const btnFecharModalCriar = document.getElementById("btnFecharModalCriar");
+const formCriarLocal = document.getElementById("formCriarLocal");
+
+const modalEditarLocal = document.getElementById("modalEditarLocal");
+const btnFecharModalEditar = document.getElementById("btnFecharModalEditar");
+const formEditarLocal = document.getElementById("formEditarLocal");
+const idLocalEditar = document.getElementById("idLocalEditar");
+const nomeLocalEditar = document.getElementById("nomeLocalEditar");
+const descricaoLocalEditar = document.getElementById("descricaoLocalEditar");
+const campusSelectEditar = document.getElementById("campusSelectEditar");
+const campusSelectCriar = document.getElementById("campusSelectCriar");
+
+let locais = [];
+let acaoPendente = null;
+let localPendente = null;
+
+async function carregarCampus() {
+    try {
+        const response = await fetch("/campus", {
+            headers: getAuthHeaders(),
+            credentials: "same-origin"
+        });
+        if (!response.ok) throw new Error("Erro ao carregar campus");
+        const campus = await response.json();
+
+        const options = campus.map(c => `<option value="${c.id}">${c.nome}</option>
+        `).join("");
+
+        campusSelectCriar.innerHTML = '<option value="" disabled selected>Selecione o campus...</option>' + options;
+        campusSelectEditar.innerHTML = '<option value="" disabled selected>Selecione o campus...</option>' + options;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function carregarLocais() {
+    tabelaBody.innerHTML = '<tr><td colspan="4">Carregando locais...</td></tr>';
+
+    try {
+        const response = await fetch("/locais", {
+            headers: getAuthHeaders(),
+            credentials: "same-origin"
+        });
+
+        if (!response.ok) {
+            throw new Error("Erro ao carregar locais");
+        }
+
+        locais = await response.json();
+        atualizarStats();
+        renderizarTabela();
+    } catch (err) {
+        tabelaBody.innerHTML = `<tr><td colspan="4">Erro: ${err.message}</td></tr>`;
+    }
+}
+
+function atualizarStats() {
+    document.getElementById("statTotal").textContent = locais.length;
+}
+
+function renderizarTabela() {
+    const termo = buscaInput.value.toLowerCase();
+    const filtrados = locais.filter(l =>
+        l.nome.toLowerCase().includes(termo) ||
+        (l.descricao || "").toLowerCase().includes(termo) ||
+        (l.campus?.nome || "").toLowerCase().includes(termo)
+    );
+
+    if (filtrados.length === 0) {
+        tabelaBody.innerHTML = '<tr><td colspan="4">Nenhum local encontrado.</td></tr>';
+        return;
+    }
+
+    tabelaBody.innerHTML = filtrados.map(l => `
+        <tr>
+            <td>${l.nome}</td>
+            <td>${l.descricao || "-"}</td>
+            <td>${l.campus?.nome || "-"}</td>
+            <td>
+                <div class="acoes-botoes">
+                    <button class="btn-editar" data-id="${l.id}" title="Editar local">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+                    <button class="btn-excluir" data-id="${l.id}" data-acao="excluir" title="Excluir local">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    `).join("");
+
+    document.querySelectorAll(".btn-editar").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            const id = parseInt(e.currentTarget.dataset.id, 10);
+            const local = locais.find(l => l.id === id);
+            abrirModalEditar(local);
+        });
+    });
+
+    document.querySelectorAll(".btn-excluir").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            const id = parseInt(e.currentTarget.dataset.id, 10);
+            const acao = e.currentTarget.dataset.acao;
+            const local = locais.find(l => l.id === id);
+            abrirConfirmacao(acao, local);
+        });
+    });
+}
+
+function abrirModalCriar() {
+    modalCriarLocal.classList.add("open");
+}
+
+function fecharModalCriar() {
+    modalCriarLocal.classList.remove("open");
+    formCriarLocal.reset();
+}
+
+function abrirModalEditar(local) {
+    idLocalEditar.value = local.id;
+    nomeLocalEditar.value = local.nome;
+    descricaoLocalEditar.value = local.descricao || "";
+    campusSelectEditar.value = local.campusId || "";
+    modalEditarLocal.classList.add("open");
+}
+
+function fecharModalEditar() {
+    modalEditarLocal.classList.remove("open");
+    formEditarLocal.reset();
+}
+
+async function criarLocal(e) {
+    e.preventDefault();
+
+    const formData = new FormData(formCriarLocal);
+    const dados = Object.fromEntries(formData);
+    dados.campusId = parseInt(dados.campusId);
+
+    try {
+        const response = await fetch("/locais", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                ...getAuthHeaders()
+            },
+            credentials: "same-origin",
+            body: JSON.stringify(dados)
+        });
+
+        if (!response.ok) {
+            const erro = await response.json();
+            throw new Error(erro.erro || erro.errors?.[0] || "Erro ao criar local");
+        }
+
+        fecharModalCriar();
+        carregarLocais();
+    } catch (err) {
+        alert(err.message);
+    }
+}
+
+async function salvarEdicao(e) {
+    e.preventDefault();
+
+    const id = parseInt(idLocalEditar.value, 10);
+    const formData = new FormData(formEditarLocal);
+    const dados = Object.fromEntries(formData);
+    dados.campusId = parseInt(dados.campusId);
+
+    try {
+        const response = await fetch(`/locais/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                ...getAuthHeaders()
+            },
+            credentials: "same-origin",
+            body: JSON.stringify(dados)
+        });
+
+        if (!response.ok) {
+            const erro = await response.json();
+            throw new Error(erro.erro || erro.errors?.[0] || "Erro ao atualizar local");
+        }
+
+        fecharModalEditar();
+        carregarLocais();
+    } catch (err) {
+        alert(err.message);
+    }
+}
+
+function abrirConfirmacao(acao, local) {
+    acaoPendente = acao;
+    localPendente = local;
+
+    const mensagens = {
+        excluir: `Deseja excluir o local "${local.nome}"?`
+    };
+
+    popupConfirmacaoTexto.textContent = mensagens[acao];
+    popupConfirmacao.classList.remove("hidden");
+}
+
+function fecharConfirmacao() {
+    popupConfirmacao.classList.add("hidden");
+    acaoPendente = null;
+    localPendente = null;
+}
+
+async function executarAcao() {
+    if (!acaoPendente || !localPendente) return;
+
+    try {
+        let response;
+
+        if (acaoPendente === "excluir") {
+            response = await fetch(`/locais/${localPendente.id}`, {
+                method: "DELETE",
+                headers: getAuthHeaders(),
+                credentials: "same-origin"
+            });
+        }
+
+        if (!response.ok) {
+            throw new Error("Erro ao executar acao");
+        }
+
+        fecharConfirmacao();
+        carregarLocais();
+    } catch (err) {
+        alert(err.message);
+        fecharConfirmacao();
+    }
+}
+
+buscaInput.addEventListener("input", renderizarTabela);
+btnConfirmarAcao.addEventListener("click", executarAcao);
+btnCancelarAcao.addEventListener("click", fecharConfirmacao);
+
+btnAbrirModalCriar.addEventListener("click", abrirModalCriar);
+btnFecharModalCriar.addEventListener("click", fecharModalCriar);
+formCriarLocal.addEventListener("submit", criarLocal);
+
+btnFecharModalEditar.addEventListener("click", fecharModalEditar);
+formEditarLocal.addEventListener("submit", salvarEdicao);
+
+popupConfirmacao.addEventListener("click", (e) => {
+    if (e.target === popupConfirmacao) fecharConfirmacao();
+});
+
+modalCriarLocal.addEventListener("click", (e) => {
+    if (e.target === modalCriarLocal) fecharModalCriar();
+});
+
+modalEditarLocal.addEventListener("click", (e) => {
+    if (e.target === modalEditarLocal) fecharModalEditar();
+});
+
+carregarCampus();
+carregarLocais();

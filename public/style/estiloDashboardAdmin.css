@@ -12,15 +12,57 @@ body {
     font-family: 'Inter', sans-serif;
 }
 
+/* Sub-abas do Dashboard - reset de propriedades herdadas do nav global */
+.dashboard-tabs {
+    position: static;
+    top: auto;
+    left: auto;
+    width: auto;
+    height: auto;
+    z-index: auto;
+}
+
 /* Header do Dashboard */
 .dashboard-header {
     background: linear-gradient(135deg, #024059 0%, #035a7d 100%);
     color: white;
-    padding: 40px 20px;
+    padding: 40px 20px 20px;
     margin-top: 70px;
     text-align: center;
     box-shadow: 0 4px 20px rgba(2, 64, 89, 0.3);
     width: 100%;
+}
+
+/* Sub-abas do Dashboard */
+.dashboard-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 20px 20px;
+    background: linear-gradient(135deg, #024059 0%, #035a7d 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.dashboard-tabs a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.dashboard-tabs a:hover {
+    color: white;
+    background: rgba(255,255,255,0.1);
+}
+
+.dashboard-tabs a.active {
+    color: white;
+    background: rgba(255,255,255,0.2);
+    font-weight: 600;
 }
 
 .dashboard-header h1 {
@@ -152,17 +194,17 @@ body {
     overflow: hidden;
 }
 
-#tabelaUsuarios {
+.tabela-container table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
 }
 
-#tabelaUsuarios thead {
+.tabela-container thead {
     background: linear-gradient(135deg, #024059 0%, #035a7d 100%);
 }
 
-#tabelaUsuarios th {
+.tabela-container th {
     padding: 18px 24px;
     text-align: left;
     color: white;
@@ -172,41 +214,41 @@ body {
     letter-spacing: 0.8px;
 }
 
-#tabelaUsuarios th:first-child {
+.tabela-container th:first-child {
     border-radius: 20px 0 0 0;
 }
 
-#tabelaUsuarios th:last-child {
+.tabela-container th:last-child {
     border-radius: 0 20px 0 0;
     text-align: center;
 }
 
-#tabelaUsuarios tbody tr {
+.tabela-container tbody tr {
     transition: all 0.2s ease;
 }
 
-#tabelaUsuarios tbody tr:hover {
+.tabela-container tbody tr:hover {
     background: #f8fafc;
     transform: scale(1.01);
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-#tabelaUsuarios td {
+.tabela-container td {
     padding: 16px 24px;
     border-bottom: 1px solid #f0f0f0;
     color: #444;
     font-size: 0.95rem;
 }
 
-#tabelaUsuarios tbody tr:last-child td:first-child {
+.tabela-container tbody tr:last-child td:first-child {
     border-radius: 0 0 0 20px;
 }
 
-#tabelaUsuarios tbody tr:last-child td:last-child {
+.tabela-container tbody tr:last-child td:last-child {
     border-radius: 0 0 20px 0;
 }
 
-#tabelaUsuarios tbody tr:last-child td {
+.tabela-container tbody tr:last-child td {
     border-bottom: none;
 }
 
@@ -479,7 +521,99 @@ body {
     cursor: not-allowed;
 }
 
-#btnSalvarPerfil {
+.campo-form-atualizar select[multiple] {
+    min-height: 120px;
+    padding: 8px;
+}
+
+.campo-form-atualizar select[multiple] option {
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-bottom: 2px;
+}
+
+.campo-form-atualizar select[multiple] option:checked {
+    background: linear-gradient(135deg, #024059 0%, #035a7d 100%);
+    color: white;
+}
+
+.tags-selecionadas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    min-height: 32px;
+}
+
+.tag-curso {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #024059 0%, #035a7d 100%);
+    color: white;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.tag-curso button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    line-height: 1;
+    padding: 0;
+    width: auto;
+    height: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tag-curso button:hover {
+    opacity: 0.8;
+}
+
+/* Lista de cursos customizada */
+.lista-cursos {
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    max-height: 150px;
+    overflow-y: auto;
+    background: white;
+}
+
+.lista-cursos .curso-item {
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.lista-cursos .curso-item:last-child {
+    border-bottom: none;
+}
+
+.lista-cursos .curso-item:hover {
+    background: #f8fafc;
+}
+
+.lista-cursos .curso-item.selecionado {
+    background: linear-gradient(135deg, #024059 0%, #035a7d 100%);
+    color: white;
+}
+
+.lista-cursos .curso-item.selecionado::before {
+    content: '\2714';
+    font-size: 0.85rem;
+}
+
+.btn-salvar-modal {
     width: 100%;
     padding: 14px;
     background: linear-gradient(135deg, #024059 0%, #035a7d 100%);
@@ -493,9 +627,32 @@ body {
     margin-top: 10px;
 }
 
-#btnSalvarPerfil:hover {
+.btn-salvar-modal:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(2, 64, 89, 0.35);
+}
+
+/* Botao Adicionar Usuario */
+.btn-adicionar-usuario {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.btn-adicionar-usuario:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
 }
 
 /* Responsividade */
@@ -513,8 +670,8 @@ body {
         width: 100%;
     }
 
-    #tabelaUsuarios th,
-    #tabelaUsuarios td {
+    .tabela-container th,
+    .tabela-container td {
         padding: 12px 16px;
         font-size: 0.85rem;
     }
