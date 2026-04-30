@@ -12,8 +12,22 @@ interface MonitoriaInput {
   disciplinaId: string;
 }
 
+// essas funções foram criadas para resolver o problema de 3h atrasadas que ficavam as monitorias em produção
+function criarDateBRT(data: string, hora: string): Date {
+  return new Date(`${data}T${hora}:00-03:00`);
+}
+
+function extrairHoraBRT(date: Date): string {
+  return date.toLocaleTimeString("pt-BR", {
+    timeZone: "America/Sao_Paulo",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+}
+
 class MonitoriaService {
-  constructor(private _monitoriaRepository: MonitoriaPrismaRepository) {}
+  constructor(private _monitoriaRepository: MonitoriaPrismaRepository) { }
 
   async getAll(): Promise<Monitoria[]> {
     const dadosmonitoria = await this._monitoriaRepository.getAll();
@@ -31,8 +45,8 @@ class MonitoriaService {
   }
 
   async create(dados: MonitoriaInput): Promise<Monitoria> {
-    const inicio = new Date(`${dados.data}T${dados.hora_inicio}:00`);
-    const fim = new Date(`${dados.data}T${dados.hora_fim}:00`);
+    const inicio = criarDateBRT(dados.data, dados.hora_inicio);
+    const fim = criarDateBRT(dados.data, dados.hora_fim);
 
     if (inicio >= fim) {
       throw new Error("HORARIO_INVALIDO: O horário de início deve ser anterior ao horário de fim.");
@@ -68,10 +82,7 @@ class MonitoriaService {
     return monitoriaDados;
   }
 
-  async update(
-    id: string,
-    dados: Partial<MonitoriaInput>
-  ): Promise<Monitoria> {
+  async update(id: string, dados: Partial<MonitoriaInput>): Promise<Monitoria> {
     const monitoriaAtual = await this._monitoriaRepository.getById(id);
 
     if (!monitoriaAtual) {
@@ -79,15 +90,15 @@ class MonitoriaService {
     }
 
     const dataAtual = monitoriaAtual.inicio.toISOString().split("T")[0];
-    const horaInicioAtual = monitoriaAtual.inicio.toISOString().substring(11, 16);
-    const horaFimAtual = monitoriaAtual.fim.toISOString().substring(11, 16);
+    const horaInicioAtual = extrairHoraBRT(monitoriaAtual.inicio);
+    const horaFimAtual = extrairHoraBRT(monitoriaAtual.fim);
 
     const dataString = dados.data ?? dataAtual;
     const horaInicioString = dados.hora_inicio ?? horaInicioAtual;
     const horaFimString = dados.hora_fim ?? horaFimAtual;
 
-    const inicio = new Date(`${dataString}T${horaInicioString}:00`);
-    const fim = new Date(`${dataString}T${horaFimString}:00`);
+    const inicio = criarDateBRT(dataString, horaInicioString);
+    const fim = criarDateBRT(dataString, horaFimString);
 
     if (inicio >= fim) {
       throw new Error("HORARIO_INVALIDO: O horário de início deve ser anterior ao horário de fim.");
@@ -105,7 +116,7 @@ class MonitoriaService {
 
     if (dados.localId) {
       dadosAtualizados.localId = parseInt(dados.localId, 10);
-      }
+    }
 
     delete dadosAtualizados.data;
     delete dadosAtualizados.hora_inicio;
