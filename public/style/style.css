@@ -132,7 +132,6 @@ h2#titulomonitorias{
   margin: 0 0 15px 0;
   border-radius: 8px;
   width: 100%;
-  max-width: 320px;
   height: 210px;
   transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s, display 0.3s allow-discrete;
 }
@@ -863,8 +862,19 @@ transform: scale(1.05);
 
 /* Grid para página de gerenciar monitorias */
 .pagina-gerenciar #listamonitorias {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 23px;
-  justify-content: flex-start;
+}
+
+@media (max-width: 900px) {
+  .pagina-gerenciar #listamonitorias {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .pagina-gerenciar #listamonitorias {
+    grid-template-columns: 1fr;
+  }
 }
