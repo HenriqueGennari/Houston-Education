@@ -12,7 +12,7 @@ Identificamos que muitos estudantes enfrentam barreiras no aprendizado por falta
 
 A **Houston Education** surge para centralizar este ecossistema:
 - **Para o Aluno:** Encontra auxílio rápido em disciplinas críticas e melhora o seu rendimento.
-- **Para o Monitor:** Gere os seus horários, turmas e consolida o seu conhecimento ensinando.
+- **Para o Monitor:** Gere os seus horários e consolida o seu conhecimento da melhor forma: ensinando.
 - **Para a Instituição:** Reduz a taxa de retenção e promove o engajamento estudantil.
 
 
@@ -23,29 +23,16 @@ A **Houston Education** surge para centralizar este ecossistema:
 Para informações detalhadas sobre a arquitetura, regras de negócio e o histórico de evolução do projeto, acesse a pasta `/docs`:
 
 - **[Documentação Principal](./docs/MainDoc.md):** Contém o detalhamento completo do sistema, diagramas e especificações técnicas.
-- **[Changelog (Versionamento)](./docs/CHANGELOG.md):** Registro cronológico de todas as atualizações, correções e novas funcionalidades implementadas.
+- **[Changelog (Versionamento)](./docs/CHANGELOG.md):** Registro cronológico de todas as atualizações e versões, além de correções e novas funcionalidades implementadas.
 
 ---
 
 ## 🛠️ Stack Tecnológica
 
-O projeto utiliza uma arquitetura moderna e robusta, garantindo performance e segurança:
-
-* **Backend:** [Node.js](https://nodejs.org/) com [TypeScript](https://www.typescriptlang.org/) (Tipagem forte para evitar erros em tempo de execução).
-* **Banco de Dados:** [PostgreSQL](https://www.postgresql.org/) gerenciado pelo [Prisma ORM](https://www.prisma.io/).
-* **Frontend:** HTML5, CSS3 e JavaScript (Design focado na experiência do usuário - UX).
-* **Arquitetura:** Padrão **MVC** (Model-View-Controller) para uma organização de código limpa e modular.
-## 🚀 Tecnologias Utilizadas
-
-O projeto foi construído com base em uma stack moderna e escalável, empregando os seguintes recursos:
-
-- **TypeScript** e **Node.js** – Desenvolvimento do backend com tipagem estática e alta confiabilidade.  
-- **Prisma ORM** – Gerenciamento e modelagem de dados.  
-- **PostgreSQL** – Banco de dados escolhido.
-- **Arquitetura MVC** – Organização e separação clara de responsabilidades.  
-- **HTML, CSS e JavaScript** – Construção do frontend com design responsivo.  
-
----
+* **Backend:** [Node.js](https://nodejs.org/) com [TypeScript](https://www.typescriptlang.org/)
+* **Banco de Dados:** [PostgreSQL](https://www.postgresql.org/) usando o [Prisma ORM](https://www.prisma.io/)
+* **Frontend:** HTML5, CSS3 e JavaScript.
+* **Arquitetura:** Padrão **MVC** (Model-View-Controller)
 
 ## 📋 Funcionalidades Principais
 
@@ -53,7 +40,7 @@ O projeto foi construído com base em uma stack moderna e escalável, empregando
 | :--- | :--- |
 | **Autenticação Segura** | Login diferenciado para Alunos e Monitores. |
 | **Dashboard de Monitorias** | Visualização de disciplinas, datas e horários disponíveis. |
-| **Inscrição Simplicada** | Fluxo rápido para o aluno garantir a sua vaga na sessão de ensino. |
+| **Inscrição Simplicada** | Fluxo rápido para o aluno garantir a sua vaga. |
 | **Gestão de Perfil** | Controle de informações pessoais e histórico de participações. |
 | **Painel do Monitor** | Área exclusiva para criação, edição e gestão de monitorias. |
 
