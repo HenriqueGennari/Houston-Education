@@ -15,6 +15,16 @@ A **Houston Education** surge para centralizar este ecossistema:
 - **Para o Monitor:** Gere os seus horários, turmas e consolida o seu conhecimento ensinando.
 - **Para a Instituição:** Reduz a taxa de retenção e promove o engajamento estudantil.
 
+
+---
+
+## 📚 Documentação do Sistema
+
+Para informações detalhadas sobre a arquitetura, regras de negócio e o histórico de evolução do projeto, acesse a pasta `/docs`:
+
+- **[Documentação Principal](./docs/MainDoc.md):** Contém o detalhamento completo do sistema, diagramas e especificações técnicas.
+- **[Changelog (Versionamento)](./docs/CHANGELOG.md):** Registro cronológico de todas as atualizações, correções e novas funcionalidades implementadas.
+
 ---
 
 ## 🛠️ Stack Tecnológica
