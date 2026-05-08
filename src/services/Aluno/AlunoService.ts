@@ -46,6 +46,10 @@ class AlunosService{
 
     async update(id : string, dados : Aluno) : Promise <Aluno>{
 
+        if (dados.matricula.length < 8) {
+            throw new Error ("MATRICULA_INVALIDA")
+        }
+
         if (dados.matricula || dados.email){
             const alunoExistente = await this._alunoPrismaRepository.findByEmailAndMatricula(dados.email || "", dados.matricula || "")
 
