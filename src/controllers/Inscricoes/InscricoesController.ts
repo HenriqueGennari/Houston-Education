@@ -44,6 +44,16 @@ class InscricoesController {
         }
     }
 
+    async getByMonitoria(Req: Request, Res: Response) {
+        try {
+            const monitoriaId = Req.params.monitoriaId;
+            const inscricoesDados = await inscricoesService.getByMonitoria(monitoriaId);
+            return Res.status(200).json(inscricoesDados);
+        } catch (err: any) {
+            return Res.status(500).json({ error: err.message });
+        }
+    }
+
     async getById(Req: Request, Res: Response) {
         try {
             const id = parseInt(Req.params.id, 10);

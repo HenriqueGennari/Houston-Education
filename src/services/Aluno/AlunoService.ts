@@ -18,8 +18,14 @@ class AlunosService{
 
         if (emailAluno) {
             throw new Error ("EMAIL_EXISTE")
-        } 
-        
+        }
+
+        const matriculaAluno = await this._alunoPrismaRepository.findByMatricula(dados.matricula);
+
+        if (matriculaAluno) {
+            throw new Error ("MATRICULA_EXISTE")
+        }
+
         const senhaHash = await bcrypt.hash(dados.senha, 10);
 
         const dadosComSenhaHash = {

@@ -43,6 +43,20 @@ class AlunoPrismaRepository {
         return alunoEmail;
     }
 
+    async findByMatricula(matricula: string): Promise<AlunoWithPerfil | null> {
+        const alunoMatricula = await prisma.aluno.findFirst({
+            where: {
+                matricula: matricula,
+                deletedAt: null
+            },
+            include: {
+                perfil: true
+            }
+        });
+
+        return alunoMatricula;
+    }
+
     async getById(id: string): Promise<AlunoWithPerfil | null> {
         const aluno = await prisma.aluno.findFirst({
             where: {

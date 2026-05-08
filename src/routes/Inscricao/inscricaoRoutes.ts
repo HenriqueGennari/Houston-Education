@@ -13,6 +13,8 @@ router.get("/", autenticado, autorizado(["ADMIN", "MONITOR"]), InscricoesControl
 
 router.get("/aluno", autenticado, autorizado(["ADMIN", "MONITOR", "ALUNO"]), InscricoesController.getInscricaoAluno); // lembra que essa rota é pra pegar as inscrições de um unico aluno ATRAVÉS DO TOKEN
 
+router.get("/monitoria/:monitoriaId", autenticado, autorizado(["ADMIN", "MONITOR"]), InscricoesController.getByMonitoria);
+
 router.get("/:id", autenticado, autorizado(["ADMIN", "MONITOR"]), validateSchema(schema.inscricoesGetByIdSchema, "params"), InscricoesController.getById);
 
 router.post("/", autenticado, validateSchema(schema.inscricoesCreateSchema), InscricoesController.create);

@@ -33,6 +33,35 @@ class InscricaoPrismaRepository {
     return inscricao;
   }
 
+  async getByMonitoria(monitoriaId: string): Promise<any[]> {
+    const inscricoes = await prisma.inscricao.findMany({
+      where: {
+        monitoriaId,
+      },
+      include: {
+        aluno: {
+          select: {
+            id: true,
+            nome: true,
+            matricula: true,
+          },
+        },
+        monitoria: {
+          select: {
+            id: true,
+            nome_monitoria: true,
+          },
+        },
+      },
+      orderBy: {
+        aluno: {
+          nome: "asc",
+        },
+      },
+    });
+    return inscricoes;
+  }
+
   async getById(id: number): Promise<Inscricao | null> {
     const InscricaoId = await prisma.inscricao.findFirst({
       where: {
