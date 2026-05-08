@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import "dotenv/config";
+import { decrypt } from "dotenv";
+import { decode } from "punycode";
 
 // Extendendo o Request para incluir user
 
@@ -49,7 +51,8 @@ export const autenticado = (req: AuthRequest, res: Response, next: NextFunction)
       id: decoded.id as string,
       nome: decoded.nome as string,
       email: decoded.email as string,
-      perfil: decoded.perfil as string
+      perfil: decoded.perfil as string,
+      matricula : decoded.matricula as string
       //adiciono o perfil aqui
     };
 
