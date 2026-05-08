@@ -14,12 +14,17 @@ class AlunosService{
     }
     
     async create(dados : Aluno) : Promise<Aluno>{
-        const emailAluno = await this._alunoPrismaRepository.findByEmail(dados.email);
+        const alunoExistente = await this._alunoPrismaRepository.findByEmailAndMatricula(dados.email, dados.matricula);
 
-        if (emailAluno) {
-            throw new Error ("EMAIL_EXISTE")
-        } 
-        
+        if (alunoExistente) {
+            if (alunoExistente.email === dados.email) {
+                throw new Error ("EMAIL_EXISTE")
+            }
+            if (alunoExistente.matricula === dados.matricula) {
+                throw new Error ("MATRICULA_EXISTE")
+            }
+        }
+
         const senhaHash = await bcrypt.hash(dados.senha, 10);
 
         const dadosComSenhaHash = {
@@ -40,11 +45,33 @@ class AlunosService{
     }
 
     async update(id : string, dados : Aluno) : Promise <Aluno>{
+
+        if (dados.nome !== undefined && dados.nome.trim() === "") {
+            throw new Error ("NOME_OBRIGATORIO")
+        }
+
+        if (dados.email !== undefined && dados.email.trim() === "") {
+            throw new Error ("EMAIL_OBRIGATORIO")
+        }
+
+        if (dados.matricula !== undefined && dados.matricula.length < 8) {
+            throw new Error ("MATRICULA_INVALIDA")
+        }
+
+        if (dados.matricula || dados.email){
+            const alunoExistente = await this._alunoPrismaRepository.findByEmailAndMatricula(dados.email || "", dados.matricula || "")
+
+            if (alunoExistente && alunoExistente.id !== id){
+                throw new Error ("MATRICULA_OU_EMAIL_EM_USO")
+            }
+        }
+
         const alunoDados = await this._alunoPrismaRepository.update(id, dados)
 
         if (!alunoDados){
             throw new Error ("ALUNO_INEXISTENTE")
         }
+
 
         return alunoDados;
     }

@@ -21,7 +21,7 @@ class AuthService{
     }
 
     async existeUser(email: string) {
-        const user = await this._alunoPrismaRepository.findByEmail(email)
+        const user = await this._alunoPrismaRepository.findByEmailAndMatricula(email, "")
 
         if (!user) {
             throw new Error("USUARIO_INEXISTENTE")

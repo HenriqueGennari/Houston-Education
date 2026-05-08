@@ -63,6 +63,10 @@ router.get("/gerenciar-monitorias", autenticadoCookie, (req: any, res: Response,
   res.sendFile("gerenciarMonitorias.html", { root: "public/pages" });
 });
 
+router.get("/perfil", autenticadoCookie, (_req: Request, res: Response) => {
+  res.sendFile("perfil.html", { root: "public/pages" });
+});
+
 router.use("/alunos", alunoRoutes);
 router.use("/disciplinas" , disciplinaRoutes )
 router.use("/locais" , localRoutes )

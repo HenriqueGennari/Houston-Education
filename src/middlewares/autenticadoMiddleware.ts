@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import "dotenv/config";
+import { decrypt } from "dotenv";
+import { decode } from "punycode";
 
 // Extendendo o Request para incluir user
 
@@ -10,6 +12,7 @@ export interface AuthRequest extends Request { // criando um type authrequest pa
     id: string;
     nome: string;
     email: string;
+    matricula: string;
     perfil: string;
   };
 }
@@ -48,7 +51,8 @@ export const autenticado = (req: AuthRequest, res: Response, next: NextFunction)
       id: decoded.id as string,
       nome: decoded.nome as string,
       email: decoded.email as string,
-      perfil: decoded.perfil as string
+      perfil: decoded.perfil as string,
+      matricula : decoded.matricula as string
       //adiciono o perfil aqui
     };
 
@@ -77,6 +81,7 @@ export const autenticadoCookie = (req: AuthRequest, res: Response, next: NextFun
       id: decoded.id as string,
       nome: decoded.nome as string,
       email: decoded.email as string,
+      matricula: decoded.matricula as string,
       perfil: decoded.perfil as string
     };
 

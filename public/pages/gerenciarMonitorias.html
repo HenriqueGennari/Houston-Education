@@ -55,6 +55,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="/perfil" id="linkPerfil">
+                        <img src="../assets/img/iconeUsuario.png" alt="Icone Perfil">
+                        <span>Perfil</span>
+                    </a>
+                </li>
+                <li>
                     <a href="/pages/cadastrarMonitoria.html" id="linkCadastrarMonitoria">
                         <img src="../assets/img/iconeCadastrarMonitoria.png" alt="Icone Cadastrar Monitoria">
                         <span>Cadastrar Monitoria</span>
@@ -89,7 +95,7 @@
         </div>
     </div>
 
-    <section class="sectionmonitorias">.
+    <section class="sectionmonitorias">
         <div class="exibirmonitorias">
             <h2 id="titulomonitorias">Suas monitorias</h2>
             <ul id="listamonitorias">
@@ -122,6 +128,21 @@
         </div>
     </div>
 
+    <!-- POPUP DE DETALHES DA MONITORIA -->
+    <div id="popupDetalhesMonitoria" class="popup hidden">
+        <div class="popup-content">
+            <div class="popup-header">
+                <h2 id="popupDetalhesTitulo"></h2>
+                <button class="popup-fechar" id="btnFecharDetalhes">&times;</button>
+            </div>
+            <div class="popup-body">
+                <p id="popupDetalhesDescricao" class="popup-descricao"></p>
+                <h3>Alunos Inscritos</h3>
+                <ul id="listaInscritos"></ul>
+            </div>
+        </div>
+    </div>
+
     <!--MODAL PARA ATUALIZAR AS MONITORIAS-->
 
     <div id="modalOverlay" class="modal-overlay">
@@ -134,42 +155,63 @@
             </div>
 
             <form id="formAtualizarMonitoria">
-                <div class="campo-form-atualizar">
-                    <label>Nome</label>
-                    <input type="text" name="nome_monitoria">
-                </div>
-                <div class="campo-form-atualizar">
-                    <label>Descrição</label>
-                    <input name="descricao" placeholder="Adicione detalhes, tópicos ou observações..."></input>
+                <div class="form-row">
+                    <div class="campo-form-atualizar full-width">
+                        <label>Nome</label>
+                        <input type="text" name="nome_monitoria">
+                    </div>
                 </div>
 
-                <div class="campo-form-atualizar">
-                    <label>Data</label>
-                    <input type="text" class="datepicker" name="data" placeholder="Selecione a data...">
+                <div class="form-row">
+                    <div class="campo-form-atualizar full-width">
+                        <label>Descrição</label>
+                        <textarea name="descricao" rows="4" placeholder="Adicione detalhes, tópicos ou observações..."></textarea>
+                    </div>
                 </div>
 
-                <div class="campo-form-atualizar">
-                    <label>Hora Inicio</label>
-                    <input type="text" class="timepicker" name="hora_inicio">
+                <div class="form-row tres-colunas">
+                    <div class="campo-form-atualizar">
+                        <label>Data</label>
+                        <input type="text" class="datepicker" name="data" placeholder="Selecione a data...">
+                    </div>
+                    <div class="campo-form-atualizar">
+                        <label>Hora Inicio</label>
+                        <input type="text" class="timepicker" name="hora_inicio">
+                    </div>
+                    <div class="campo-form-atualizar">
+                        <label>Hora Fim</label>
+                        <input type="text" class="timepicker" name="hora_fim">
+                    </div>
                 </div>
 
-                <div class="campo-form-atualizar">
-                    <label>Hora Fim</label>
-                    <input type="text" class="timepicker" name="hora_fim">
+                <div class="form-row">
+                    <div class="campo-form-atualizar">
+                        <label>Selecione um campus</label>
+                        <select id="campus">
+                            <option value="" disabled selected>Selecione o campus...</option>
+                        </select>
+                    </div>
+                    <div class="campo-form-atualizar">
+                        <label>Selecione um local</label>
+                        <select name="localId" id="locais">
+                            <option value="" disabled selected>Selecione...</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="campo-form-atualizar">
-                    <label>Selecione um local</label>
-                    <select name="localId" id="locais">
-                        <option value="" disabled selected>Selecione...</option>
-                    </select>
-                </div>
-
-                <div class="campo-form-atualizar">
-                    <label>Selecione uma disciplina</label>
-                    <select name="disciplinaId" id="disciplinas">
-                        <option value="" disabled selected>Selecione...</option>
-                    </select>
+                <div class="form-row">
+                    <div class="campo-form-atualizar">
+                        <label>Selecione um curso</label>
+                        <select id="cursos">
+                            <option value="" disabled selected>Selecione o curso...</option>
+                        </select>
+                    </div>
+                    <div class="campo-form-atualizar">
+                        <label>Selecione uma disciplina</label>
+                        <select name="disciplinaId" id="disciplinas">
+                            <option value="" disabled selected>Selecione...</option>
+                        </select>
+                    </div>
                 </div>
 
                 <button id="submit_btn_atualizar">Salvar Alterações</button>
@@ -181,8 +223,6 @@
     <script type="module" src="../scripts/carregarNomeUsuario.js?v=2"></script>
     <script type="module" src="../scripts/monitorias/gerenciarMonitorias.js?v=2"></script>
     <script type="module" src="../scripts/monitorias/autorizadoMonitorias.js?v=2"></script>
-    <script type="module" src="../scripts/disciplinas/carregarDisciplinas.js?v=2"></script>
-    <script type="module" src="../scripts/locais/carregarLocais.js?v=2"></script>
     <script src="../scripts/utils/pickerData&Hora.js?v=2" type="module"></script>
 
 </body>

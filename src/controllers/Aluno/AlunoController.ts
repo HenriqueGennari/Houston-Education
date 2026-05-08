@@ -6,7 +6,6 @@ const alunoService = new AlunosService(new AlunoPrismaRepository());
 
 class AlunoController{
 
-
     async getAll(Req : Request, Res : Response) {
         try {
             const perfil = Req.query.perfil as string | undefined;

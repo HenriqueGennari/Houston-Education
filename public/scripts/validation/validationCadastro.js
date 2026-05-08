@@ -8,8 +8,6 @@ form.addEventListener("submit", async (e) => {
     const formData = new FormData(form);
     const data = Object.fromEntries(formData); // dados que o usuário digitou
 
-    console.log(data)
-    
     if (!data.nome || !data.senha || !data.email || !data.matricula) {
         mensagem.textContent = "Preencha todos os campos.";
         mensagem.style.color = "red";
@@ -17,29 +15,27 @@ form.addEventListener("submit", async (e) => {
     }
 
     try {
-
         const res = await fetch('/alunos', {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         });
 
-        
-
         const result = await res.json();
 
         if (!res.ok) {
-            if (result.erro === "EMAIL_EXISTE") {
-                mensagem.textContent = "Esse email já está cadastrado!";
+            if (result.erro === "EMAIL_EXISTE" || result.erro === "MATRICULA_EXISTE") {
+                mensagem.textContent = "Matrícula ou email já cadastrados";
             } else if (result.erro === "DADOS_INCOMPLETOS") {
                 mensagem.textContent = "Preencha todos os campos corretamente!";
+            } else if (result.errors) {
+                mensagem.textContent = "Erro ao cadastrar! Verifique se a matrícula possui 8 dígitos!";
             } else {
                 mensagem.textContent = "Erro ao cadastrar! Verifique se a matrícula possui 8 dígitos!";
             }
             mensagem.style.color = "red";
-            
         } else {
-            window.location.href = 'login.html'; 
+            window.location.href = 'login.html';
         }
 
     } catch (err) {

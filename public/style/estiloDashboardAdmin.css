@@ -670,6 +670,14 @@ body {
         width: 100%;
     }
 
+    .tabela-container {
+        overflow-x: auto;
+    }
+
+    .tabela-container table {
+        min-width: 500px;
+    }
+
     .tabela-container th,
     .tabela-container td {
         padding: 12px 16px;
@@ -678,5 +686,12 @@ body {
 
     .acoes-botoes {
         flex-direction: row;
+        gap: 6px;
+    }
+
+    .acoes-botoes button {
+        width: 32px;
+        height: 32px;
+        font-size: 0.85rem;
     }
 }

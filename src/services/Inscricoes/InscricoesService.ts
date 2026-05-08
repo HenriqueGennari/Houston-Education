@@ -1,4 +1,4 @@
-import { Inscricao } from "@prisma/client";
+    import { Inscricao } from "@prisma/client";
 import type InscricoesPrismaRepository from "../../repositories/Prisma/InscricoesPrismaRepository.js";
 
 
@@ -14,6 +14,11 @@ class InscricaosService{
     
     async getInscricaoAluno(alunoId: string) : Promise<Inscricao[]>{
         const InscricaosDados = await this._inscricaoPrismaRepository.getInscricaoAluno(alunoId)
+        return InscricaosDados;
+    }
+
+    async getByMonitoria(monitoriaId: string) : Promise<any[]>{
+        const InscricaosDados = await this._inscricaoPrismaRepository.getByMonitoria(monitoriaId)
         return InscricaosDados;
     }
 

@@ -239,7 +239,7 @@ async function carregarMonitorias() {
                     document.getElementById("id_monitoria_hidden").value = m.id;
 
                     formUpdate.querySelector('input[name="nome_monitoria"]').value = m.nome_monitoria;
-                    formUpdate.querySelector('input[name="descricao"]').value = m.descricao;
+                    formUpdate.querySelector('textarea[name="descricao"]').value = m.descricao;
                     formUpdate.querySelector('input[name="data"]').value = new Date(m.inicio).toISOString().split("T")[0];
                     formUpdate.querySelector('input[name="hora_inicio"]').value = new Date(m.inicio).toTimeString().slice(0, 5);
                     formUpdate.querySelector('input[name="hora_fim"]').value = new Date(m.fim).toTimeString().slice(0, 5);
