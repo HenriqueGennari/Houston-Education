@@ -46,7 +46,15 @@ class AlunosService{
 
     async update(id : string, dados : Aluno) : Promise <Aluno>{
 
-        if (dados.matricula.length < 8) {
+        if (dados.nome !== undefined && dados.nome.trim() === "") {
+            throw new Error ("NOME_OBRIGATORIO")
+        }
+
+        if (dados.email !== undefined && dados.email.trim() === "") {
+            throw new Error ("EMAIL_OBRIGATORIO")
+        }
+
+        if (dados.matricula !== undefined && dados.matricula.length < 8) {
             throw new Error ("MATRICULA_INVALIDA")
         }
 
