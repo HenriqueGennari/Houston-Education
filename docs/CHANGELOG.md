@@ -44,6 +44,77 @@ Exemplo de evolução de versão:
 
 ---
 
+## [1.2.0] - 2026-05-08
+
+### Added
+
+**Aba Perfil**
+- Criada página de Perfil (`perfil.html`) para atualização de dados pessoais (nome, email, matrícula).
+- Adicionado item "Perfil" no menu lateral visível para todos os perfis (Aluno, Monitor e Admin).
+
+**Botão de Detalhes na Aba de Gerenciamento**
+- Adicionado botão "Detalhes" nos cards de monitoria na tela de gerenciamento.
+- Exibe popup com lista de todos os alunos inscritos naquela monitoria.
+- Criado endpoint separado para trazer as informações de inscritos.
+
+**Validações e Regras de Negócio**
+- Adicionado tratamento de erro para matrícula duplicada: query que verifica se a matrícula já existe no banco antes de cadastrar/atualizar. Ademais, foi adicionado a validação para horário de fim menor ou igual ao horário de início.
+- Adicionada validação de campos vazios no update de aluno: nome e email não podem ser enviados como string vazia, permitindo que apenas um campo seja atualizado por vez.
+
+**Repository de Aluno**
+- Criada função `findByEmailAndMatricula` que busca por email OU matrícula em uma única query.
+- Substituídos todos os usos de `findByEmail` e `findByMatricula` isolados pela nova função unificada.
+
+### Changed
+
+**Modal de Atualização de Monitorias**
+- Remodelação da modal de atualização com layout mais compacto.
+- Campo "Descrição" movido para linha própria abaixo de "Nome" e acima de "Data", utilizando `textarea` para textos longos.
+- Dropdowns de local e disciplina agora são filtrados com base no campus e curso selecionados previamente.
+
+
+
+**JWT**
+- Token JWT agora inclui o campo `matricula` no payload, eliminando a necessidade de endpoint extra para buscar dados do usuário logado.
+
+### Fixed
+
+**Responsividade do Dashboard Admin**
+- Adicionado scroll horizontal nas tabelas do dashboard para dispositivos móveis (telas < 768px).
+- Reduzido tamanho dos botões de ação (editar/excluir) em mobile para melhor usabilidade.
+
+**Layout e Popups**
+- Corrigido vazamento de texto da descrição nos cards e popups de monitoria com quebra de linha (`word-wrap: break-word`).
+- Corrigido caminho de redirecionamento da aba Perfil para a Home.
+
+<details>
+<summary>🖼️ <b>Clique aqui para visualizar as telas desta versão</b></summary>
+
+<br>
+
+#### Home
+![Tela Home](./img/TELAS-V1.1.0/homeV1.1.png)
+
+#### Dashboard Admin
+![Dashboard Admin - Usuários](./img/TELAS-V1.1.0/dashboardAdminUsuariosV1.1.png)
+![Dashboard Admin - Locais](./img/TELAS-V1.1.0/dashboardAdminLocaisV1.1.png)
+![Dashboard Admin - Disciplinas](./img/TELAS-V1.1.0/dashboardAdminDisciplinasV1.1.png)
+![Dashboard Admin - Cursos](./img/TELAS-V1.1.0/dashboardAdminCursosV1.1.png)
+
+#### Monitorias
+![Tela de Gerenciamento](./img/TELAS-V1.2.0/gerenciamentoMonitoriasV1.2.png)
+![Tela de Cadastro de Monitorias](./img/TELAS-V1.1.0/cadastroMonitoriasV1.1.png)
+
+#### Perfil
+
+![Tela de perfil](./img/TELAS-V1.2.0/perfilV1.2.png)
+
+</details>
+
+
+---
+
+
 ## [1.1.0] - 2026-04-30
 
 ### Added
