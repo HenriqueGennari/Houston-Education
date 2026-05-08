@@ -14,16 +14,15 @@ class AlunosService{
     }
     
     async create(dados : Aluno) : Promise<Aluno>{
-        const emailAluno = await this._alunoPrismaRepository.findByEmail(dados.email);
+        const alunoExistente = await this._alunoPrismaRepository.findByEmailAndMatricula(dados.email, dados.matricula);
 
-        if (emailAluno) {
-            throw new Error ("EMAIL_EXISTE")
-        }
-
-        const matriculaAluno = await this._alunoPrismaRepository.findByMatricula(dados.matricula);
-
-        if (matriculaAluno) {
-            throw new Error ("MATRICULA_EXISTE")
+        if (alunoExistente) {
+            if (alunoExistente.email === dados.email) {
+                throw new Error ("EMAIL_EXISTE")
+            }
+            if (alunoExistente.matricula === dados.matricula) {
+                throw new Error ("MATRICULA_EXISTE")
+            }
         }
 
         const senhaHash = await bcrypt.hash(dados.senha, 10);
@@ -46,11 +45,21 @@ class AlunosService{
     }
 
     async update(id : string, dados : Aluno) : Promise <Aluno>{
+
+        if (dados.matricula || dados.email){
+            const alunoExistente = await this._alunoPrismaRepository.findByEmailAndMatricula(dados.email || "", dados.matricula || "")
+
+            if (alunoExistente && alunoExistente.id !== id){
+                throw new Error ("MATRICULA_OU_EMAIL_EM_USO")
+            }
+        }
+
         const alunoDados = await this._alunoPrismaRepository.update(id, dados)
 
         if (!alunoDados){
             throw new Error ("ALUNO_INEXISTENTE")
         }
+
 
         return alunoDados;
     }

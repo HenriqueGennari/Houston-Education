@@ -2,7 +2,7 @@
 import { Router } from "express";
 import AlunoController from "../../controllers/Aluno/AlunoController.js";
 import { validateSchema } from "../../middlewares/validateSchemaMiddleware.js";
-import { autenticado, AuthRequest } from "../../middlewares/autenticadoMiddleware.js";
+import { autenticado } from "../../middlewares/autenticadoMiddleware.js";
 import { autorizado } from "../../middlewares/autorizadoMiddleware.js";
 
 import * as schema from "../../schemas/alunoSchema.js";

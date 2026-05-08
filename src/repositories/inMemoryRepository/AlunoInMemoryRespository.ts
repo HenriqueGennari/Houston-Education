@@ -23,18 +23,18 @@ class AlunoRepository{
 
         return idAluno;
     }
-    async findByEmail(email : string) : Promise <Alunos | null>{
-        const emailAluno = this.alunos.find((item) => item.email === email)
+    async findByEmailAndMatricula(email: string, matricula: string): Promise <Alunos | null> {
+        const aluno = this.alunos.find((item) => item.email === email || item.matricula === matricula);
 
-        if (!emailAluno){
-            return null
-        } 
+        if (!aluno) {
+            return null;
+        }
 
-        return emailAluno;
-
+        return aluno;
     }
+
     async create(dados : Alunos) : Promise <Alunos> {
-        
+
         dados.id = uuidv4();
         const alunosDados = this.alunos.push(dados);
 

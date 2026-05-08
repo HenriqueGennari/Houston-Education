@@ -230,6 +230,8 @@ h2#titulomonitorias{
   font-size: 1.1rem;
   margin: 0.6rem 0;
   line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 /* Dar destaque ao nome da disciplina e do monitor */
@@ -412,25 +414,30 @@ h2#titulomonitorias{
     font-size: 0.9rem;
 }
 
-/* Estilo unificado para inputs e selects */
+/* Estilo unificado para inputs, selects e textareas */
 .campo-form-atualizar input,
-.campo-form-atualizar select {
+.campo-form-atualizar select,
+.campo-form-atualizar textarea {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 1rem;
-    width: 100%; 
+    width: 100%;
     outline: none;
     transition: border-color 0.2s;
+    font-family: inherit;
+    resize: vertical;
 }
 
 .campo-form-atualizar input:focus,
-.campo-form-atualizar select:focus {
+.campo-form-atualizar select:focus,
+.campo-form-atualizar textarea:focus {
     border-color: #024059;
 }
 
 .campo-form-atualizar input.erro-horario,
-.campo-form-atualizar select.erro-horario {
+.campo-form-atualizar select.erro-horario,
+.campo-form-atualizar textarea.erro-horario {
     border-color: #e74c3c;
     background-color: #fdf2f2;
 }
@@ -449,6 +456,10 @@ h2#titulomonitorias{
 
 .form-row .campo-form-atualizar {
     margin-bottom: 0;
+}
+
+.form-row .campo-form-atualizar.full-width {
+    grid-column: 1 / -1;
 }
 
 /* Responsivo: em telas pequenas volta a empilhar */
@@ -642,6 +653,8 @@ transform: scale(1.05);
     line-height: 1.5;
     padding-bottom: 12px;
     border-bottom: 1px solid #eee;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .popup-body h3 {

@@ -10,6 +10,7 @@ export interface AuthRequest extends Request { // criando um type authrequest pa
     id: string;
     nome: string;
     email: string;
+    matricula: string;
     perfil: string;
   };
 }
@@ -77,6 +78,7 @@ export const autenticadoCookie = (req: AuthRequest, res: Response, next: NextFun
       id: decoded.id as string,
       nome: decoded.nome as string,
       email: decoded.email as string,
+      matricula: decoded.matricula as string,
       perfil: decoded.perfil as string
     };
 

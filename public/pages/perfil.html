@@ -4,12 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin - Campus</title>
+    <title>Perfil - Houston Education</title>
     <link rel="shortcut icon" href="../assets/img/iconeHoustonEducation.ico" type="image/x-icon">
-
-    <link rel="stylesheet" href="../style/styleNavMenuLateral.css">
-    <link rel="stylesheet" href="../style/estiloDashboardAdmin.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../style/styleNavMenuLateral.css?v=5">
+    <link rel="stylesheet" href="../style/estiloPerfil.css?v=1">
     <script type="module" src="../scripts/menuLateral/menuLateral.js"></script>
     <script type="module" src="../scripts/menuLateral/ocultarAbasPorPerfil.js"></script>
 </head>
@@ -18,10 +16,9 @@
     <script type="module">
         import { parseJwt } from "../scripts/utils/parseJWT.js";
 
-        const user = parseJwt(localStorage.getItem('token'));
-
-        if (user.perfil !== "MONITOR" && user.perfil !== "ADMIN") {
-            window.location.href = "/pages/naoAutorizado.html";
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = "/pages/login.html";
         }
     </script>
 
@@ -51,7 +48,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/perfil" id="linkPerfil">
+                    <a href="/perfil" class="active">
                         <img src="../assets/img/iconeUsuario.png" alt="Icone Perfil">
                         <span>Perfil</span>
                     </a>
@@ -80,21 +77,51 @@
 
     <div id="overlay" class="overlay-menu"></div>
 
-    <div class="dashboard-header">
-        <h1>Dashboard Admin</h1>
-        <p>Gerencie os campus da instituicao</p>
+    <div id="popupSucesso" class="popup-sucesso hidden">
+        <div class="popup-sucesso-content">
+            <button class="popup-sucesso-fechar" id="btnFecharPopup">×</button>
+            <span class="popup-sucesso-icone">✔</span>
+            <p>Informacoes salvas com sucesso!</p>
+        </div>
     </div>
 
-    <nav class="dashboard-tabs">
-        <a href="/dashboard-admin">Usuarios</a>
-        <a href="/dashboard-locais">Locais</a>
-        <a href="/dashboard-disciplinas">Disciplinas</a>
-        <a href="/dashboard-campus" class="active">Campus</a>
-    </nav>
+    <div class="perfil-container">
+        <div class="perfil-card">
+            <div class="perfil-header">
+                <div class="perfil-icone">
+                    <img src="../assets/img/iconeUsuario.png" alt="Icone Perfil">
+                </div>
+                <h2>Dados Pessoais</h2>
+            </div>
 
-    <div class="dashboard-container">
-        <!-- Conteudo de campus sera implementado futuramente -->
+            <form id="formPerfil">
+                <div class="perfil-form-row">
+                    <div class="campo-perfil">
+                        <label for="nomeCompleto">Nome Completo <span class="obrigatorio">*</span></label>
+                        <input type="text" id="nomeCompleto" name="nomeCompleto" value="">
+                    </div>
+                    <div class="campo-perfil">
+                        <label for="matricula">Matricula</label>
+                        <input type="text" id="matricula" name="matricula" value="">
+                    </div>
+                </div>
+
+                <div class="perfil-form-row">
+                    <div class="campo-perfil full-width">
+                        <label for="email">E-mail <span class="obrigatorio">*</span></label>
+                        <input type="email" id="email" name="email" value="">
+                    </div>
+                </div>
+
+                <div class="perfil-acoes">
+                    <button type="button" class="btn-cancelar" id="btnCancelar">Cancelar</button>
+                    <button type="submit" class="btn-salvar">Salvar Alteracoes</button>
+                </div>
+            </form>
+        </div>
     </div>
+
+    <script type="module" src="../scripts/perfil/perfil.js"></script>
 </body>
 
 </html>
