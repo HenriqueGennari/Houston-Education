@@ -133,6 +133,7 @@ h2#titulomonitorias{
   border-radius: 8px;
   width: 100%;
   min-height: 210px;
+  position: relative;
   transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s, display 0.3s allow-discrete;
 }
 
@@ -352,6 +353,7 @@ h2#titulomonitorias{
 /* Classe que o JS vai adicionar para mostrar o modal */
 .modal-overlay.open {
     display: flex;
+    overflow-y: auto;
 }
 
 /* --- A CAIXA BRANCA (Modal Content) --- */
@@ -361,8 +363,10 @@ h2#titulomonitorias{
     border-radius: 10px;
     width: 90%;       /* Em celulares ocupa 90% da tela */
     max-width: 500px; /* Em PC nunca passa de 500px */
+    max-height: 90vh; /* Limita altura para permitir scroll interno */
+    overflow-y: auto; /* Scroll vertical quando conteúdo excede */
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Sombra suave */
-    
+
     /* Uma leve animação de entrada */
     animation: modalFadeIn 0.3s ease-out;
 }
@@ -944,7 +948,8 @@ transform: scale(1.05);
 }
 
 /* Tabs de Campus */
-.tabs-campus {
+.tabs-campus,
+.tabs-status {
     display: flex;
     gap: 0;
     border-bottom: 2px solid #e2e8f0;
@@ -991,7 +996,8 @@ transform: scale(1.05);
 }
 
 @media (max-width: 768px) {
-    .tabs-campus {
+    .tabs-campus,
+    .tabs-status {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
@@ -1010,7 +1016,7 @@ transform: scale(1.05);
 /* Grid para página de gerenciar monitorias */
 .pagina-gerenciar #listamonitorias {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 23px;
 }
 
@@ -1024,4 +1030,230 @@ transform: scale(1.05);
   .pagina-gerenciar #listamonitorias {
     grid-template-columns: 1fr;
   }
+}
+
+/* Destaque de monitoria compartilhada */
+.monitoria-destacada {
+    border: 3px solid #0d8bf2;
+    box-shadow: 0 0 20px rgba(13, 139, 242, 0.4);
+    animation: pulseDestaque 2s ease-in-out infinite;
+    border-radius: 12px;
+}
+
+@keyframes pulseDestaque {
+    0%, 100% { box-shadow: 0 0 20px rgba(13, 139, 242, 0.4); }
+    50% { box-shadow: 0 0 30px rgba(13, 139, 242, 0.7); }
+}
+
+.cardmonitoria {
+    position: relative;
+}
+
+.btn-compartilhar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    background: #f0f0f0;
+    color: #666;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 2;
+    padding: 0;
+}
+
+.btn-compartilhar:hover {
+    background: #024059;
+    color: white;
+    transform: scale(1.1);
+}
+
+.btn-compartilhar svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Toast de compartilhamento */
+.toast-compartilhar {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #024059;
+    color: white;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    box-shadow: 0 8px 24px rgba(2, 64, 89, 0.35);
+    z-index: 10000;
+    opacity: 0;
+    transition: all 0.4s ease;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.toast-compartilhar.toast-visivel {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+/* Responsividade da Modal */
+@media (max-width: 768px) {
+    .modal-overlay.open {
+        align-items: flex-start;
+        padding: 20px 0;
+    }
+
+    .modal-content {
+        max-height: calc(100vh - 40px);
+        margin: auto 0;
+    }
+}
+
+/* Popup de chamada (lista de presenca) — mais largo */
+#popupDetalhesMonitoria .popup-content {
+    max-width: 900px;
+    max-height: 95vh;
+    overflow-y: auto;
+}
+
+.chamada-aviso {
+    font-size: 0.85rem;
+    color: #666;
+    font-style: italic;
+    margin-top: -8px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+/* Icones de presenca no popup de chamada */
+.btn-presenca {
+    width: 32px;
+    height: 32px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all 0.2s ease;
+}
+
+.btn-presenca:hover {
+    transform: scale(1.1);
+}
+
+.btn-presenca-presente {
+    border-color: #22c55e;
+    color: #22c55e;
+}
+
+.btn-presenca-presente.ativo {
+    background: #22c55e;
+    color: #fff;
+    border-color: #22c55e;
+}
+
+.btn-presenca-ausente {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+.btn-presenca-ausente.ativo {
+    background: #ef4444;
+    color: #fff;
+    border-color: #ef4444;
+}
+
+/* Layout do item de inscrito no modo chamada */
+.item-inscrito {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 12px;
+    border-bottom: 1px solid #eee;
+    gap: 20px;
+}
+
+.item-inscrito:last-child {
+    border-bottom: none;
+}
+
+.info-inscrito {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    flex: 1;
+    gap: 12px;
+}
+
+.nome-inscrito {
+    font-weight: 600;
+    color: #333;
+    line-height: 1.3;
+}
+
+.matricula-inscrito {
+    font-size: 0.85em;
+    color: #666;
+    line-height: 1.3;
+}
+
+.presenca-controles {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    min-width: 74px;
+    justify-content: flex-end;
+}
+
+/* Icone de editar no canto superior direito do card */
+.btn-editar-card {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 26px;
+    height: 26px;
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1e3a8a;
+    transition: all 0.2s ease;
+    z-index: 2;
+}
+
+.btn-editar-card:hover {
+    background: #1e3a8a;
+    color: #fff;
+    transform: scale(1.1);
+}
+
+/* Botao lista de presenca */
+.btn-lista-presenca {
+    background: #1e3a8a;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.2s ease;
+}
+
+.btn-lista-presenca:hover {
+    background: #3b82f6;
 }

@@ -98,6 +98,11 @@
     <section class="sectionmonitorias">
         <div class="exibirmonitorias">
             <h2 id="titulomonitorias">Suas monitorias</h2>
+            <div class="tabs-status" id="tabsStatus">
+                <button class="tab-btn active" data-status="todas">Todas</button>
+                <button class="tab-btn" data-status="agendada">Agendadas</button>
+                <button class="tab-btn" data-status="antiga">Antigas</button>
+            </div>
             <ul id="listamonitorias">
                 <li>Carregando monitorias...</li>
             </ul>
@@ -138,6 +143,7 @@
             <div class="popup-body">
                 <p id="popupDetalhesDescricao" class="popup-descricao"></p>
                 <h3>Alunos Inscritos</h3>
+                <p class="chamada-aviso">Não se preocupe, a chamada só será salva após a ocorrência da monitoria</p>
                 <ul id="listaInscritos"></ul>
             </div>
         </div>

@@ -19,6 +19,10 @@ router.get("/:id", autenticado, autorizado(["ADMIN", "MONITOR"]), validateSchema
 
 router.post("/", autenticado, validateSchema(schema.inscricoesCreateSchema), InscricoesController.create);
 
+router.put("/monitoria/:monitoriaId/presenca", autenticado, autorizado(["ADMIN", "MONITOR"]), validateSchema(schema.inscricoesSalvarChamadaSchema), InscricoesController.salvarChamada);
+
 router.delete("/:id", autenticado, validateSchema(schema.inscricoesDeleteSchema, "params"), InscricoesController.delete);
+
+
 
 export default router;

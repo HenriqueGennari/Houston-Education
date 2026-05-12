@@ -14,3 +14,12 @@ export const inscricoesCreateSchema = yup.object({
     alunoId : yup.string().uuid().required(),
     monitoriaId : yup.string().uuid().required()
 }).noUnknown();
+
+export const inscricoesSalvarChamadaSchema = yup.object({
+    inscricoes: yup.array().of(
+        yup.object({
+            id: yup.number().required("ID_OBRIGATORIO"),
+            presente: yup.boolean().required("PRESENTE_OBRIGATORIO")
+        })
+    ).required("INSCRICOES_OBRIGATORIAS")
+}).noUnknown();

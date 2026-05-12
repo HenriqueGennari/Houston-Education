@@ -89,6 +89,18 @@ class InscricaoPrismaRepository {
 
     return inscricaoApagado;
   }
+
+  async salvarChamada(atualizacoes: { id: number; presente: boolean }[]): Promise<Inscricao[]> {
+    const resultados = await prisma.$transaction( 
+      atualizacoes.map((a) =>
+        prisma.inscricao.update({
+          where: { id: a.id },
+          data: { presente: a.presente },
+        })
+      )
+    );
+    return resultados;
+  }
 }
 
 export default InscricaoPrismaRepository;

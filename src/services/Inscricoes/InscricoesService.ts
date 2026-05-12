@@ -1,5 +1,6 @@
-    import { Inscricao } from "@prisma/client";
+import { Inscricao } from "@prisma/client";
 import type InscricoesPrismaRepository from "../../repositories/Prisma/InscricoesPrismaRepository.js";
+import MonitoriaPrismaRepository from "../../repositories/Prisma/MonitoriaPrismaRepository.js";
 
 
 class InscricaosService{
@@ -49,6 +50,32 @@ class InscricaosService{
         }
 
         return InscricaoDados;
+    }
+
+    async salvarChamada(
+        monitoriaId: string, atualizacoes: { id: number; presente: boolean }[], usuarioId: string, perfilUsuario: string ): Promise<Inscricao[]> {
+
+        const monitoriaRepository = new MonitoriaPrismaRepository();
+        const monitoria = await monitoriaRepository.getById(monitoriaId);
+
+        if (!monitoria) {
+            throw new Error("MONITORIA_NAO_ENCONTRADA");
+        }
+
+        const agora = new Date();
+        
+        if (new Date(monitoria.inicio) >= agora) {
+            throw new Error("MONITORIA_NAO_OCORREU");
+        }
+
+        if (perfilUsuario !== "ADMIN" && monitoria.monitorId !== usuarioId) {
+            throw new Error("NAO_AUTORIZADO");
+        }
+
+        const resultados = await this._inscricaoPrismaRepository.salvarChamada(atualizacoes);
+
+
+        return resultados;
     }
 }
 

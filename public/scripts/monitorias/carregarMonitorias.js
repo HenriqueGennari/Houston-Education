@@ -131,10 +131,22 @@ async function carregarMonitorias() {
             cursoData.monitorias.forEach((m) => {
             const li = document.createElement("li");
             li.classList.add("cardmonitoria");
+            li.dataset.id = m.id;
             li.dataset.campus = m.local?.campus?.nome || "";
             li.dataset.curso = cursoNome.toLowerCase();
 
+            const linkCompartilhavel = `${window.location.origin}/pages/home.html?monitoria=${m.id}`;
+
             li.innerHTML = `
+            <button class="btn-compartilhar" title="Copiar link da monitoria" aria-label="Compartilhar monitoria">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="18" cy="5" r="3"/>
+                    <circle cx="6" cy="12" r="3"/>
+                    <circle cx="18" cy="19" r="3"/>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                </svg>
+            </button>
             <div class="informacoesmonitoria">
                 <div class="nomemonitoria">${m.nome_monitoria}</div>
                 <div class="disciplinamonitoria">${m.disciplina.nome}</div>
@@ -145,6 +157,16 @@ async function carregarMonitorias() {
                 <div class="campusmonitoria">${m.local?.campus?.nome || ''}</div>
             </div>
             `;
+
+            const btnCompartilhar = li.querySelector(".btn-compartilhar");
+            btnCompartilhar.addEventListener("click", (e) => {
+                e.stopPropagation();
+                navigator.clipboard.writeText(linkCompartilhavel).then(() => {
+                    mostrarToast("Link copiado para a área de transferência!");
+                }).catch(() => {
+                    mostrarToast("Não foi possível copiar o link.");
+                });
+            });
 
             const popupInfoMonitoria = document.getElementById("popupInfoMonitoria");
             const popupTitulo = document.getElementById("popupTitulo");
@@ -368,6 +390,8 @@ async function carregarMonitorias() {
 
         buscarMonitoria.addEventListener("input", filtrar);
 
+        destacarMonitoriaDaUrl();
+
     } catch (err) {
         lista.innerHTML = `<li>Erro ao carregar monitorias: ${err.message}</li>`;
     }
@@ -375,3 +399,48 @@ async function carregarMonitorias() {
 
 carregarCampusTabs();
 carregarMonitorias();
+
+function destacarMonitoriaDaUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const monitoriaId = params.get("monitoria");
+    if (!monitoriaId) return;
+
+    const card = document.querySelector(`.cardmonitoria[data-id="${monitoriaId}"]`);
+    if (!card) return;
+
+    // Ativar o tab do campus correto
+    const campusNome = card.dataset.campus;
+    if (campusNome) {
+        const tabBtn = document.querySelector(`.tab-btn[data-campus="${campusNome}"]`);
+        if (tabBtn) {
+            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+            tabBtn.classList.add("active");
+            filtrarPorCampus(campusNome);
+        }
+    }
+
+    // Adicionar destaque visual
+    card.classList.add("monitoria-destacada");
+
+    // Scroll suave até o card
+    setTimeout(() => {
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 300);
+}
+
+function mostrarToast(mensagem) {
+    let toast = document.getElementById("toastCompartilhar");
+    if (!toast) {
+        toast = document.createElement("div");
+        toast.id = "toastCompartilhar";
+        toast.className = "toast-compartilhar";
+        document.body.appendChild(toast);
+    }
+
+    toast.textContent = mensagem;
+    toast.classList.add("toast-visivel");
+
+    setTimeout(() => {
+        toast.classList.remove("toast-visivel");
+    }, 2500);
+}

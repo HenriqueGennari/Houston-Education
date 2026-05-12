@@ -33,6 +33,16 @@ class InscricoesController {
         }
     }
 
+    async getByMonitoria(Req: Request, Res: Response) {
+        try {
+            const monitoriaId = Req.params.monitoriaId;
+            const inscricoesDados = await inscricoesService.getByMonitoria(monitoriaId);
+            return Res.status(200).json(inscricoesDados);
+        } catch (err: any) {
+            return Res.status(500).json({ error: err.message });
+        }
+    }
+    
     async create(Req: Request, Res: Response) {
         try {
             const dados = Req.body;
@@ -44,15 +54,6 @@ class InscricoesController {
         }
     }
 
-    async getByMonitoria(Req: Request, Res: Response) {
-        try {
-            const monitoriaId = Req.params.monitoriaId;
-            const inscricoesDados = await inscricoesService.getByMonitoria(monitoriaId);
-            return Res.status(200).json(inscricoesDados);
-        } catch (err: any) {
-            return Res.status(500).json({ error: err.message });
-        }
-    }
 
     async getById(Req: Request, Res: Response) {
         try {
@@ -65,6 +66,7 @@ class InscricoesController {
             return Res.status(400).json({ error: err.message })
         }
     }
+
     async delete(Req: Request, Res: Response) {
         try {
             const id = parseInt(Req.params.id, 10);
@@ -74,6 +76,31 @@ class InscricoesController {
 
         } catch (err: any) {
             return Res.status(400).json({ error: err.message })
+        }
+    }
+
+    async salvarChamada(Req: AuthRequest, Res: Response) {
+        try {
+            const monitoriaId = Req.params.monitoriaId;
+            const { inscricoes } = Req.body; // aqui eu pego o id da inscrição e o status do presente
+            const usuarioId = Req.user?.id;
+            const perfilUsuario = Req.user?.perfil;
+
+            if (!usuarioId || !perfilUsuario) {
+                return Res.status(401).json({ error: "USUARIO_NAO_AUTENTICADO" });
+            }
+
+            const resultado = await inscricoesService.salvarChamada(monitoriaId, inscricoes, usuarioId, perfilUsuario);
+            return Res.status(200).json(resultado);
+
+        } catch (err: any) {
+            if (err.message === "MONITORIA_NAO_ENCONTRADA") {
+                return Res.status(404).json({ error: err.message });
+            }
+            if (err.message === "MONITORIA_NAO_OCORREU" || err.message === "NAO_AUTORIZADO") {
+                return Res.status(403).json({ error: err.message });
+            }
+            return Res.status(500).json({ error: err.message });
         }
     }
 }
