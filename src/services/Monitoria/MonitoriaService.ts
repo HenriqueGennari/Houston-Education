@@ -33,17 +33,17 @@ class MonitoriaService {
   async getAll(): Promise<Monitoria[]> {
     const dadosmonitoria = await this._monitoriaRepository.getAll();
     return dadosmonitoria;
-  }
+  } // get de todas as monitorias do sistema
 
   async getDisponiveis(): Promise<Monitoria[]> {
     const dadosmonitoria = await this._monitoriaRepository.getDisponiveis();
     return dadosmonitoria;
-  }
+  } // get de todas as monitorias que ainda vão acontecer
 
   async getByMonitor(monitorId: string): Promise<Monitoria[]> {
     const dadosmonitoria = await this._monitoriaRepository.getByMonitor(monitorId);
     return dadosmonitoria;
-  }
+  } // get de todas as monitorias de um monitor específico 
 
   async getById(id: string): Promise<Monitoria> {
   const monitoriaDados = await this._monitoriaRepository.getById(id);
@@ -53,7 +53,7 @@ class MonitoriaService {
   }
 
     return monitoriaDados;
-  }
+  } // get pelo id da monitoria
 
   async create(dados: MonitoriaInput): Promise<Monitoria> {
     const inicio = criarDateBRT(dados.data, dados.hora_inicio);

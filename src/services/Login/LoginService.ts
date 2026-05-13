@@ -6,21 +6,20 @@ class AuthService{
 
     constructor(private _alunoPrismaRepository : AlunoPrismaRepository){}
 
-    async validateUser(email : string, senha : string){
+    async validateUser(email : string, senha : string){ // literalmente validando o login do usuário
 
-        const user = await this.existeUser(email) // verifica se o usuário existe
+        const user = await this.existeUser(email)
 
         const senhaValida = await bcrypt.compare(senha, user.senha)
 
         if(!user || !senhaValida){
-             // verifica se a senha está certa
             throw new Error ("CREDENCIAIS_INVALIDAS");
         }
         
         return user;
     }
 
-    async existeUser(email: string) {
+    async existeUser(email: string) { // vendo se ele já existe
         const user = await this._alunoPrismaRepository.findByEmailAndMatricula(email, "")
 
         if (!user) {

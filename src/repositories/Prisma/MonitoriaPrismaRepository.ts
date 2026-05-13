@@ -149,7 +149,7 @@ class MonitoriaPrismaRepository {
     return monitoriaDados;
   }
 
-  async getLocalAndData() : Promise<any[]> {
+  async getLocalAndData() : Promise<any[]> { // função auxiliar para o método create
     const monitorias = await prisma.monitoria.findMany({
       where: {
         fim: {
