@@ -149,6 +149,31 @@ class MonitoriaPrismaRepository {
     return monitoriaDados;
   }
 
+  async getLocalAndData() : Promise<any[]> {
+    const monitorias = await prisma.monitoria.findMany({
+      where: {
+        fim: {
+          gte: new Date(),
+        },
+      },
+      select: {
+        inicio: true,
+        fim : true,
+        local: {
+          select: {
+            nome: true,
+            campus: {
+              select: {
+                nome: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    return monitorias;
+  }
+
   async create(data: Prisma.MonitoriaUncheckedCreateInput): Promise<Monitoria> {
     const novAMonitoria = await prisma.monitoria.create({
       data,

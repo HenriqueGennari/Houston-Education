@@ -32,18 +32,6 @@ class MonitoriaController{
             Res.status(500).json({err : err.message})
         }
     }
-    async create(req: Request, res: Response) {
-        try {
-            const dados = req.body;
-            const monitoriaCriada = await monitoriaService.create(dados);
-
-            return res.status(201).json(monitoriaCriada);
-
-        } catch (err: any) {
-            const status = err.message?.startsWith("HORARIO_INVALIDO") ? 400 : 500;
-            return res.status(status).json({ erro: err.message});
-        }
-    }
 
     async getById(Req : Request, Res : Response){
         try {
@@ -55,6 +43,19 @@ class MonitoriaController{
         } catch (err : any) {
             return Res.status(400).json({error : err.message})
         }
+    }
+
+    async create(req: Request, res: Response) {
+    try {
+        const dados = req.body;
+        const monitoriaCriada = await monitoriaService.create(dados);
+
+        return res.status(201).json(monitoriaCriada);
+
+    } catch (err: any) {
+        const status = err.message?.startsWith("HORARIO_INVALIDO") ? 400 : 500;
+        return res.status(status).json({ erro: err.message});
+    }
     }
     async update(Req : Request, Res : Response){
         try {

@@ -1,3 +1,4 @@
+import { json } from "stream/consumers";
 import MonitoriaPrismaRepository from "../../repositories/Prisma/MonitoriaPrismaRepository.js";
 import { Monitoria } from "@prisma/client";
 
@@ -10,7 +11,7 @@ interface MonitoriaInput {
   localId?: string;
   monitorId: string;
   disciplinaId: string;
-}
+} // preciso tirar isso daqui e colocar no model
 
 // essas funções foram criadas para resolver o problema de 3h atrasadas que ficavam as monitorias em produção
 function criarDateBRT(data: string, hora: string): Date {
@@ -44,6 +45,16 @@ class MonitoriaService {
     return dadosmonitoria;
   }
 
+  async getById(id: string): Promise<Monitoria> {
+  const monitoriaDados = await this._monitoriaRepository.getById(id);
+
+  if (!monitoriaDados) {
+    throw new Error("MONITORIA_INEXISTENTE");
+  }
+
+    return monitoriaDados;
+  }
+
   async create(dados: MonitoriaInput): Promise<Monitoria> {
     const inicio = criarDateBRT(dados.data, dados.hora_inicio);
     const fim = criarDateBRT(dados.data, dados.hora_fim);
@@ -52,7 +63,7 @@ class MonitoriaService {
       throw new Error("HORARIO_INVALIDO: O horário de início deve ser anterior ao horário de fim.");
     }
 
-    const dadosParaPrisma: any = {
+    const dadosFormatados: any = {
       nome_monitoria: dados.nome_monitoria,
       inicio,
       fim,
@@ -61,26 +72,23 @@ class MonitoriaService {
     };
 
     if (dados.descricao) {
-      dadosParaPrisma.descricao = dados.descricao;
+      dadosFormatados.descricao = dados.descricao;
     }
 
     if (dados.localId) {
-      dadosParaPrisma.localId = parseInt(dados.localId, 10);
+      dadosFormatados.localId = parseInt(dados.localId, 10);
     }
 
-    const dadosMonitoria = await this._monitoriaRepository.create(dadosParaPrisma);
+    const monitoriasExistentes = await this._monitoriaRepository.getLocalAndData()
+    
+    const dadosMonitoria = await this._monitoriaRepository.create(dadosFormatados);
+
+    console.log(JSON.stringify(monitoriasExistentes, null, 2))
+
     return dadosMonitoria;
   }
 
-  async getById(id: string): Promise<Monitoria> {
-    const monitoriaDados = await this._monitoriaRepository.getById(id);
 
-    if (!monitoriaDados) {
-      throw new Error("MONITORIA_INEXISTENTE");
-    }
-
-    return monitoriaDados;
-  }
 
   async update(id: string, dados: Partial<MonitoriaInput>): Promise<Monitoria> {
     const monitoriaAtual = await this._monitoriaRepository.getById(id);
