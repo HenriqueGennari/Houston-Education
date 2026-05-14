@@ -25,6 +25,23 @@ let usuarios = [];
 let acaoPendente = null;
 let usuarioPendente = null;
 
+function mostrarToastSucesso(mensagem) {
+    let toast = document.getElementById("toastSucesso");
+    if (!toast) {
+        toast = document.createElement("div");
+        toast.id = "toastSucesso";
+        toast.className = "toast-sucesso";
+        document.body.appendChild(toast);
+    }
+
+    toast.innerHTML = `<i class="ph-fill ph-check-circle"></i> <span>${mensagem}</span>`;
+    toast.classList.add("toast-visivel");
+
+    setTimeout(() => {
+        toast.classList.remove("toast-visivel");
+    }, 4000);
+}
+
 async function carregarUsuarios() {
     tabelaBody.innerHTML = '<tr><td colspan="5">Carregando usuarios...</td></tr>';
 
@@ -142,6 +159,7 @@ async function salvarPerfil(e) {
         }
 
         fecharModalEditar();
+        mostrarToastSucesso("Perfil atualizado com sucesso!");
         carregarUsuarios();
     } catch (err) {
         alert(err.message);
@@ -185,6 +203,7 @@ async function executarAcao() {
         }
 
         fecharConfirmacao();
+        mostrarToastSucesso("Usuário excluído com sucesso!");
         carregarUsuarios();
     } catch (err) {
         alert(err.message);
@@ -224,6 +243,7 @@ async function criarUsuario(e) {
         }
 
         fecharModalCriar();
+        mostrarToastSucesso("Usuário criado com sucesso!");
         carregarUsuarios();
     } catch (err) {
         alert(err.message);

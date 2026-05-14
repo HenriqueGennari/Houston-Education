@@ -33,7 +33,7 @@ export const monitoriaCreateSchema = yup.object({
   hora_inicio: yup.string().matches(/^\d{2}:\d{2}$/).required(),
   hora_fim: yup.string().matches(/^\d{2}:\d{2}$/).required(),
   descricao: yup.string().max(200).optional(),
-  localId: yup.string().optional(),
+  localId: yup.string().required(),
   monitorId: yup.string().required(),
   disciplinaId: yup.string().required(),
 }).noUnknown();

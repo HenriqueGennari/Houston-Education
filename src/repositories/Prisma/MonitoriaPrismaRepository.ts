@@ -149,30 +149,18 @@ class MonitoriaPrismaRepository {
     return monitoriaDados;
   }
 
-  async getLocalAndData() : Promise<any[]> { // função auxiliar para o método create
-    const monitorias = await prisma.monitoria.findMany({
+  async conflitoHorario( localId: number,inicio: Date, fim: Date, monitoriaExistenteId?: string): Promise<boolean> { // lembrar In < Fa and Ia < Fn - se ambos true - HÁ CONFLITO
+    const monitoriaExistente = await prisma.monitoria.findFirst({
       where: {
-        fim: {
-          gte: new Date(),
-        },
-      },
-      select: {
-        inicio: true,
-        fim : true,
-        local: {
-          select: {
-            nome: true,
-            campus: {
-              select: {
-                nome: true,
-              },
-            },
-          },
-        },
+        id: monitoriaExistenteId ? {not : monitoriaExistenteId} : undefined, // estou basicamente dizendo o seguinte: caso o id de uma monitoria exsitente venha, busque um id diferente desse mesmo, e, caso não venha, eu boto como undefined. Eu preciso disso pq na função de update, caso eu não passe o id da própria monitoria que estou atualizando, eu sempre teria um true dessa função. 
+        localId,
+        fim: { gt: inicio }, 
+        inicio: { lt: fim },
       },
     });
-    return monitorias;
-  }
+    
+  return !!monitoriaExistente;
+}
 
   async create(data: Prisma.MonitoriaUncheckedCreateInput): Promise<Monitoria> {
     const novAMonitoria = await prisma.monitoria.create({

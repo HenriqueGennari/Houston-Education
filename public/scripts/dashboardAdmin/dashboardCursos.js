@@ -22,6 +22,23 @@ let cursos = [];
 let acaoPendente = null;
 let cursoPendente = null;
 
+function mostrarToastSucesso(mensagem) {
+    let toast = document.getElementById("toastSucesso");
+    if (!toast) {
+        toast = document.createElement("div");
+        toast.id = "toastSucesso";
+        toast.className = "toast-sucesso";
+        document.body.appendChild(toast);
+    }
+
+    toast.innerHTML = `<i class="ph-fill ph-check-circle"></i> <span>${mensagem}</span>`;
+    toast.classList.add("toast-visivel");
+
+    setTimeout(() => {
+        toast.classList.remove("toast-visivel");
+    }, 4000);
+}
+
 async function carregarCursos() {
     tabelaBody.innerHTML = '<tr><td colspan="3">Carregando cursos...</td></tr>';
 
@@ -138,6 +155,7 @@ async function criarCurso(e) {
         }
 
         fecharModalCriar();
+        mostrarToastSucesso("Curso criado com sucesso!");
         carregarCursos();
     } catch (err) {
         alert(err.message);
@@ -168,6 +186,7 @@ async function salvarEdicao(e) {
         }
 
         fecharModalEditar();
+        mostrarToastSucesso("Curso atualizado com sucesso!");
         carregarCursos();
     } catch (err) {
         alert(err.message);
@@ -211,6 +230,7 @@ async function executarAcao() {
         }
 
         fecharConfirmacao();
+        mostrarToastSucesso("Curso excluído com sucesso!");
         carregarCursos();
     } catch (err) {
         alert(err.message);

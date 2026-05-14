@@ -8,7 +8,7 @@ interface MonitoriaInput {
   data: string;
   hora_inicio: string;
   hora_fim: string;
-  localId?: string;
+  localId: string;
   monitorId: string;
   disciplinaId: string;
 } // preciso tirar isso daqui e colocar no model
@@ -46,11 +46,11 @@ class MonitoriaService {
   } // get de todas as monitorias de um monitor específico 
 
   async getById(id: string): Promise<Monitoria> {
-  const monitoriaDados = await this._monitoriaRepository.getById(id);
+    const monitoriaDados = await this._monitoriaRepository.getById(id);
 
-  if (!monitoriaDados) {
-    throw new Error("MONITORIA_INEXISTENTE");
-  }
+    if (!monitoriaDados) {
+      throw new Error("MONITORIA_INEXISTENTE");
+    }
 
     return monitoriaDados;
   } // get pelo id da monitoria
@@ -63,32 +63,31 @@ class MonitoriaService {
       throw new Error("HORARIO_INVALIDO: O horário de início deve ser anterior ao horário de fim.");
     }
 
+    
     const dadosFormatados: any = {
       nome_monitoria: dados.nome_monitoria,
       inicio,
       fim,
       monitorId: dados.monitorId,
       disciplinaId: parseInt(dados.disciplinaId, 10),
-    };
+      localId : parseInt (dados.localId, 10)
+      };
 
     if (dados.descricao) {
       dadosFormatados.descricao = dados.descricao;
     }
 
-    if (dados.localId) {
-      dadosFormatados.localId = parseInt(dados.localId, 10);
+    const conflito = await this._monitoriaRepository.conflitoHorario(dadosFormatados.localId, inicio, fim)
+
+    if (conflito){
+      throw new Error ("CONFLITO_HORARIO_MONITORIA")
     }
 
-    const monitoriasExistentes = await this._monitoriaRepository.getLocalAndData()
-    
-    const dadosMonitoria = await this._monitoriaRepository.create(dadosFormatados);
+    const monitoriaNova = await this._monitoriaRepository.create(dadosFormatados)
 
-    console.log(JSON.stringify(monitoriasExistentes, null, 2))
 
-    return dadosMonitoria;
+    return monitoriaNova;
   }
-
-
 
   async update(id: string, dados: Partial<MonitoriaInput>): Promise<Monitoria> {
     const monitoriaAtual = await this._monitoriaRepository.getById(id);

@@ -46,28 +46,38 @@ class MonitoriaController{
     }
 
     async create(req: Request, res: Response) {
-    try {
-        const dados = req.body;
-        const monitoriaCriada = await monitoriaService.create(dados);
-
-        return res.status(201).json(monitoriaCriada);
-
-    } catch (err: any) {
-        const status = err.message?.startsWith("HORARIO_INVALIDO") ? 400 : 500;
-        return res.status(status).json({ erro: err.message});
-    }
-    }
-    async update(Req : Request, Res : Response){
         try {
-            const {id} = Req.params
-            const dados = Req.body
+            const dados = req.body;
+            const monitoriaCriada = await monitoriaService.create(dados);
 
-            const monitoriaDados = await monitoriaService.update(id, dados)
+            return res.status(201).json(monitoriaCriada);
 
-            return Res.status(200).json(monitoriaDados)
-        } catch (err : any) {
-            const status = err.message?.startsWith("HORARIO_INVALIDO") ? 400 : 400;
-            return Res.status(status).json({error : err.message})
+        } catch (err: any) {
+            if (err.message?.startsWith("HORARIO_INVALIDO")) {
+                return res.status(400).json({ erro: err.message });
+            }
+            if (err.message?.startsWith("CONFLITO_HORARIO")) {
+                return res.status(409).json({ erro: err.message });
+            }
+            return res.status(500).json({ erro: err.message });
+        }
+    }
+    async update(Req: Request, Res: Response) {
+        try {
+            const { id } = Req.params;
+            const dados = Req.body;
+
+            const monitoriaDados = await monitoriaService.update(id, dados);
+
+            return Res.status(200).json(monitoriaDados);
+        } catch (err: any) {
+            if (err.message?.startsWith("HORARIO_INVALIDO")) {
+                return Res.status(400).json({ error: err.message });
+            }
+            if (err.message?.startsWith("CONFLITO_HORARIO")) {
+                return Res.status(409).json({ error: err.message });
+            }
+            return Res.status(500).json({ error: err.message });
         }
     }
     async delete(Req : Request, Res : Response){

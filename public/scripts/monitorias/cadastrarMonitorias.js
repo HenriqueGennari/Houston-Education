@@ -48,8 +48,17 @@ form.addEventListener("submit", async (evento)=>{
             body : JSON.stringify(dados)
         })
 
-        if (!response.ok){
-            mensagem.textContent = "Erro ao criar monitoria. Verifique a data e hora!";
+        if (!response.ok) {
+            const dadosErro = await response.json().catch(() => ({}));
+            const mensagemErro = dadosErro.erro || dadosErro.error || "";
+
+            if (response.status === 409 || mensagemErro.startsWith("CONFLITO_HORARIO")) {
+                mensagem.textContent = "Já existe uma monitoria agendada neste local nesse horário. Escolha outro horário ou local.";
+            } else if (response.status === 400 || mensagemErro.startsWith("HORARIO_INVALIDO")) {
+                mensagem.textContent = "Horário inválido. O início deve ser anterior ao fim.";
+            } else {
+                mensagem.textContent = "Erro ao criar monitoria. Tente novamente.";
+            }
             mensagem.style.color = "red";
             return;
         }

@@ -29,7 +29,7 @@ export const alunoCreateSchema = yup.object({
     nome : yup.string().required(),
     senha : yup.string().required(),
     email : yup.string().email().required(),
-    matricula : yup.string().min(8).max(11).required(),
+    matricula : yup.number().min(8).max(11).required(),
 }).noUnknown();
 
 export const alunoUpdatePerfilSchema = yup.object({

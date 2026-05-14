@@ -38,6 +38,23 @@ async function salvarChamada(monitoriaId, inscricoes) {
     }
 }
 
+function mostrarToastSucesso(mensagem) {
+    let toast = document.getElementById("toastSucessoChamada");
+    if (!toast) {
+        toast = document.createElement("div");
+        toast.id = "toastSucessoChamada";
+        toast.className = "toast-sucesso";
+        document.body.appendChild(toast);
+    }
+
+    toast.innerHTML = `<i class="ph-fill ph-check-circle"></i> <span>${mensagem}</span>`;
+    toast.classList.add("toast-visivel");
+
+    setTimeout(() => {
+        toast.classList.remove("toast-visivel");
+    }, 4000);
+}
+
 async function carregarCursos() {
     try {
         const response = await fetch("/cursos", {
@@ -337,12 +354,12 @@ async function carregarMonitorias() {
 
                                 const btnPresente = document.createElement("button");
                                 btnPresente.classList.add("btn-presenca", "btn-presenca-presente");
-                                btnPresente.innerHTML = "&#10003;";
+                                btnPresente.innerHTML = '<i class="ph-fill ph-check-circle"></i>';
                                 btnPresente.title = "Presente";
 
                                 const btnAusente = document.createElement("button");
                                 btnAusente.classList.add("btn-presenca", "btn-presenca-ausente");
-                                btnAusente.innerHTML = "&#10007;";
+                                btnAusente.innerHTML = '<i class="ph-fill ph-x-circle"></i>';
                                 btnAusente.title = "Ausente";
 
                                 // Estado inicial baseado no banco (null/undefined = nenhum ativo)
@@ -411,10 +428,18 @@ async function carregarMonitorias() {
 
                                 try {
                                     await salvarChamada(m.id, atualizacoes);
-                                    alert("Chamada salva com sucesso!");
+                                    mostrarToastSucesso("Chamada salva com sucesso!");
                                     popupDetalhes.classList.add("hidden");
                                 } catch (err) {
-                                    alert("Erro ao salvar chamada. Tente novamente.");
+                                    if (err.message === "MONITORIA_NAO_OCORREU") {
+                                        alert("A monitoria ainda não ocorreu. A chamada só pode ser salva após a data da monitoria.");
+                                    } else if (err.message === "NAO_AUTORIZADO") {
+                                        alert("Você não tem permissão para salvar esta chamada.");
+                                    } else if (err.message === "MONITORIA_NAO_ENCONTRADA") {
+                                        alert("Monitoria não encontrada.");
+                                    } else {
+                                        alert("Erro ao salvar chamada. Tente novamente.");
+                                    }
                                 }
                             });
 

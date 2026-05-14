@@ -24,6 +24,23 @@ let locais = [];
 let acaoPendente = null;
 let localPendente = null;
 
+function mostrarToastSucesso(mensagem) {
+    let toast = document.getElementById("toastSucesso");
+    if (!toast) {
+        toast = document.createElement("div");
+        toast.id = "toastSucesso";
+        toast.className = "toast-sucesso";
+        document.body.appendChild(toast);
+    }
+
+    toast.innerHTML = `<i class="ph-fill ph-check-circle"></i> <span>${mensagem}</span>`;
+    toast.classList.add("toast-visivel");
+
+    setTimeout(() => {
+        toast.classList.remove("toast-visivel");
+    }, 4000);
+}
+
 async function carregarCampus() {
     try {
         const response = await fetch("/campus", {
@@ -163,6 +180,7 @@ async function criarLocal(e) {
         }
 
         fecharModalCriar();
+        mostrarToastSucesso("Local criado com sucesso!");
         carregarLocais();
     } catch (err) {
         alert(err.message);
@@ -194,6 +212,7 @@ async function salvarEdicao(e) {
         }
 
         fecharModalEditar();
+        mostrarToastSucesso("Local atualizado com sucesso!");
         carregarLocais();
     } catch (err) {
         alert(err.message);
@@ -237,6 +256,7 @@ async function executarAcao() {
         }
 
         fecharConfirmacao();
+        mostrarToastSucesso("Local excluído com sucesso!");
         carregarLocais();
     } catch (err) {
         alert(err.message);

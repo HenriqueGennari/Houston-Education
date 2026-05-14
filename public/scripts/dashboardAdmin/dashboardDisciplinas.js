@@ -29,6 +29,23 @@ let cursos = [];
 let acaoPendente = null;
 let disciplinaPendente = null;
 
+function mostrarToastSucesso(mensagem) {
+    let toast = document.getElementById("toastSucesso");
+    if (!toast) {
+        toast = document.createElement("div");
+        toast.id = "toastSucesso";
+        toast.className = "toast-sucesso";
+        document.body.appendChild(toast);
+    }
+
+    toast.innerHTML = `<i class="ph-fill ph-check-circle"></i> <span>${mensagem}</span>`;
+    toast.classList.add("toast-visivel");
+
+    setTimeout(() => {
+        toast.classList.remove("toast-visivel");
+    }, 4000);
+}
+
 function renderizarListaCursos(listaElement, selectElement) {
     listaElement.innerHTML = cursos.map(c => `
         <div class="curso-item" data-id="${c.id}">${c.nome}</div>
@@ -237,6 +254,7 @@ async function criarDisciplina(e) {
         }
 
         fecharModalCriar();
+        mostrarToastSucesso("Disciplina criada com sucesso!");
         carregarDisciplinas();
     } catch (err) {
         alert(err.message);
@@ -268,6 +286,7 @@ async function salvarEdicao(e) {
         }
 
         fecharModalEditar();
+        mostrarToastSucesso("Disciplina atualizada com sucesso!");
         carregarDisciplinas();
     } catch (err) {
         alert(err.message);
@@ -311,6 +330,7 @@ async function executarAcao() {
         }
 
         fecharConfirmacao();
+        mostrarToastSucesso("Disciplina excluída com sucesso!");
         carregarDisciplinas();
     } catch (err) {
         alert(err.message);
