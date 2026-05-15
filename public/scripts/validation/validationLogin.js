@@ -67,3 +67,22 @@ form.addEventListener("submit", async (e) => {
         setLoading(false);
     }
 });
+
+// Toggle visibilidade da senha
+const btnToggleSenhaLogin = document.getElementById("btnToggleSenhaLogin");
+const inputSenhaLogin = document.getElementById("inputSenhaLogin");
+
+if (btnToggleSenhaLogin && inputSenhaLogin) {
+    btnToggleSenhaLogin.addEventListener("click", () => {
+        const icone = btnToggleSenhaLogin.querySelector("i");
+        if (inputSenhaLogin.type === "password") {
+            inputSenhaLogin.type = "text";
+            icone.classList.remove("fa-eye");
+            icone.classList.add("fa-eye-slash");
+        } else {
+            inputSenhaLogin.type = "password";
+            icone.classList.remove("fa-eye-slash");
+            icone.classList.add("fa-eye");
+        }
+    });
+}

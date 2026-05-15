@@ -43,3 +43,22 @@ form.addEventListener("submit", async (e) => {
         mensagem.style.color = "red";
     }
 });
+
+// Toggle visibilidade da senha
+const btnToggleSenhaCadastro = document.getElementById("btnToggleSenhaCadastro");
+const inputSenhaCadastro = document.getElementById("inputSenhaCadastro");
+
+if (btnToggleSenhaCadastro && inputSenhaCadastro) {
+    btnToggleSenhaCadastro.addEventListener("click", () => {
+        const icone = btnToggleSenhaCadastro.querySelector("i");
+        if (inputSenhaCadastro.type === "password") {
+            inputSenhaCadastro.type = "text";
+            icone.classList.remove("fa-eye");
+            icone.classList.add("fa-eye-slash");
+        } else {
+            inputSenhaCadastro.type = "password";
+            icone.classList.remove("fa-eye-slash");
+            icone.classList.add("fa-eye");
+        }
+    });
+}

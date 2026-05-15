@@ -405,4 +405,23 @@ modalCriarUsuario.addEventListener("click", (e) => {
     });
 });
 
+// Toggle visibilidade da senha no modal de criar usuário
+const btnToggleSenhaCriar = document.getElementById("btnToggleSenhaCriar");
+const inputSenhaCriar = document.getElementById("inputSenhaCriar");
+
+if (btnToggleSenhaCriar && inputSenhaCriar) {
+    btnToggleSenhaCriar.addEventListener("click", () => {
+        const icone = btnToggleSenhaCriar.querySelector("i");
+        if (inputSenhaCriar.type === "password") {
+            inputSenhaCriar.type = "text";
+            icone.classList.remove("fa-eye");
+            icone.classList.add("fa-eye-slash");
+        } else {
+            inputSenhaCriar.type = "password";
+            icone.classList.remove("fa-eye-slash");
+            icone.classList.add("fa-eye");
+        }
+    });
+}
+
 carregarUsuarios();
