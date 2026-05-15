@@ -74,6 +74,13 @@ async function carregarMonitorias() {
         const monitorias = await response.json();
         todasMonitorias = monitorias;
 
+        const ordenacao = document.getElementById("ordenarMonitorias")?.value || "recente";
+        monitorias.sort((a, b) => {
+            const dataA = new Date(a.inicio).getTime();
+            const dataB = new Date(b.inicio).getTime();
+            return ordenacao === "recente" ? dataB - dataA : dataA - dataB;
+        });
+
         const inscricoes = await respInscricao.json();
 
         if (monitorias.length === 0) {
@@ -395,6 +402,13 @@ async function carregarMonitorias() {
     } catch (err) {
         lista.innerHTML = `<li>Erro ao carregar monitorias: ${err.message}</li>`;
     }
+}
+
+const ordenarMonitoriasHome = document.getElementById("ordenarMonitorias");
+if (ordenarMonitoriasHome) {
+    ordenarMonitoriasHome.addEventListener("change", () => {
+        carregarMonitorias();
+    });
 }
 
 carregarCampusTabs();

@@ -39,15 +39,21 @@ li {
 
 /* container da busca */
 .divBuscar {
-  position: relative;
   flex: 1;
   display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.input-busca-wrapper {
+  position: relative;
+  width: 45%;
 }
 
 /* campo de busca */
 #buscaMonitoria {
-  width: 60%;
+  width: 100%;
   padding: 10px 40px 10px 40px; /* espaço p/ a lupa */
   border: 1.5px solid #ccc;
   border-radius: 25px;
@@ -63,12 +69,35 @@ li {
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
 }
 
+.select-ordenar {
+  padding: 10px 16px;
+  border: 1.5px solid #ccc;
+  border-radius: 25px;
+  background: white;
+  color: #333;
+  font-size: 0.95rem;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23024059' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 40px;
+  transition: all 0.3s ease;
+}
+
+.select-ordenar:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+}
+
 /* Ícone de lupa */
 .icone-lupa {
   position: absolute;
-  left: calc(20% + 15px); /* Ajusta horizontalmente conforme a largura do input */
-  top: 50%; /* Centraliza verticalmente */
-  transform: translateY(-50%); /* Corrige o alinhamento no centro exato */
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
   width: 22px;
   height: 22px;
   opacity: 0.7;
@@ -76,9 +105,8 @@ li {
   transition: opacity 0.2s ease;
 }
 
-
-#buscaMonitoria:focus + .icone-lupa,
-.divBuscar:hover .icone-lupa {
+.input-busca-wrapper:hover .icone-lupa,
+.input-busca-wrapper:focus-within .icone-lupa {
   opacity: 1;
 }
 
@@ -306,19 +334,25 @@ h2#titulomonitorias{
 
   .divBuscar {
     width: 100%;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .input-busca-wrapper {
+    width: 100%;
   }
 
   #buscaMonitoria {
-    width: 90%;
+    width: 100%;
     padding-left: 40px;
   }
 
-  .divBuscar::before {
-    left: 35px;
+  .select-ordenar {
+    width: 100%;
   }
 
   .icone-lupa {
-    left: 35px;
+    left: 15px;
   }
 }
 

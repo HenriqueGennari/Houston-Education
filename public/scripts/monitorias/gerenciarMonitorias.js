@@ -174,6 +174,13 @@ async function carregarMonitorias() {
             return;
         }
 
+        const ordenacao = document.getElementById("ordenarMonitorias")?.value || "recente";
+        monitorias.sort((a, b) => {
+            const dataA = new Date(a.inicio).getTime();
+            const dataB = new Date(b.inicio).getTime();
+            return ordenacao === "recente" ? dataB - dataA : dataA - dataB;
+        });
+
         lista.innerHTML = "";
 
         monitorias.forEach((m) => {
@@ -645,6 +652,13 @@ if (popupDetalhesMonitoria) {
         if (e.target === popupDetalhesMonitoria) {
             popupDetalhesMonitoria.classList.add("hidden");
         }
+    });
+}
+
+const ordenarMonitorias = document.getElementById("ordenarMonitorias");
+if (ordenarMonitorias) {
+    ordenarMonitorias.addEventListener("change", () => {
+        carregarMonitorias();
     });
 }
 
