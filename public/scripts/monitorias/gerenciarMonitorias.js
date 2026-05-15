@@ -281,7 +281,8 @@ async function carregarMonitorias() {
                     popupTitulo.textContent = m.nome_monitoria;
                     popupDisciplina.textContent = `Disciplina: ${m.disciplina.nome}`;
                     popupMonitor.textContent = `Monitor: ${m.monitor.nome}`;
-                    popupLocal.textContent = `Local: ${m.local?.nome || 'Não informado'}`;
+                    const campusNome = m.local?.campus?.nome;
+popupLocal.textContent = `Local: ${m.local?.nome || 'Não informado'}${campusNome ? ' — ' + campusNome : ''}`;
                     popupDataHora.textContent = `Data/Hora: ${new Date(m.inicio).toLocaleDateString()} - ${new Date(m.inicio).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
                     popupDescricao.textContent = `Descrição: ${m.descricao || 'Sem descrição'}`;
 
@@ -345,8 +346,12 @@ async function carregarMonitorias() {
                                 matriculaSpan.classList.add("matricula-inscrito");
                                 matriculaSpan.textContent = insc.aluno.matricula;
 
+                                const statusSpan = document.createElement("span");
+                                statusSpan.classList.add("status-presenca");
+
                                 infoDiv.appendChild(nomeSpan);
                                 infoDiv.appendChild(matriculaSpan);
+                                infoDiv.appendChild(statusSpan);
                                 li.appendChild(infoDiv);
 
                                 const controlesDiv = document.createElement("div");
@@ -362,6 +367,21 @@ async function carregarMonitorias() {
                                 btnAusente.innerHTML = '<i class="ph-fill ph-x-circle"></i>';
                                 btnAusente.title = "Ausente";
 
+                                function atualizarStatusPresenca() {
+                                    if (btnPresente.classList.contains("ativo")) {
+                                        statusSpan.textContent = "Presente";
+                                        statusSpan.classList.add("presente");
+                                        statusSpan.classList.remove("ausente");
+                                    } else if (btnAusente.classList.contains("ativo")) {
+                                        statusSpan.textContent = "Ausente";
+                                        statusSpan.classList.add("ausente");
+                                        statusSpan.classList.remove("presente");
+                                    } else {
+                                        statusSpan.textContent = "";
+                                        statusSpan.classList.remove("presente", "ausente");
+                                    }
+                                }
+
                                 // Estado inicial baseado no banco (null/undefined = nenhum ativo)
                                 if (insc.presente === true) {
                                     btnPresente.classList.add("ativo");
@@ -370,6 +390,7 @@ async function carregarMonitorias() {
                                     btnAusente.classList.add("ativo");
                                     estadoPresenca.set(insc.id, false);
                                 }
+                                atualizarStatusPresenca();
 
                                 btnPresente.addEventListener("click", () => {
                                     const jaAtivo = btnPresente.classList.contains("ativo");
@@ -381,6 +402,7 @@ async function carregarMonitorias() {
                                         btnAusente.classList.remove("ativo");
                                         estadoPresenca.set(insc.id, true);
                                     }
+                                    atualizarStatusPresenca();
                                 });
 
                                 btnAusente.addEventListener("click", () => {
@@ -393,6 +415,7 @@ async function carregarMonitorias() {
                                         btnPresente.classList.remove("ativo");
                                         estadoPresenca.set(insc.id, false);
                                     }
+                                    atualizarStatusPresenca();
                                 });
 
                                 controlesDiv.appendChild(btnPresente);
@@ -511,12 +534,29 @@ function limparErroHorario() {
     horaFim.classList.remove("erro-horario");
 }
 
+function mostrarErroConflito(mensagem) {
+    const erro = document.getElementById("erroConflitoHorario");
+    if (erro) {
+        erro.textContent = mensagem;
+        erro.classList.add("visivel");
+    }
+}
+
+function limparErroConflito() {
+    const erro = document.getElementById("erroConflitoHorario");
+    if (erro) {
+        erro.textContent = "";
+        erro.classList.remove("visivel");
+    }
+}
+
 // Lógica de atualizar monitoria
 const formAtualizar = document.getElementById("formAtualizarMonitoria");
 if (formAtualizar) {
     formAtualizar.addEventListener("submit", async (e) => {
         e.preventDefault();
         limparErroHorario();
+        limparErroConflito();
 
         const idMonitoria = document.getElementById("id_monitoria_hidden").value;
         const formData = new FormData(formAtualizar);
@@ -526,7 +566,7 @@ if (formAtualizar) {
 
         try {
             const response = await fetch(`/monitorias/${idMonitoria}`, {
-                method: "PUT",
+                method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
                     ...getAuthHeaders()
@@ -548,6 +588,10 @@ if (formAtualizar) {
                 if (mensagemErro.startsWith("HORARIO_INVALIDO")) {
                     marcarErroHorario();
                 }
+                if (mensagemErro === "CONFLITO_MONITORIA_EXISTENTE") {
+                    mostrarErroConflito("Monitoria existente para esse horário");
+                    marcarErroHorario();
+                }
             }
         } catch (error) {
             console.log(error);
@@ -556,8 +600,8 @@ if (formAtualizar) {
 
     const horaInicioInput = formAtualizar.querySelector('input[name="hora_inicio"]');
     const horaFimInput = formAtualizar.querySelector('input[name="hora_fim"]');
-    if (horaInicioInput) horaInicioInput.addEventListener("input", limparErroHorario);
-    if (horaFimInput) horaFimInput.addEventListener("input", limparErroHorario);
+    if (horaInicioInput) horaInicioInput.addEventListener("input", () => { limparErroHorario(); limparErroConflito(); });
+    if (horaFimInput) horaFimInput.addEventListener("input", () => { limparErroHorario(); limparErroConflito(); });
 }
 
 // Fechar popup de sucesso

@@ -18,7 +18,7 @@ router.get("/:id", autenticado, autorizado(["ADMIN"]) , validateSchema(schema.mo
 
 router.post("/", autenticado, autorizado(["ADMIN", "MONITOR"]), validateSchema(schema.monitoriaCreateSchema), MonitoriaController.create); 
 
-router.put("/:id", autenticado, autorizado(["ADMIN", "MONITOR"]),validateSchema(schema.monitoriaUpdateIdSchema, "params"), validateSchema(schema.monitoriaUpdateSchema, "body"), MonitoriaController.update);
+router.patch("/:id", autenticado, autorizado(["ADMIN", "MONITOR"]),validateSchema(schema.monitoriaUpdateIdSchema, "params"), validateSchema(schema.monitoriaUpdateSchema, "body"), MonitoriaController.update);
 
 router.delete("/:id", autenticado, autorizado(["ADMIN"]) , validateSchema(schema.monitoriaDeleteSchema, "params"), MonitoriaController.delete);
 

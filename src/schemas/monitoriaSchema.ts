@@ -15,6 +15,7 @@ export const monitoriaDeleteSchema = yup.object({
 export const monitoriaUpdateIdSchema = yup.object({
   id: idSchema,
 }).noUnknown();
+
 export const monitoriaUpdateSchema = yup.object({
   nome_monitoria: yup.string().optional(),
   data: yup.string().matches(/^\d{4}-\d{2}-\d{2}$/).optional(),

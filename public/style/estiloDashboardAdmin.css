@@ -726,3 +726,22 @@ body {
 .toast-sucesso i {
     font-size: 1.2rem;
 }
+
+/* Mensagem de erro em formulários */
+.mensagem-erro {
+    display: block;
+    color: #ef4444;
+    font-size: 0.85rem;
+    margin-top: 4px;
+    min-height: 1.2em;
+    visibility: hidden;
+}
+
+.mensagem-erro.visivel {
+    visibility: visible;
+}
+
+.input-erro {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2;
+}

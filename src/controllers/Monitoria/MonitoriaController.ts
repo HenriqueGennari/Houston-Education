@@ -77,6 +77,9 @@ class MonitoriaController{
             if (err.message?.startsWith("CONFLITO_HORARIO")) {
                 return Res.status(409).json({ error: err.message });
             }
+            if (err.message === "CONFLITO_MONITORIA_EXISTENTE") {
+                return Res.status(409).json({ error: "CONFLITO_MONITORIA_EXISTENTE" });
+            }
             return Res.status(500).json({ error: err.message });
         }
     }
