@@ -33,21 +33,28 @@ class LocalService {
   }
 
   async update(id: number, dados: Prisma.LocalUncheckedUpdateInput): Promise<Local> {
-    await this.getById(id);
+    const localAtual = await this.getById(id); // nao preciso tratar
 
-    if (dados.nome && dados.campusId) {
-      const campusId = typeof dados.campusId === "string" ? parseInt(dados.campusId, 10) : dados.campusId as number;
-      const existente = await this._localRepository.findByNomeAndCampus(dados.nome as string, campusId);
-      if (existente && existente.id !== id) {
-        throw new Error("LOCAL_DUPLICADO");
-      }
+    const localAtualizado : any = {
+      ...dados,
+
     }
 
-    const local = await this._localRepository.update(id, dados);
-    if (!local) {
-      throw new Error("ERRO_AO_ATUALIZAR");
+    if (dados.campusId){
+      
     }
-    return local;
+
+    // CONTINUAR DEBUG VER O TIPO DE RETORNO EM DADOS
+   /* async update(id: number, dados: Prisma.LocalUncheckedUpdateInput): Promise<Local> {
+  console.log("dados recebidos:", dados);
+  console.log("tipo do campusId:", typeof dados.campusId);
+  console.log("valor do campusId:", dados.campusId);
+  // ...
+  }*/
+
+
+
+    return localAtualizado;
   }
 
   async delete(id: number): Promise<Local> {

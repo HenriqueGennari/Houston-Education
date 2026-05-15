@@ -112,7 +112,7 @@ class MonitoriaService {
     }
 
     const dadosAtualizados: any = {
-      ...dados,
+      ...dados, 
       inicio,
       fim,
     };
