@@ -1,5 +1,6 @@
 import * as yup from 'yup'
 
+const perfisValidos = [1,2,3]
 
 const idSchema = yup.string().uuid().required("ID_OBRIGATORIO");
 
@@ -15,10 +16,8 @@ export const alunoUpdateIdSchema = yup.object({
 
 export const alunoUpdateSchema = yup.object({
     nome : yup.string().optional(),
-    senha : yup.string().optional(),
     email : yup.string().email().optional(),
     matricula : yup.string().optional(),
-    perfil : yup.string().optional()
 }).noUnknown();
 
 export const alunoDeleteSchema = yup.object({
@@ -29,10 +28,14 @@ export const alunoCreateSchema = yup.object({
     nome : yup.string().required(),
     senha : yup.string().required(),
     email : yup.string().email().required(),
-    matricula : yup.number().min(8).max(11).required(),
+    matricula : yup.string().matches(/^\d{8,11}$/).required(),
 }).noUnknown();
 
 export const alunoUpdatePerfilSchema = yup.object({
-    perfilId : yup.number().integer().min(1).max(3).required("PERFIL_ID_OBRIGATORIO"),
+    perfilId: yup.number().integer().oneOf(perfisValidos).optional(),
+    nome: yup.string().optional(),
+    email: yup.string().email().optional(),
+    matricula: yup.string().matches(/^\d{8,11}$/).optional(),
+    senha: yup.string().optional(),
 }).noUnknown();
 

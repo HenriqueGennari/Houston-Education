@@ -53,7 +53,7 @@ class MonitoriaService {
     }
 
     return monitoriaDados;
-  } // get pelo id da monitoria
+  }
 
   async create(dados: MonitoriaInput): Promise<Monitoria> {
     const inicio = criarDateBRT(dados.data, dados.hora_inicio);
@@ -128,6 +128,12 @@ class MonitoriaService {
     delete dadosAtualizados.data;
     delete dadosAtualizados.hora_inicio;
     delete dadosAtualizados.hora_fim;
+
+    const conflito = await this._monitoriaRepository.conflitoHorario(dadosAtualizados.localId, dadosAtualizados.inicio, dadosAtualizados.fim)
+
+    if (conflito){
+      throw new Error ("CONFLITO_MONITORIA_EXISTENTE")
+    }
 
     const dadosMonitoria = await this._monitoriaRepository.update(
       id,

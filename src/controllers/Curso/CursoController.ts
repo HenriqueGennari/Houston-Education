@@ -20,7 +20,13 @@ class CursoController {
       return Res.status(201).json(curso);
     } catch (err: any) {
       if (err.message === "CURSO_INEXISTENTE") {
-        return Res.status(404).json({ erro: err.message });
+        return Res.status(404).json({ erro: "CURSO_INEXISTENTE" });
+      }
+      if (err.message === "CURSO_DUPLICADO") {
+        return Res.status(409).json({ erro: "CURSO_DUPLICADO" });
+      }
+      if (err.message?.includes("Unique constraint")) {
+        return Res.status(409).json({ erro: "CURSO_DUPLICADO" });
       }
       return Res.status(500).json({ erro: err.message });
     }
@@ -29,11 +35,20 @@ class CursoController {
   async update(Req: Request, Res: Response) {
     try {
       const id = parseInt(Req.params.id, 10);
-      const curso = await cursoService.update(id, Req.body);
+      const dados = { ...Req.body };
+
+      const curso = await cursoService.update(id, dados);
+
       return Res.status(200).json(curso);
     } catch (err: any) {
       if (err.message === "CURSO_INEXISTENTE") {
-        return Res.status(404).json({ erro: err.message });
+        return Res.status(404).json({ erro: "CURSO_INEXISTENTE" });
+      }
+      if (err.message === "CURSO_DUPLICADO") {
+        return Res.status(409).json({ erro: "CURSO_DUPLICADO" });
+      }
+      if (err.message?.includes("Unique constraint")) {
+        return Res.status(409).json({ erro: "CURSO_DUPLICADO" });
       }
       return Res.status(500).json({ erro: err.message });
     }

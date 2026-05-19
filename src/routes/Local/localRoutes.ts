@@ -10,7 +10,7 @@ const router = Router();
 router.get("/", autenticado, autorizado(["ADMIN", "MONITOR", "ALUNO"]), LocalController.getAll);
 router.get("/:id", autenticado, autorizado(["ADMIN", "MONITOR"]), validateSchema(schema.localGetByIdSchema, "params"), LocalController.getById);
 router.post("/", autenticado, autorizado(["ADMIN"]), validateSchema(schema.localCreateSchema), LocalController.create);
-router.put("/:id", autenticado, autorizado(["ADMIN"]), validateSchema(schema.localUpdateSchema), LocalController.update);
+router.patch("/:id", autenticado, autorizado(["ADMIN"]), validateSchema(schema.localUpdateSchema), LocalController.update);
 router.delete("/:id", autenticado, autorizado(["ADMIN"]), validateSchema(schema.localGetByIdSchema, "params"), LocalController.delete);
 
 export default router;

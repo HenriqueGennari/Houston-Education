@@ -159,8 +159,8 @@ class MonitoriaPrismaRepository {
       },
     });
     
-  return !!monitoriaExistente;
-}
+    return !!monitoriaExistente;
+  }
 
   async create(data: Prisma.MonitoriaUncheckedCreateInput): Promise<Monitoria> {
     const novAMonitoria = await prisma.monitoria.create({
@@ -170,10 +170,7 @@ class MonitoriaPrismaRepository {
     return novAMonitoria;
   }
 
-  async update(
-    id: string,
-    data: Prisma.MonitoriaUncheckedUpdateInput
-  ): Promise<Monitoria | null> {
+  async update( id: string, data: Prisma.MonitoriaUncheckedUpdateInput ): Promise<Monitoria | null> {
     const monitoriaAtualizadA = await prisma.monitoria.update({
       data,
       where: {
