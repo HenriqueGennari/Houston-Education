@@ -43,7 +43,45 @@ class MonitoriaService {
   async getByMonitor(monitorId: string): Promise<Monitoria[]> {
     const dadosmonitoria = await this._monitoriaRepository.getByMonitor(monitorId);
     return dadosmonitoria;
-  } // get de todas as monitorias de um monitor específico 
+  } // get de todas as monitorias de um monitor específico
+
+  async getHistoricoMonitor(monitorId: string, usuarioId: string, perfil: string): Promise<any[]> {
+    if ((perfil === "MONITOR" && monitorId !== usuarioId) || perfil === "ALUNO") {
+      throw new Error("ACESSO_NEGADO");
+    }
+
+    const dadosmonitoria = await this._monitoriaRepository.getHistoricoMonitor(monitorId);
+
+    return dadosmonitoria.map((m: any) => ({
+      nome: m.nome_monitoria,
+      disciplina: { nome: m.disciplina.nome },
+      data: m.inicio.toISOString().split("T")[0],
+      inicio: extrairHoraBRT(m.inicio),
+      fim: extrairHoraBRT(m.fim),
+      inscritos: m._count.inscricoes,
+      presentes: m.inscricoes.length,
+      temChamada: m._count.inscricoes > 0,
+    }));
+  }
+
+  async getHistoricoAdmin(perfil: string): Promise<any[]> {
+    if (perfil !== "ADMIN") {
+      throw new Error("ACESSO_NEGADO");
+    }
+
+    const dadosmonitoria = await this._monitoriaRepository.getHistoricoAdmin();
+
+    return dadosmonitoria.map((m: any) => ({
+      nome: m.nome_monitoria,
+      disciplina: { nome: m.disciplina.nome },
+      data: m.inicio.toISOString().split("T")[0],
+      inicio: extrairHoraBRT(m.inicio),
+      fim: extrairHoraBRT(m.fim),
+      inscritos: m._count.inscricoes,
+      presentes: m.inscricoes.length,
+      temChamada: m._count.inscricoes > 0,
+    }));
+  }
 
   async getById(id: string): Promise<Monitoria> {
     const monitoriaDados = await this._monitoriaRepository.getById(id);

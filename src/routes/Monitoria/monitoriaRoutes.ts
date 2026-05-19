@@ -14,6 +14,8 @@ router.get("/", autenticado, MonitoriaController.getAll);
 
 router.get("/disponiveis", autenticado, MonitoriaController.getDisponiveis);
 router.get("/monitor/:monitorId", autenticado, autorizado(["ADMIN", "MONITOR"]) , MonitoriaController.getByMonitor);
+router.get("/historico", autenticado, autorizado(["ADMIN"]), MonitoriaController.getHistoricoAdmin);
+router.get("/historico/:monitorId", autenticado, autorizado(["ADMIN", "MONITOR"]), validateSchema(schema.monitoriaGetHistoricoSchema, "params"), MonitoriaController.getHistoricoMonitor);
 router.get("/:id", autenticado, autorizado(["ADMIN"]) , validateSchema(schema.monitoriaGetByIdSchema, "params"), MonitoriaController.getById);
 
 router.post("/", autenticado, autorizado(["ADMIN", "MONITOR"]), validateSchema(schema.monitoriaCreateSchema), MonitoriaController.create); 

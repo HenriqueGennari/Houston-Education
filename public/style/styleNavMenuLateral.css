@@ -129,6 +129,45 @@ nav {
 }
 
 /* =========================================
+   SUBMENU (Minhas monitorias)
+   ========================================= */
+
+.submenu-toggle {
+    justify-content: flex-start;
+}
+
+.seta-submenu {
+    margin-left: auto;
+    font-size: 0.8rem;
+    transition: transform 0.2s ease;
+}
+
+.submenu.aberto .seta-submenu {
+    transform: rotate(180deg);
+}
+
+.submenu-lista {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background-color: #013242;
+}
+
+.submenu.aberto .submenu-lista {
+    max-height: 200px;
+}
+
+.submenu-lista li a {
+    padding: 14px 20px 14px 59px;
+    font-size: 1rem;
+    gap: 10px;
+}
+
+.submenu-lista li a:hover {
+    background-color: #024a66;
+}
+
+/* =========================================
    O OVERLAY (Escurecer e Click-to-close)
    ========================================= */
 

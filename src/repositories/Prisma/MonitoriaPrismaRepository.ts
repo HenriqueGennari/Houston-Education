@@ -139,6 +139,61 @@ class MonitoriaPrismaRepository {
     return dadosMonitoria;
   }
 
+  async getHistoricoMonitor(monitorId: string): Promise<any[]> {
+    const dadosMonitoria = await prisma.monitoria.findMany({
+      where: {
+        monitorId: monitorId,
+      },
+      include: {
+        disciplina: {
+          select: {
+            nome: true,
+          },
+        },
+        inscricoes: {
+          where: {
+            presente: true,
+          },
+          select: {
+            id: true,
+          },
+        },
+        _count: {
+          select: {
+            inscricoes: true,
+          },
+        },
+      },
+    });
+    return dadosMonitoria;
+  }
+
+  async getHistoricoAdmin(): Promise<any[]> {
+    const dadosMonitoria = await prisma.monitoria.findMany({
+      include: {
+        disciplina: {
+          select: {
+            nome: true,
+          },
+        },
+        inscricoes: {
+          where: {
+            presente: true,
+          },
+          select: {
+            id: true,
+          },
+        },
+        _count: {
+          select: {
+            inscricoes: true,
+          },
+        },
+      },
+    });
+    return dadosMonitoria;
+  }
+
   async getById(id: string): Promise<Monitoria | null> {
     const monitoriaDados = await prisma.monitoria.findFirst({
       where: {

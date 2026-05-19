@@ -7,6 +7,10 @@ export const monitoriaGetByIdSchema = yup.object({
   id: idSchema,
 }).noUnknown();
 
+export const monitoriaGetHistoricoSchema = yup.object({
+  monitorId: idSchema,
+}).noUnknown();
+
 export const monitoriaDeleteSchema = yup.object({
   id: idSchema,
 }).noUnknown();

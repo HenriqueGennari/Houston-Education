@@ -4,15 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin - Campus</title>
+    <title>Histórico de Monitorias</title>
     <link rel="shortcut icon" href="../assets/img/iconeHoustonEducation.ico" type="image/x-icon">
 
-    <link rel="stylesheet" href="../style/styleNavMenuLateral.css">
-    <link rel="stylesheet" href="../style/estiloDashboardAdmin.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+    <link rel="stylesheet" href="../style/styleNavMenuLateral.css?v=2">
+    <link rel="stylesheet" href="../style/historicoMonitorias.css?v=2">
     <script type="module" src="../scripts/menuLateral/menuLateral.js"></script>
     <script type="module" src="../scripts/menuLateral/ocultarAbasPorPerfil.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 </head>
 
 <body>
@@ -94,21 +93,46 @@
 
     <div id="overlay" class="overlay-menu"></div>
 
-    <div class="dashboard-header">
-        <h1>Dashboard Admin</h1>
-        <p>Gerencie os campus da instituicao</p>
-    </div>
+    <main class="historico-container">
+        <div class="historico-header">
+            <h1>Histórico das monitorias</h1>
+        </div>
 
-    <nav class="dashboard-tabs">
-        <a href="/dashboard-admin">Usuarios</a>
-        <a href="/dashboard-locais">Locais</a>
-        <a href="/dashboard-disciplinas">Disciplinas</a>
-        <a href="/dashboard-campus" class="active">Campus</a>
-    </nav>
+        <div class="historico-filtros">
+            <div class="filtro-busca">
+                <input type="text" id="buscaMonitoria" placeholder="Buscar monitoria...">
+            </div>
+            <select id="filtroDisciplina">
+                <option value="">Todas disciplinas</option>
+            </select>
+            <input type="date" id="dataInicial" placeholder="Data inicial">
+            <input type="date" id="dataFinal" placeholder="Data final">
+        </div>
 
-    <div class="dashboard-container">
-        <!-- Conteudo de campus sera implementado futuramente -->
-    </div>
+        <div class="tabela-container">
+            <table id="tabelaHistorico">
+                <thead>
+                    <tr>
+                        <th>Monitoria</th>
+                        <th>Disciplina</th>
+                        <th>Data</th>
+                        <th>Horário</th>
+                        <th>Inscritos</th>
+                        <th>Presentes</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="corpoTabelaHistorico">
+                    <tr>
+                        <td colspan="7" class="sem-dados">Carregando...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script type="module" src="../scripts/carregarNomeUsuario.js?v=2"></script>
+    <script type="module" src="../scripts/historicoMonitorias/historicoMonitorias.js?v=2"></script>
 </body>
 
 </html>

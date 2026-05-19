@@ -21,3 +21,12 @@ botaoMenu.addEventListener('click', toggleMenu);
 
 // Clicar no overlay SÓ FECHA
 overlay.addEventListener('click', fecharMenu);
+
+// Toggle do submenu "Minhas monitorias"
+const submenuToggle = document.getElementById('toggleMinhasMonitorias');
+if (submenuToggle) {
+    submenuToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        submenuToggle.closest('.submenu').classList.toggle('aberto');
+    });
+}

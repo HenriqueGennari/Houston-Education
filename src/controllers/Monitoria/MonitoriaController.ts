@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { AuthRequest } from "../../middlewares/autenticadoMiddleware.js";
 import MonitoriaService from "../../services/Monitoria/MonitoriaService.js";
 import MonitoriaPrismaRepository from "../../repositories/Prisma/MonitoriaPrismaRepository.js";
 
@@ -30,6 +31,33 @@ class MonitoriaController{
             return Res.status(200).json(dadosMonitoria)
         } catch (err : any) {
             Res.status(500).json({err : err.message})
+        }
+    }
+
+    async getHistoricoMonitor(Req: Request, Res: Response) {
+        try {
+            const { monitorId } = Req.params;
+            const user = (Req as AuthRequest).user;
+            const dadosMonitoria = await monitoriaService.getHistoricoMonitor(monitorId, user!.id, user!.perfil);
+            return Res.status(200).json(dadosMonitoria);
+        } catch (err: any) {
+            if (err.message === "ACESSO_NEGADO") {
+                return Res.status(403).json({ error: err.message });
+            }
+            Res.status(500).json({ err: err.message });
+        }
+    }
+
+    async getHistoricoAdmin(Req: Request, Res: Response) {
+        try {
+            const user = (Req as AuthRequest).user;
+            const dadosMonitoria = await monitoriaService.getHistoricoAdmin(user!.perfil);
+            return Res.status(200).json(dadosMonitoria);
+        } catch (err: any) {
+            if (err.message === "ACESSO_NEGADO") {
+                return Res.status(403).json({ error: err.message });
+            }
+            Res.status(500).json({ err: err.message });
         }
     }
 

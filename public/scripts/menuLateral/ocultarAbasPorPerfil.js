@@ -5,7 +5,7 @@ const user = token ? parseJwt(token) : null;
 const perfil = user?.perfil || "";
 
 const linkCadastrar = document.getElementById("linkCadastrarMonitoria")?.closest("li");
-const linkGerenciar = document.getElementById("linkGerenciarMonitoria")?.closest("li");
+const linkGerenciar = document.getElementById("linkGerenciarMonitoria")?.closest(".submenu");
 const linkDashboard = document.getElementById("linkDashboardAdmin.html")?.closest("li");
 
 // ALUNO (perfil 3) - apenas home e logout
