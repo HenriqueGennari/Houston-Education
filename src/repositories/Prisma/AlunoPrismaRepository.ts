@@ -29,7 +29,7 @@ class AlunoPrismaRepository {
         return alunos;
     }
 
-    async findByEmailAndMatricula(email: string, matricula: string): Promise<AlunoWithPerfil | null> { // função auxíliar que traz o email e a matrícula, estou usando no login, pra criar um usuário e para atualizar
+    async findByEmailAndMatricula(email: string, matricula: string): Promise<any | null> {
         const aluno = await prisma.aluno.findFirst({
             where: {
                 deletedAt: null,
@@ -38,13 +38,20 @@ class AlunoPrismaRepository {
                     { matricula: matricula }
                 ]
             },
-            include: {
-                perfil: true
+            select: {
+                id: true,
+                nome: true,
+                email: true,
+                matricula: true,
+                senha: true,
+                perfilId: true,
+                perfil: {
+                    select: {
+                        nome: true
+                    }
+                }
             }
         });
-
-        console.log("debug service find email")
-        console.log(aluno)
 
         return aluno;
     }
