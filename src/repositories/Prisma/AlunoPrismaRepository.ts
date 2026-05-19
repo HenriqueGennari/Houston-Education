@@ -43,6 +43,9 @@ class AlunoPrismaRepository {
             }
         });
 
+        console.log("debug service find email")
+        console.log(aluno)
+
         return aluno;
     }
 

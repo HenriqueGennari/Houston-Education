@@ -204,6 +204,20 @@ class MonitoriaPrismaRepository {
     return monitoriaDados;
   }
 
+  async getChamadaMonitoria(monitoriaId: string): Promise<any[]> {
+    const dadosChamada = await prisma.$queryRaw`
+      SELECT
+        aluno.nome,
+        aluno.matricula,
+        insc.presente
+      FROM inscricao AS insc
+      INNER JOIN aluno ON aluno.id = insc."alunoId"
+      WHERE insc."monitoriaId" = ${monitoriaId}
+    `;
+
+    return dadosChamada as any[];
+  }
+
   async conflitoHorario( localId: number,inicio: Date, fim: Date, monitoriaExistenteId?: string): Promise<boolean> { // lembrar In < Fa and Ia < Fn - se ambos true - HÁ CONFLITO
     const monitoriaExistente = await prisma.monitoria.findFirst({
       where: {

@@ -102,6 +102,10 @@
             <div class="filtro-busca">
                 <input type="text" id="buscaMonitoria" placeholder="Buscar monitoria...">
             </div>
+            <select id="ordenarMonitorias" class="select-ordenar">
+                <option value="recente">Mais recente</option>
+                <option value="antiga">Mais antiga</option>
+            </select>
             <select id="filtroDisciplina">
                 <option value="">Todas disciplinas</option>
             </select>
@@ -130,6 +134,22 @@
             </table>
         </div>
     </main>
+
+    <div id="modalChamada" class="modal-overlay">
+        <div class="modal-chamada-content">
+            <div class="modal-chamada-header">
+                <h2 id="modalChamadaTitulo">Chamada</h2>
+                <button class="modal-chamada-fechar" id="btnFecharModal">&times;</button>
+            </div>
+            <div class="modal-chamada-body">
+                <div class="modal-chamada-acoes">
+                    <button class="btn-baixar-pdf" id="btnBaixarPdf">Baixar PDF</button>
+                </div>
+                <div class="modal-chamada-lista" id="modalChamadaLista">
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script type="module" src="../scripts/carregarNomeUsuario.js?v=2"></script>
     <script type="module" src="../scripts/historicoMonitorias/historicoMonitorias.js?v=2"></script>

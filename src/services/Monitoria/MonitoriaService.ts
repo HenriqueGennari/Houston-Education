@@ -53,6 +53,7 @@ class MonitoriaService {
     const dadosmonitoria = await this._monitoriaRepository.getHistoricoMonitor(monitorId);
 
     return dadosmonitoria.map((m: any) => ({
+      id: m.id,
       nome: m.nome_monitoria,
       disciplina: { nome: m.disciplina.nome },
       data: m.inicio.toISOString().split("T")[0],
@@ -72,6 +73,7 @@ class MonitoriaService {
     const dadosmonitoria = await this._monitoriaRepository.getHistoricoAdmin();
 
     return dadosmonitoria.map((m: any) => ({
+      id: m.id,
       nome: m.nome_monitoria,
       disciplina: { nome: m.disciplina.nome },
       data: m.inicio.toISOString().split("T")[0],
@@ -91,6 +93,22 @@ class MonitoriaService {
     }
 
     return monitoriaDados;
+  }
+
+  async getChamadaMonitoria(monitoriaId: string, usuarioId: string, perfil: string): Promise<any[]> {
+    const monitoria = await this._monitoriaRepository.getById(monitoriaId);
+
+    if (!monitoria) {
+      throw new Error("MONITORIA_INEXISTENTE");
+    }
+
+    if (perfil === "MONITOR" && monitoria.monitorId !== usuarioId) {
+      throw new Error("ACESSO_NEGADO");
+    }
+
+    const dadosChamada = await this._monitoriaRepository.getChamadaMonitoria(monitoriaId);
+
+    return dadosChamada;
   }
 
   async create(dados: MonitoriaInput): Promise<Monitoria> {

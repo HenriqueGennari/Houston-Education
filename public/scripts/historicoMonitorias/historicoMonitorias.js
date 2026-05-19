@@ -1,6 +1,7 @@
 import { parseJwt } from "../utils/parseJWT.js";
 
 const API_URL = "http://localhost:3000";
+let monitoriasCache = [];
 
 async function carregarHistorico() {
     const tbody = document.getElementById("corpoTabelaHistorico");
@@ -26,7 +27,8 @@ async function carregarHistorico() {
         if (!resposta.ok) throw new Error("Erro ao carregar histórico");
 
         const monitorias = await resposta.json();
-        renderizarTabela(monitorias);
+        monitoriasCache = monitorias;
+        ordenarMonitorias();
         popularFiltroDisciplinas(monitorias);
     } catch (erro) {
         console.warn("Usando dados mock:", erro.message);
@@ -62,7 +64,8 @@ async function carregarHistorico() {
                 temChamada: false,
             },
         ];
-        renderizarTabela(mock);
+        monitoriasCache = mock;
+        ordenarMonitorias();
         popularFiltroDisciplinas(mock);
     }
 }
@@ -104,7 +107,12 @@ function renderizarTabela(monitorias) {
 
     document.querySelectorAll(".btn-ver-chamada").forEach((btn) => {
         btn.addEventListener("click", () => {
-            alert("Visualização da chamada em desenvolvimento");
+            const id = btn.dataset.id;
+            const linha = btn.closest("tr");
+            const colunas = linha.querySelectorAll("td");
+            const nomeMonitoria = colunas[0].textContent;
+            const dataMonitoria = colunas[2].textContent;
+            abrirModalChamada(id, nomeMonitoria, dataMonitoria);
         });
     });
 }
@@ -157,5 +165,103 @@ document.getElementById("buscaMonitoria")?.addEventListener("input", filtrarMoni
 document.getElementById("filtroDisciplina")?.addEventListener("change", filtrarMonitorias);
 document.getElementById("dataInicial")?.addEventListener("change", filtrarMonitorias);
 document.getElementById("dataFinal")?.addEventListener("change", filtrarMonitorias);
+document.getElementById("ordenarMonitorias")?.addEventListener("change", ordenarMonitorias);
+
+function ordenarMonitorias() {
+    if (!monitoriasCache || monitoriasCache.length === 0) return;
+
+    const ordenacao = document.getElementById("ordenarMonitorias")?.value || "recente";
+
+    const ordenado = [...monitoriasCache].sort((a, b) => {
+        const dataA = new Date(a.data).getTime();
+        const dataB = new Date(b.data).getTime();
+        return ordenacao === "recente" ? dataB - dataA : dataA - dataB;
+    });
+
+    renderizarTabela(ordenado);
+    filtrarMonitorias();
+}
+
+const modalChamada = document.getElementById("modalChamada");
+const btnFecharModal = document.getElementById("btnFecharModal");
+const btnBaixarPdf = document.getElementById("btnBaixarPdf");
+
+async function abrirModalChamada(id, nomeMonitoria, dataMonitoria) {
+    document.getElementById("modalChamadaTitulo").textContent = `Chamada - ${nomeMonitoria} - ${dataMonitoria}`;
+
+    const token = localStorage.getItem("token");
+    const container = document.getElementById("modalChamadaLista");
+    container.innerHTML = `<div class="sem-alunos">Carregando...</div>`;
+    modalChamada.classList.add("open");
+
+    try {
+        const resposta = await fetch(`${API_URL}/monitorias/${id}/chamada`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (!resposta.ok) {
+            if (resposta.status === 403) {
+                container.innerHTML = `<div class="sem-alunos">Você não tem permissão para visualizar esta chamada.</div>`;
+                return;
+            }
+            if (resposta.status === 404) {
+                container.innerHTML = `<div class="sem-alunos">Monitoria não encontrada.</div>`;
+                return;
+            }
+            throw new Error("Erro ao carregar chamada");
+        }
+
+        const alunos = await resposta.json();
+        const alunosFormatados = alunos.map(a => ({
+            nome: a.nome,
+            matricula: a.matricula,
+            inscrito: "Sim",
+            presente: a.presente,
+        }));
+
+        renderizarListaChamada(alunosFormatados);
+    } catch (erro) {
+        container.innerHTML = `<div class="sem-alunos">Erro ao carregar chamada. Tente novamente.</div>`;
+    }
+}
+
+function fecharModalChamada() {
+    modalChamada.classList.remove("open");
+}
+
+function renderizarListaChamada(alunos) {
+    const container = document.getElementById("modalChamadaLista");
+
+    if (!alunos || alunos.length === 0) {
+        container.innerHTML = `<div class="sem-alunos">Nenhum aluno inscrito nesta monitoria</div>`;
+        return;
+    }
+
+    container.innerHTML = alunos.map(aluno => `
+        <div class="chamada-aluno">
+            <div class="chamada-aluno-info">
+                <span class="chamada-aluno-nome">${aluno.nome}</span>
+                <span class="chamada-aluno-matricula">Matrícula: ${aluno.matricula}</span>
+                <span class="chamada-aluno-inscrito">Inscrito: ${aluno.inscrito}</span>
+            </div>
+            <span class="chamada-aluno-status ${aluno.presente ? 'status-presente' : 'status-ausente'}">
+                ${aluno.presente ? 'Presente' : 'Ausente'}
+            </span>
+        </div>
+    `).join("");
+}
+
+btnFecharModal?.addEventListener("click", fecharModalChamada);
+btnBaixarPdf?.addEventListener("click", () => {
+    alert("Download do PDF em desenvolvimento");
+});
+
+modalChamada?.addEventListener("click", (e) => {
+    if (e.target === modalChamada) {
+        fecharModalChamada();
+    }
+});
 
 carregarHistorico();

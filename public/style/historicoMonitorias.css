@@ -80,6 +80,23 @@ body {
     border-color: #024059;
 }
 
+.select-ordenar {
+    padding: 10px 14px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: white;
+    color: #333;
+    font-size: 0.95rem;
+    cursor: pointer;
+    outline: none;
+    min-width: 140px;
+    transition: border-color 0.2s;
+}
+
+.select-ordenar:focus {
+    border-color: #024059;
+}
+
 .tabela-container {
     background: white;
     border-radius: 0 0 8px 8px;
@@ -162,6 +179,171 @@ body {
     text-align: center;
     color: #888;
     padding: 40px;
+}
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.modal-overlay.open {
+    display: flex;
+}
+
+.modal-chamada-content {
+    background: white;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 700px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: modalEntrada 0.25s ease-out;
+}
+
+@keyframes modalEntrada {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-chamada-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-chamada-header h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.modal-chamada-fechar {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #999;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.modal-chamada-fechar:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.modal-chamada-body {
+    padding: 20px 24px;
+    overflow-y: auto;
+}
+
+.modal-chamada-acoes {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
+
+.btn-baixar-pdf {
+    padding: 8px 20px;
+    background: #024059;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-baixar-pdf:hover {
+    background: #035a7d;
+}
+
+.chamada-aluno {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background: #fafafa;
+    transition: background 0.15s;
+}
+
+.chamada-aluno:hover {
+    background: #f0f7ff;
+}
+
+.chamada-aluno-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.chamada-aluno-nome {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95rem;
+    min-width: 180px;
+}
+
+.chamada-aluno-matricula,
+.chamada-aluno-inscrito {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.chamada-aluno-status {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-presente {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-ausente {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.sem-alunos {
+    text-align: center;
+    color: #888;
+    padding: 40px;
+    font-size: 0.95rem;
 }
 
 @media (max-width: 768px) {

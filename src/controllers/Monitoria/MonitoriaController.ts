@@ -73,6 +73,23 @@ class MonitoriaController{
         }
     }
 
+    async getChamadaMonitoria(Req: Request, Res: Response) {
+        try {
+            const { id } = Req.params;
+            const user = (Req as AuthRequest).user;
+            const dadosChamada = await monitoriaService.getChamadaMonitoria(id, user!.id, user!.perfil);
+            return Res.status(200).json(dadosChamada);
+        } catch (err: any) {
+            if (err.message === "MONITORIA_INEXISTENTE") {
+                return Res.status(404).json({ error: err.message });
+            }
+            if (err.message === "ACESSO_NEGADO") {
+                return Res.status(403).json({ error: err.message });
+            }
+            return Res.status(500).json({ error: err.message });
+        }
+    }
+
     async create(req: Request, res: Response) {
         try {
             const dados = req.body;
