@@ -4,25 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin - Campus</title>
+    <title>Minhas Inscrições - Houston Education</title>
     <link rel="shortcut icon" href="../assets/img/iconeHoustonEducation.ico" type="image/x-icon">
-
-    <link rel="stylesheet" href="../style/styleNavMenuLateral.css">
-    <link rel="stylesheet" href="../style/estiloDashboardAdmin.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+    <link rel="stylesheet" href="../style/styleNavMenuLateral.css?v=5">
+    <link rel="stylesheet" href="../style/minhasInscricoes.css?v=1">
     <script type="module" src="../scripts/menuLateral/menuLateral.js"></script>
     <script type="module" src="../scripts/menuLateral/ocultarAbasPorPerfil.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 </head>
 
 <body>
     <script type="module">
         import { parseJwt } from "../scripts/utils/parseJWT.js";
 
-        const user = parseJwt(localStorage.getItem('token'));
-
-        if (user.perfil !== "MONITOR" && user.perfil !== "ADMIN") {
-            window.location.href = "/pages/naoAutorizado.html";
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = "/pages/login.html";
         }
     </script>
 
@@ -58,7 +55,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/pages/minhasInscricoes.html" id="linkMinhasInscricoes">
+                    <a href="/pages/minhasInscricoes.html" class="active">
                         <i class="ph ph-file-text" style="font-size: 22px;"></i>
                         <span>Minhas inscrições</span>
                     </a>
@@ -100,21 +97,50 @@
 
     <div id="overlay" class="overlay-menu"></div>
 
-    <div class="dashboard-header">
-        <h1>Dashboard Admin</h1>
-        <p>Gerencie os campus da instituicao</p>
+    <main class="inscricoes-container">
+        <div class="inscricoes-header">
+            <h1>Minhas inscrições</h1>
+        </div>
+
+        <div class="inscricoes-lista" id="listaInscricoes">
+            <!-- Cards serão inseridos via JS -->
+        </div>
+    </main>
+
+    <!-- Modal de Detalhes -->
+    <div id="modalDetalhes" class="modal-overlay">
+        <div class="modal-detalhes-content">
+            <div class="modal-detalhes-header">
+                <h2 id="modalDetalhesTitulo"></h2>
+                <button class="modal-detalhes-fechar" id="btnFecharModal">&times;</button>
+            </div>
+            <div class="modal-detalhes-body">
+                <div class="detalhe-item">
+                    <span class="detalhe-label">Disciplina:</span>
+                    <span class="detalhe-valor" id="detalheDisciplina"></span>
+                </div>
+                <div class="detalhe-item">
+                    <span class="detalhe-label">Monitor:</span>
+                    <span class="detalhe-valor" id="detalheMonitor"></span>
+                </div>
+                <div class="detalhe-item">
+                    <span class="detalhe-label">Local:</span>
+                    <span class="detalhe-valor" id="detalheLocal"></span>
+                </div>
+                <div class="detalhe-item">
+                    <span class="detalhe-label">Data/Hora:</span>
+                    <span class="detalhe-valor" id="detalheDataHora"></span>
+                </div>
+                <div class="detalhe-item">
+                    <span class="detalhe-label">Descrição:</span>
+                    <span class="detalhe-valor" id="detalheDescricao"></span>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <nav class="dashboard-tabs">
-        <a href="/dashboard-admin">Usuarios</a>
-        <a href="/dashboard-locais">Locais</a>
-        <a href="/dashboard-disciplinas">Disciplinas</a>
-        <a href="/dashboard-campus" class="active">Campus</a>
-    </nav>
-
-    <div class="dashboard-container">
-        <!-- Conteudo de campus sera implementado futuramente -->
-    </div>
+    <script type="module" src="../scripts/carregarNomeUsuario.js?v=2"></script>
+    <script type="module" src="../scripts/minhasInscricoes/minhasInscricoes.js?v=1"></script>
 </body>
 
 </html>
