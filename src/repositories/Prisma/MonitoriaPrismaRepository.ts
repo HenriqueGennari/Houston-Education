@@ -150,6 +150,11 @@ class MonitoriaPrismaRepository {
             nome: true,
           },
         },
+        monitor: {
+          select: {
+            nome: true,
+          },
+        },
         inscricoes: {
           where: {
             presente: true,
@@ -172,6 +177,11 @@ class MonitoriaPrismaRepository {
     const dadosMonitoria = await prisma.monitoria.findMany({
       include: {
         disciplina: {
+          select: {
+            nome: true,
+          },
+        },
+        monitor: {
           select: {
             nome: true,
           },

@@ -12,6 +12,7 @@
     <script type="module" src="../scripts/menuLateral/menuLateral.js"></script>
     <script type="module" src="../scripts/menuLateral/ocultarAbasPorPerfil.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 
 <body>
@@ -118,6 +119,7 @@
                 <thead>
                     <tr>
                         <th>Monitoria</th>
+                        <th>Monitor</th>
                         <th>Disciplina</th>
                         <th>Data</th>
                         <th>Horário</th>
@@ -128,7 +130,7 @@
                 </thead>
                 <tbody id="corpoTabelaHistorico">
                     <tr>
-                        <td colspan="7" class="sem-dados">Carregando...</td>
+                        <td colspan="8" class="sem-dados">Carregando...</td>
                     </tr>
                 </tbody>
             </table>
@@ -151,8 +153,42 @@
         </div>
     </div>
 
+    <div id="pdfContent" style="display: none;">
+        <div class="pdf-header">
+            <img src="../assets/img/iconeHoustonEducation.ico" alt="Logo" class="pdf-logo">
+            <div class="pdf-header-info">
+                <h1>Houston Education</h1>
+                <p>Relatório de Chamada</p>
+            </div>
+        </div>
+        <div class="pdf-monitoria-info">
+            <h2 id="pdfTitulo">Chamada</h2>
+            <div class="pdf-info-grid">
+                <p><strong>Monitor:</strong> <span id="pdfMonitor">-</span></p>
+                <p><strong>Disciplina:</strong> <span id="pdfDisciplina">-</span></p>
+                <p><strong>Data:</strong> <span id="pdfData">-</span></p>
+                <p><strong>Horário:</strong> <span id="pdfHorario">-</span></p>
+            </div>
+        </div>
+        <table class="pdf-tabela">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nome</th>
+                    <th>Matrícula</th>
+                    <th>Inscrito</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="pdfTabelaCorpo"></tbody>
+        </table>
+        <div class="pdf-footer">
+            <p>Documento gerado em <span id="pdfDataGeracao"></span></p>
+        </div>
+    </div>
+
     <script type="module" src="../scripts/carregarNomeUsuario.js?v=2"></script>
-    <script type="module" src="../scripts/historicoMonitorias/historicoMonitorias.js?v=2"></script>
+    <script type="module" src="../scripts/historicoMonitorias/historicoMonitorias.js?v=3"></script>
 </body>
 
 </html>

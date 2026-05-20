@@ -346,6 +346,147 @@ body {
     font-size: 0.95rem;
 }
 
+/* Estilos para o PDF */
+#pdfContent {
+    font-family: 'Inter', sans-serif;
+    padding: 30px;
+    background: white;
+    color: #333;
+}
+
+.pdf-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 3px solid #024059;
+    padding-bottom: 20px;
+    margin-bottom: 24px;
+}
+
+.pdf-logo {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+}
+
+.pdf-header-info h1 {
+    font-size: 1.5rem;
+    color: #024059;
+    margin: 0;
+}
+
+.pdf-header-info p {
+    font-size: 0.95rem;
+    color: #666;
+    margin: 4px 0 0;
+}
+
+.pdf-monitoria-info {
+    margin-bottom: 24px;
+}
+
+.pdf-monitoria-info h2 {
+    font-size: 1.1rem;
+    color: #024059;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.pdf-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 24px;
+}
+
+.pdf-info-grid p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.pdf-info-grid strong {
+    color: #555;
+}
+
+.pdf-tabela {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.pdf-tabela thead {
+    background: #024059;
+    color: white;
+}
+
+.pdf-tabela th {
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.pdf-tabela th:first-child {
+    width: 40px;
+    text-align: center;
+}
+
+.pdf-tabela th:last-child {
+    text-align: center;
+}
+
+.pdf-tabela td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.85rem;
+}
+
+.pdf-tabela td:first-child {
+    text-align: center;
+    font-weight: 600;
+    color: #666;
+}
+
+.pdf-tabela td:last-child {
+    text-align: center;
+    font-weight: 600;
+}
+
+.pdf-tabela .status-presente {
+    color: #155724;
+    background: #d4edda;
+    padding: 2px 10px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+
+.pdf-tabela .status-ausente {
+    color: #721c24;
+    background: #f8d7da;
+    padding: 2px 10px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+
+.pdf-tabela tbody tr:nth-child(even) {
+    background: #fafafa;
+}
+
+.pdf-footer {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #eee;
+}
+
+.pdf-footer p {
+    font-size: 0.8rem;
+    color: #999;
+    margin: 0;
+}
+
 @media (max-width: 768px) {
     .historico-filtros {
         flex-direction: column;
