@@ -1,85 +1,132 @@
-const API_URL = "http://localhost:3000";
+import { getAlunoId } from "../utils/getAlunoId.js";
+import { getAuthHeaders } from "../utils/getAuthHeaders.js";
 
-// Dados mock para visualização (serão substituídos pelo backend futuramente)
-const inscricoesMock = [
-    {
-        id: "1",
-        nome: "Monitoria de Lógica de Programação",
-        data: "30/05/2026",
-        disciplina: "Banco de dados",
-        monitor: "Monitor Paulo",
-        local: "Sala 160 — Taguatinga",
-        dataHora: "30/05/2026 - 07:00",
-        descricao: "Sem descrição",
-    },
-    {
-        id: "2",
-        nome: "Monitoria de Cálculo I",
-        data: "15/06/2026",
-        disciplina: "Cálculo",
-        monitor: "Ana Carolina",
-        local: "Laboratório 3 — Taguatinga",
-        dataHora: "15/06/2026 - 14:00",
-        descricao: "Revisão para a P2. Trazam exercícios resolvidos.",
-    },
-    {
-        id: "3",
-        nome: "Monitoria de Banco de Dados",
-        data: "20/06/2026",
-        disciplina: "Banco de Dados",
-        monitor: "Carlos Eduardo",
-        local: "Sala 205 — Taguatinga",
-        dataHora: "20/06/2026 - 10:00",
-        descricao: "Modelagem ER e normalização.",
-    },
-];
+const listaInscricoes = document.getElementById("listaInscricoes");
+const modalDetalhes = document.getElementById("modalDetalhes");
+const btnFecharModal = document.getElementById("btnFecharModal");
+const popupCancelar = document.getElementById("popupCancelarInscricao");
+const btnConfirmarCancelar = document.getElementById("btnConfirmarCancelar");
+const btnFecharPopupCancelar = document.getElementById("btnFecharPopupCancelar");
 
-function carregarInscricoes() {
-    const container = document.getElementById("listaInscricoes");
+let inscricoesAtuais = [];
+let inscricaoParaCancelar = null;
 
-    // TODO: Substituir por chamada real ao backend
-    // const token = localStorage.getItem("token");
-    // const resposta = await fetch(`${API_URL}/inscricoes/minhas`, { ... });
-
-    const inscricoes = inscricoesMock;
-
-    if (!inscricoes || inscricoes.length === 0) {
-        container.innerHTML = `<div class="sem-inscricoes">Você ainda não está inscrito em nenhuma monitoria.</div>`;
+async function carregarInscricoes() {
+    const alunoId = getAlunoId();
+    if (!alunoId) {
+        listaInscricoes.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: #888;">Erro ao identificar usuário. Faça login novamente.</div>`;
         return;
     }
 
-    container.innerHTML = inscricoes.map((inscricao) => `
-        <div class="inscricao-card" data-id="${inscricao.id}">
-            <div class="inscricao-card-titulo">${inscricao.nome}</div>
-            <div class="inscricao-card-data">
-                <i class="ph ph-calendar"></i>
-                <span>${inscricao.data}</span>
-            </div>
-            <button class="btn-detalhes" data-id="${inscricao.id}">Detalhes</button>
-        </div>
-    `).join("");
-
-    document.querySelectorAll(".btn-detalhes").forEach((btn) => {
-        btn.addEventListener("click", () => {
-            const id = btn.dataset.id;
-            const inscricao = inscricoes.find((i) => i.id === id);
-            if (inscricao) {
-                abrirModalDetalhes(inscricao);
-            }
+    try {
+        const response = await fetch(`/inscricoes/${alunoId}/minhas-inscricoes`, {
+            headers: getAuthHeaders(),
+            credentials: "same-origin"
         });
+
+        if (!response.ok) {
+            throw new Error("ERRO_AO_CARREGAR");
+        }
+
+        inscricoesAtuais = await response.json();
+        aplicarFiltros();
+    } catch (err) {
+        listaInscricoes.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: #888;">Erro ao carregar inscrições: ${err.message}</div>`;
+    }
+}
+
+function aplicarFiltros() {
+    const termoBusca = document.getElementById("buscaMonitoria")?.value.toLowerCase() || "";
+    const ordenacao = document.getElementById("ordenarMonitorias")?.value || "recente";
+
+    let inscricoesFiltradas = [...inscricoesAtuais];
+
+    // Ordenação
+    inscricoesFiltradas.sort((a, b) => {
+        const dataA = new Date(a.monitoria.inicio).getTime();
+        const dataB = new Date(b.monitoria.inicio).getTime();
+        return ordenacao === "recente" ? dataB - dataA : dataA - dataB;
+    });
+
+    // Busca
+    if (termoBusca) {
+        inscricoesFiltradas = inscricoesFiltradas.filter((inscricao) => {
+            const m = inscricao.monitoria;
+            const nomeMonitoria = m.nome_monitoria?.toLowerCase() || "";
+            const nomeDisciplina = m.disciplina?.nome?.toLowerCase() || "";
+            return nomeMonitoria.includes(termoBusca) || nomeDisciplina.includes(termoBusca);
+        });
+    }
+
+    renderizarInscricoes(inscricoesFiltradas);
+}
+
+function renderizarInscricoes(inscricoes) {
+    listaInscricoes.innerHTML = "";
+
+    if (!inscricoes || inscricoes.length === 0) {
+        listaInscricoes.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: #888;">Nenhuma monitoria encontrada.</div>`;
+        return;
+    }
+
+    inscricoes.forEach((inscricao) => {
+        const m = inscricao.monitoria;
+        const card = document.createElement("div");
+        card.classList.add("cardmonitoria");
+        card.dataset.inscricaoId = inscricao.id;
+        card.dataset.monitoriaId = m.id;
+
+        const agora = new Date();
+        const monitoriaJaOcorreu = new Date(m.inicio) <= agora;
+
+        card.innerHTML = `
+            <div class="informacoesmonitoria">
+                <div class="nomemonitoria">${m.nome_monitoria}</div>
+                <div class="disciplinamonitoria">${m.disciplina?.nome || ""}</div>
+                <div class="datamonitoria">
+                    ${new Date(m.inicio).toLocaleDateString()} -
+                    ${new Date(m.inicio).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </div>
+                <div class="campusmonitoria">${m.local?.campus?.nome || ''}</div>
+            </div>
+            <div class="divbotao">
+                <button class="btn-detalhes">Detalhes</button>
+                ${!monitoriaJaOcorreu ? `<button class="btn-inscrito" data-inscricao-id="${inscricao.id}">Inscrito</button>` : ''}
+            </div>
+        `;
+
+        const btnDetalhes = card.querySelector(".btn-detalhes");
+        btnDetalhes.addEventListener("click", (e) => {
+            e.stopPropagation();
+            abrirModalDetalhes(inscricao);
+        });
+
+        if (!monitoriaJaOcorreu) {
+            const btnInscrito = card.querySelector(".btn-inscrito");
+            btnInscrito.addEventListener("click", (e) => {
+                e.stopPropagation();
+                inscricaoParaCancelar = inscricao.id;
+                popupCancelar.classList.remove("hidden");
+            });
+        }
+
+        listaInscricoes.appendChild(card);
     });
 }
 
-const modalDetalhes = document.getElementById("modalDetalhes");
-const btnFecharModal = document.getElementById("btnFecharModal");
-
 function abrirModalDetalhes(inscricao) {
-    document.getElementById("modalDetalhesTitulo").textContent = inscricao.nome;
-    document.getElementById("detalheDisciplina").textContent = inscricao.disciplina;
-    document.getElementById("detalheMonitor").textContent = inscricao.monitor;
-    document.getElementById("detalheLocal").textContent = inscricao.local;
-    document.getElementById("detalheDataHora").textContent = inscricao.dataHora;
-    document.getElementById("detalheDescricao").textContent = inscricao.descricao || "Sem descrição";
+    const m = inscricao.monitoria;
+    const dataInicio = new Date(m.inicio);
+    const dataFormatada = dataInicio.toLocaleDateString();
+    const horaFormatada = dataInicio.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+    document.getElementById("modalDetalhesTitulo").textContent = m.nome_monitoria;
+    document.getElementById("detalheDisciplina").textContent = m.disciplina?.nome || "Não informado";
+    document.getElementById("detalheMonitor").textContent = m.monitor?.nome || "Não informado";
+    document.getElementById("detalheLocal").textContent = `${m.local?.nome || "Não informado"} ${m.local?.campus?.nome ? `(${m.local.campus.nome})` : ""}`;
+    document.getElementById("detalheDataHora").textContent = `${dataFormatada} - ${horaFormatada}`;
+    document.getElementById("detalheDescricao").textContent = m.descricao || "Sem descrição";
+    document.getElementById("detalhePresente").textContent = inscricao.presente ? "Sim" : "Não";
 
     modalDetalhes.classList.add("open");
 }
@@ -95,5 +142,43 @@ modalDetalhes?.addEventListener("click", (e) => {
         fecharModalDetalhes();
     }
 });
+
+btnFecharPopupCancelar?.addEventListener("click", () => {
+    popupCancelar.classList.add("hidden");
+    inscricaoParaCancelar = null;
+});
+
+popupCancelar?.addEventListener("click", (e) => {
+    if (e.target === popupCancelar) {
+        popupCancelar.classList.add("hidden");
+        inscricaoParaCancelar = null;
+    }
+});
+
+btnConfirmarCancelar?.addEventListener("click", async () => {
+    if (!inscricaoParaCancelar) return;
+
+    try {
+        const response = await fetch(`/inscricoes/${inscricaoParaCancelar}`, {
+            method: "DELETE",
+            headers: getAuthHeaders(),
+            credentials: "same-origin"
+        });
+
+        if (!response.ok) {
+            throw new Error("ERRO_AO_CANCELAR");
+        }
+
+        popupCancelar.classList.add("hidden");
+        inscricaoParaCancelar = null;
+        carregarInscricoes();
+    } catch (err) {
+        alert("Erro ao cancelar inscrição. Tente novamente.");
+    }
+});
+
+// Eventos de filtro
+document.getElementById("buscaMonitoria")?.addEventListener("input", aplicarFiltros);
+document.getElementById("ordenarMonitorias")?.addEventListener("change", aplicarFiltros);
 
 carregarInscricoes();

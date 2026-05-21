@@ -3,6 +3,7 @@ import type InscricoesPrismaRepository from "../../repositories/Prisma/Inscricoe
 import MonitoriaPrismaRepository from "../../repositories/Prisma/MonitoriaPrismaRepository.js";
 
 
+
 class InscricaosService{
 
 
@@ -42,7 +43,7 @@ class InscricaosService{
         const dadosInscricaos = await this._inscricaoPrismaRepository.create(dados)
         return dadosInscricaos;
     }
-    async getById(id : number) : Promise <Inscricao>{
+    async getById(id : number) : Promise <any>{
         const InscricaoDados = await this._inscricaoPrismaRepository.getById(id)
 
         if (!InscricaoDados){
@@ -52,6 +53,14 @@ class InscricaosService{
     }
 
     async delete(id : number) : Promise <Inscricao>{
+        const inscricaoExistente = await this.getById(id)
+        
+        const agora = new Date()
+
+        if (new Date(inscricaoExistente.monitoria.inicio) <= agora){
+            throw new Error ("MONITORIA_JA_OCORREU")
+        }
+
         const InscricaoDados = await this._inscricaoPrismaRepository.delete(id)
 
         if (!InscricaoDados){

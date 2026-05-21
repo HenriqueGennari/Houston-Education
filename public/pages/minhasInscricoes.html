@@ -8,6 +8,8 @@
     <link rel="shortcut icon" href="../assets/img/iconeHoustonEducation.ico" type="image/x-icon">
     <link rel="stylesheet" href="../style/styleNavMenuLateral.css?v=5">
     <link rel="stylesheet" href="../style/minhasInscricoes.css?v=1">
+    <link rel="stylesheet" href="../style/style.css?v=5">
+    <link rel="stylesheet" href="../style/stylePopUp.css?v=5">
     <script type="module" src="../scripts/menuLateral/menuLateral.js"></script>
     <script type="module" src="../scripts/menuLateral/ocultarAbasPorPerfil.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
@@ -102,6 +104,17 @@
             <h1>Minhas inscrições</h1>
         </div>
 
+        <div class="divBuscar">
+            <div class="input-busca-wrapper">
+                <img src="../assets/img/lupa.png" alt="" class="icone-lupa">
+                <input type="text" id="buscaMonitoria" placeholder="Buscar monitoria ou disciplina...">
+            </div>
+            <select id="ordenarMonitorias" class="select-ordenar">
+                <option value="recente">Mais recente</option>
+                <option value="antiga">Mais antiga</option>
+            </select>
+        </div>
+
         <div class="inscricoes-lista" id="listaInscricoes">
             <!-- Cards serão inseridos via JS -->
         </div>
@@ -135,7 +148,20 @@
                     <span class="detalhe-label">Descrição:</span>
                     <span class="detalhe-valor" id="detalheDescricao"></span>
                 </div>
+                <div class="detalhe-item">
+                    <span class="detalhe-label">Presente:</span>
+                    <span class="detalhe-valor" id="detalhePresente"></span>
+                </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Popup de confirmacao para cancelar inscricao -->
+    <div id="popupCancelarInscricao" class="popup hidden">
+        <div class="popup-content">
+            <p>Deseja cancelar sua inscricao?</p>
+            <button class="btn-cancelar-inscricao" id="btnConfirmarCancelar">Cancelar inscricao</button>
+            <button class="btn-fechar-popup" id="btnFecharPopupCancelar">Fechar</button>
         </div>
     </div>
 

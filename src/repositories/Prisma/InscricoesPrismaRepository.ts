@@ -62,14 +62,25 @@ class InscricaoPrismaRepository {
     return inscricoes;
   }
 
-  async getById(id: number): Promise<Inscricao | null> {
-    const InscricaoId = await prisma.inscricao.findFirst({
+  async getById(id: number): Promise<any | null> {
+    const inscricaoId = await prisma.inscricao.findFirst({
       where: {
         id: id,
       },
+      include: {
+        monitoria: {
+          select: {
+            inicio: true,
+            fim: true,
+          },
+        },
+      },
     });
 
-    return InscricaoId;
+    console.log("Inscricao repository")
+    console.log(inscricaoId)
+
+    return inscricaoId;
   }
   
   async getMinhasInscricoes(alunoId: string): Promise<any[]> {
@@ -78,6 +89,7 @@ class InscricaoPrismaRepository {
         alunoId,
       },
       select: {
+        id: true,
         presente: true,
         aluno: {
           select: {
@@ -103,6 +115,11 @@ class InscricaoPrismaRepository {
                     nome: true,
                   },
                 },
+              },
+            },
+            monitor: {
+              select: {
+                nome: true,
               },
             },
           },
