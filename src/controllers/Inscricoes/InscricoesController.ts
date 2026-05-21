@@ -43,6 +43,36 @@ class InscricoesController {
         }
     }
     
+    async getById(Req: Request, Res: Response) {
+        try {
+            const id = parseInt(Req.params.id, 10);
+            const inscricoesDados = await inscricoesService.getById(id)
+            
+            return Res.status(200).json(inscricoesDados)
+
+        } catch (err: any) {
+            return Res.status(400).json({ error: err.message })
+        }
+    }
+
+    async getMinhasInscricoes(Req: AuthRequest, Res: Response) {
+        try {
+            const user = Req.user;
+            if (!user) {
+                return Res.status(401).json({ error: "USUARIO_NAO_AUTENTICADO" });
+            }
+            const id = Req.params.id;
+            
+            const inscricoesDados = await inscricoesService.getMinhasInscricoes(id, user);
+            return Res.status(200).json(inscricoesDados);
+        } catch (err: any) {
+            if (err.message === "NAO_AUTORIZADO") {
+                return Res.status(403).json({ error: err.message });
+            }
+            return Res.status(400).json({ error: err.message });
+        }
+    }
+
     async create(Req: Request, Res: Response) {
         try {
             const dados = Req.body;
@@ -53,20 +83,7 @@ class InscricoesController {
             return Res.status(400).json({ erro: err.message });
         }
     }
-
-
-    async getById(Req: Request, Res: Response) {
-        try {
-            const id = parseInt(Req.params.id, 10);
-            const inscricoesDados = await inscricoesService.getById(id)
-
-            return Res.status(200).json(inscricoesDados)
-
-        } catch (err: any) {
-            return Res.status(400).json({ error: err.message })
-        }
-    }
-
+    
     async delete(Req: Request, Res: Response) {
         try {
             const id = parseInt(Req.params.id, 10);

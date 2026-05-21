@@ -71,7 +71,47 @@ class InscricaoPrismaRepository {
 
     return InscricaoId;
   }
-
+  
+  async getMinhasInscricoes(alunoId: string): Promise<any[]> {
+    const inscricoes = await prisma.inscricao.findMany({
+      where: {
+        alunoId,
+      },
+      select: {
+        presente: true,
+        aluno: {
+          select: {
+            nome: true,
+          },
+        },
+        monitoria: {
+          select: {
+            nome_monitoria: true,
+            inicio: true,
+            fim: true,
+            descricao: true,
+            disciplina: {
+              select: {
+                nome: true,
+              },
+            },
+            local: {
+              select: {
+                nome: true,
+                campus: {
+                  select: {
+                    nome: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+    return inscricoes;
+  }
+  
   async create(data: Inscricao): Promise<Inscricao> {
     const novaInscricao = await prisma.inscricao.create({
       data,
@@ -79,19 +119,8 @@ class InscricaoPrismaRepository {
 
     return novaInscricao;
   }
-
-  async delete(id: number): Promise<Inscricao> {
-    const inscricaoApagado = await prisma.inscricao.delete({
-      where: {
-        id: id,
-      },
-    });
-
-    return inscricaoApagado;
-  }
-
   async salvarChamada(atualizacoes: { id: number; presente: boolean }[]): Promise<Inscricao[]> {
-    const resultados = await prisma.$transaction( 
+    const resultados = await prisma.$transaction(
       atualizacoes.map((a) =>
         prisma.inscricao.update({
           where: { id: a.id },
@@ -100,6 +129,16 @@ class InscricaoPrismaRepository {
       )
     );
     return resultados;
+  }
+
+  async delete(id: number): Promise<Inscricao> {
+    const inscricaoApagado = await prisma.inscricao.delete({
+      where: {
+        id: id,
+      },
+    });
+  
+    return inscricaoApagado;
   }
 }
 

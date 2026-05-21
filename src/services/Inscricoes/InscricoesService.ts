@@ -23,6 +23,15 @@ class InscricaosService{
         return InscricaosDados;
     }
 
+    async getMinhasInscricoes(alunoId: string, user: { id: string; perfil: string }) : Promise<any[]>{
+        if (user.id !== alunoId) {
+            throw new Error("MONITORIAS_ALHEIAS");
+        }
+
+        const InscricaosDados = await this._inscricaoPrismaRepository.getMinhasInscricoes(alunoId)
+        return InscricaosDados;
+    }
+
     async create(dados : Inscricao) : Promise<Inscricao>{
         const existeInscricao = await this._inscricaoPrismaRepository.findAlunoMonitoria(dados.alunoId, dados.monitoriaId)
         
