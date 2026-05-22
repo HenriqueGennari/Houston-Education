@@ -7,7 +7,7 @@
     <title>Gerenciar Monitorias</title>
     <link rel="shortcut icon" href="../assets/img/iconeHoustonEducation.ico" type="image/x-icon">
 
-    <link rel="stylesheet" href="../style/style.css?v=2">
+    <link rel="stylesheet" href="../style/style.css?v=3">
     <link rel="stylesheet" href="../style/stylePopUp.css?v=2">
     <link rel="stylesheet" href="../style/styleNavMenuLateral.css?v=2">
     <script type="module" src="../scripts/menuLateral/menuLateral.js"></script>
@@ -161,6 +161,15 @@
         </div>
     </div>
 
+    <!-- POPUP DE AVISO -->
+    <div id="popupAviso" class="popup-aviso hidden">
+        <div class="popup-aviso-content">
+            <div class="popup-aviso-icone">&#9888;</div>
+            <p id="popupAvisoMensagem"></p>
+            <button class="popup-aviso-botao" id="btnFecharAviso">OK</button>
+        </div>
+    </div>
+
     <!-- POPUP DE DETALHES DA MONITORIA -->
     <div id="popupDetalhesMonitoria" class="popup hidden">
         <div class="popup-content">
@@ -258,7 +267,7 @@
 
 
     <script type="module" src="../scripts/carregarNomeUsuario.js?v=2"></script>
-    <script type="module" src="../scripts/monitorias/gerenciarMonitorias.js?v=2"></script>
+    <script type="module" src="../scripts/monitorias/gerenciarMonitorias.js?v=3"></script>
     <script type="module" src="../scripts/monitorias/autorizadoMonitorias.js?v=2"></script>
     <script src="../scripts/utils/pickerData&Hora.js?v=2" type="module"></script>
 

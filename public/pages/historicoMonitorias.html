@@ -8,7 +8,7 @@
     <link rel="shortcut icon" href="../assets/img/iconeHoustonEducation.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="../style/styleNavMenuLateral.css?v=2">
-    <link rel="stylesheet" href="../style/historicoMonitorias.css?v=2">
+    <link rel="stylesheet" href="../style/historicoMonitorias.css?v=3">
     <script type="module" src="../scripts/menuLateral/menuLateral.js"></script>
     <script type="module" src="../scripts/menuLateral/ocultarAbasPorPerfil.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
@@ -116,8 +116,8 @@
             <select id="filtroDisciplina">
                 <option value="">Todas disciplinas</option>
             </select>
-            <input type="date" id="dataInicial" placeholder="Data inicial">
-            <input type="date" id="dataFinal" placeholder="Data final">
+            <input type="text" id="dataInicial" class="input-data" placeholder="De" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'">
+            <input type="text" id="dataFinal" class="input-data" placeholder="Até" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'">
         </div>
 
         <div class="tabela-container">
@@ -164,6 +164,7 @@
             <img src="../assets/img/iconeHoustonEducation.ico" alt="Logo" class="pdf-logo">
             <div class="pdf-header-info">
                 <h1>Houston Education</h1>
+                <p class="pdf-slogan">Ferraris a 200 por hora.</p>
                 <p>Relatório de Chamada</p>
             </div>
         </div>

@@ -63,7 +63,8 @@ body {
 }
 
 .historico-filtros select,
-.historico-filtros input[type="date"] {
+.historico-filtros input[type="date"],
+.historico-filtros .input-data {
     padding: 10px 14px;
     border: 1px solid #ddd;
     border-radius: 6px;
@@ -73,10 +74,12 @@ body {
     cursor: pointer;
     transition: border-color 0.2s;
     min-width: 140px;
+    position: relative;
 }
 
 .historico-filtros select:focus,
-.historico-filtros input[type="date"]:focus {
+.historico-filtros input[type="date"]:focus,
+.historico-filtros .input-data:focus {
     border-color: #024059;
 }
 
@@ -381,6 +384,13 @@ body {
     margin: 4px 0 0;
 }
 
+.pdf-slogan {
+    font-size: 0.8rem;
+    font-style: italic;
+    color: #888;
+    margin: 2px 0 6px;
+}
+
 .pdf-monitoria-info {
     margin-bottom: 24px;
 }
@@ -495,7 +505,8 @@ body {
 
     .filtro-busca,
     .historico-filtros select,
-    .historico-filtros input[type="date"] {
+    .historico-filtros input[type="date"],
+    .historico-filtros .input-data {
         width: 100%;
     }
 
