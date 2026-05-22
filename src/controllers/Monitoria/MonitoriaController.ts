@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { AuthRequest } from "../../middlewares/autenticadoMiddleware.js";
 import MonitoriaService from "../../services/Monitoria/MonitoriaService.js";
 import MonitoriaPrismaRepository from "../../repositories/Prisma/MonitoriaPrismaRepository.js";
 
@@ -32,16 +33,31 @@ class MonitoriaController{
             Res.status(500).json({err : err.message})
         }
     }
-    async create(req: Request, res: Response) {
+
+    async getHistoricoMonitor(Req: Request, Res: Response) {
         try {
-            const dados = req.body;
-            const monitoriaCriada = await monitoriaService.create(dados);
-
-            return res.status(201).json(monitoriaCriada);
-
+            const { monitorId } = Req.params;
+            const user = (Req as AuthRequest).user;
+            const dadosMonitoria = await monitoriaService.getHistoricoMonitor(monitorId, user!.id, user!.perfil);
+            return Res.status(200).json(dadosMonitoria);
         } catch (err: any) {
-            const status = err.message?.startsWith("HORARIO_INVALIDO") ? 400 : 500;
-            return res.status(status).json({ erro: err.message});
+            if (err.message === "ACESSO_NEGADO") {
+                return Res.status(403).json({ error: err.message });
+            }
+            Res.status(500).json({ err: err.message });
+        }
+    }
+
+    async getHistoricoAdmin(Req: Request, Res: Response) {
+        try {
+            const user = (Req as AuthRequest).user;
+            const dadosMonitoria = await monitoriaService.getHistoricoAdmin(user!.perfil);
+            return Res.status(200).json(dadosMonitoria);
+        } catch (err: any) {
+            if (err.message === "ACESSO_NEGADO") {
+                return Res.status(403).json({ error: err.message });
+            }
+            Res.status(500).json({ err: err.message });
         }
     }
 
@@ -56,17 +72,60 @@ class MonitoriaController{
             return Res.status(400).json({error : err.message})
         }
     }
-    async update(Req : Request, Res : Response){
+
+    async getChamadaMonitoria(Req: Request, Res: Response) {
         try {
-            const {id} = Req.params
-            const dados = Req.body
+            const { id } = Req.params;
+            const user = (Req as AuthRequest).user;
+            const dadosChamada = await monitoriaService.getChamadaMonitoria(id, user!.id, user!.perfil);
+            return Res.status(200).json(dadosChamada);
+        } catch (err: any) {
+            if (err.message === "MONITORIA_INEXISTENTE") {
+                return Res.status(404).json({ error: err.message });
+            }
+            if (err.message === "ACESSO_NEGADO") {
+                return Res.status(403).json({ error: err.message });
+            }
+            return Res.status(500).json({ error: err.message });
+        }
+    }
 
-            const monitoriaDados = await monitoriaService.update(id, dados)
+    async create(req: Request, res: Response) {
+        try {
+            const dados = req.body;
+            const monitoriaCriada = await monitoriaService.create(dados);
 
-            return Res.status(200).json(monitoriaDados)
-        } catch (err : any) {
-            const status = err.message?.startsWith("HORARIO_INVALIDO") ? 400 : 400;
-            return Res.status(status).json({error : err.message})
+            return res.status(201).json(monitoriaCriada);
+
+        } catch (err: any) {
+            if (err.message?.startsWith("HORARIO_INVALIDO")) {
+                return res.status(400).json({ erro: err.message });
+            }
+            if (err.message?.startsWith("CONFLITO_HORARIO")) {
+                return res.status(409).json({ erro: err.message });
+            }
+            return res.status(500).json({ erro: err.message });
+        }
+    }
+    async update(Req: Request, Res: Response) {
+        try {
+            const { id } = Req.params;
+            const dados = Req.body;
+
+            const monitoriaDados = await monitoriaService.update(id, dados);
+
+            return Res.status(200).json(monitoriaDados);
+        } catch (err: any) {
+            if (err.message?.startsWith("HORARIO_INVALIDO")) {
+                return Res.status(400).json({ error: err.message });
+            }
+            if (err.message?.startsWith("CONFLITO_HORARIO")) {
+                return Res.status(409).json({ error: err.message });
+            }
+            if (err.message === "CONFLITO_MONITORIA_EXISTENTE") {
+                return Res.status(409).json({ error: "CONFLITO_MONITORIA_EXISTENTE" });
+            }
+            return Res.status(500).json({ error: err.message });
         }
     }
     async delete(Req : Request, Res : Response){

@@ -13,7 +13,19 @@ class LocalController {
       return Res.status(500).json({ err: err.message });
     }
   }
-
+  
+  async getById(Req: Request, Res: Response) {
+    try {
+      const id = parseInt(Req.params.id, 10);
+      const local = await localService.getById(id);
+      return Res.status(200).json(local);
+    } catch (err: any) {
+      if (err.message === "LOCAL_INEXISTENTE") {
+        return Res.status(404).json({ erro: "LOCAL_INEXISTENTE" });
+      }
+      return Res.status(500).json({ erro: err.message });
+    }
+  }
   async create(Req: Request, Res: Response) {
     try {
       const local = await localService.create(Req.body);
@@ -29,29 +41,32 @@ class LocalController {
     }
   }
 
-  async getById(Req: Request, Res: Response) {
-    try {
-      const id = parseInt(Req.params.id, 10);
-      const local = await localService.getById(id);
-      return Res.status(200).json(local);
-    } catch (err: any) {
-      if (err.message === "LOCAL_INEXISTENTE") {
-        return Res.status(404).json({ erro: "LOCAL_INEXISTENTE" });
-      }
-      return Res.status(500).json({ erro: err.message });
-    }
-  }
-
   async update(Req: Request, Res: Response) {
     try {
       const id = parseInt(Req.params.id, 10);
-      const local = await localService.update(id, Req.body);
+      const dados = { ...Req.body };
+
+      if (dados.campusId) {
+        dados.campusId = parseInt(dados.campusId, 10);
+      }
+
+      const local = await localService.update(id, dados);
+      
       return Res.status(200).json(local);
     } catch (err: any) {
       if (err.message === "LOCAL_INEXISTENTE") {
         return Res.status(404).json({ erro: "LOCAL_INEXISTENTE" });
       }
       if (err.message === "LOCAL_DUPLICADO") {
+        return Res.status(409).json({ erro: "LOCAL_DUPLICADO" });
+      }
+      if (err.message === "CAMPUS_INVALIDO") {
+        return Res.status(400).json({ erro: "CAMPUS_INVALIDO" });
+      }
+      if (err.message?.includes("Foreign key constraint") || err.message?.toLowerCase().startsWith("fk")) {
+        return Res.status(400).json({ erro: "CAMPUS_INEXISTENTE" });
+      }
+      if (err.message?.includes("Unique constraint")) {
         return Res.status(409).json({ erro: "LOCAL_DUPLICADO" });
       }
       return Res.status(500).json({ erro: err.message });

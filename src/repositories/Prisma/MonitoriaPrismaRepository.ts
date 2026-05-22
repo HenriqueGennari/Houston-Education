@@ -139,6 +139,71 @@ class MonitoriaPrismaRepository {
     return dadosMonitoria;
   }
 
+  async getHistoricoMonitor(monitorId: string): Promise<any[]> {
+    const dadosMonitoria = await prisma.monitoria.findMany({
+      where: {
+        monitorId: monitorId,
+      },
+      include: {
+        disciplina: {
+          select: {
+            nome: true,
+          },
+        },
+        monitor: {
+          select: {
+            nome: true,
+          },
+        },
+        inscricoes: {
+          where: {
+            presente: true,
+          },
+          select: {
+            id: true,
+          },
+        },
+        _count: {
+          select: {
+            inscricoes: true,
+          },
+        },
+      },
+    });
+    return dadosMonitoria;
+  }
+
+  async getHistoricoAdmin(): Promise<any[]> {
+    const dadosMonitoria = await prisma.monitoria.findMany({
+      include: {
+        disciplina: {
+          select: {
+            nome: true,
+          },
+        },
+        monitor: {
+          select: {
+            nome: true,
+          },
+        },
+        inscricoes: {
+          where: {
+            presente: true,
+          },
+          select: {
+            id: true,
+          },
+        },
+        _count: {
+          select: {
+            inscricoes: true,
+          },
+        },
+      },
+    });
+    return dadosMonitoria;
+  }
+
   async getById(id: string): Promise<Monitoria | null> {
     const monitoriaDados = await prisma.monitoria.findFirst({
       where: {
@@ -149,6 +214,33 @@ class MonitoriaPrismaRepository {
     return monitoriaDados;
   }
 
+  async getChamadaMonitoria(monitoriaId: string): Promise<any[]> {
+    const dadosChamada = await prisma.$queryRaw`
+      SELECT
+        aluno.nome,
+        aluno.matricula,
+        insc.presente
+      FROM inscricao AS insc
+      INNER JOIN aluno ON aluno.id = insc."alunoId"
+      WHERE insc."monitoriaId" = ${monitoriaId}
+    `;
+
+    return dadosChamada as any[];
+  }
+
+  async conflitoHorario( localId: number,inicio: Date, fim: Date, monitoriaExistenteId?: string): Promise<boolean> { // lembrar In < Fa and Ia < Fn - se ambos true - HÁ CONFLITO
+    const monitoriaExistente = await prisma.monitoria.findFirst({
+      where: {
+        id: monitoriaExistenteId ? {not : monitoriaExistenteId} : undefined, // estou basicamente dizendo o seguinte: caso o id de uma monitoria exsitente venha, busque um id diferente desse mesmo, e, caso não venha, eu boto como undefined. Eu preciso disso pq na função de update, caso eu não passe o id da própria monitoria que estou atualizando, eu sempre teria um true dessa função. 
+        localId,
+        fim: { gt: inicio }, 
+        inicio: { lt: fim },
+      },
+    });
+    
+    return !!monitoriaExistente;
+  }
+
   async create(data: Prisma.MonitoriaUncheckedCreateInput): Promise<Monitoria> {
     const novAMonitoria = await prisma.monitoria.create({
       data,
@@ -157,10 +249,7 @@ class MonitoriaPrismaRepository {
     return novAMonitoria;
   }
 
-  async update(
-    id: string,
-    data: Prisma.MonitoriaUncheckedUpdateInput
-  ): Promise<Monitoria | null> {
+  async update( id: string, data: Prisma.MonitoriaUncheckedUpdateInput ): Promise<Monitoria | null> {
     const monitoriaAtualizadA = await prisma.monitoria.update({
       data,
       where: {

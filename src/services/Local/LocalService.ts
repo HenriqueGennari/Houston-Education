@@ -1,5 +1,6 @@
 import LocalPrismaRepository from "../../repositories/Prisma/LocalPrismaRepository.js";
 import { Local, Prisma } from "@prisma/client";
+import { UpdateLocal } from "../../models/Local.js";
 
 class LocalService {
   constructor(private _localRepository: LocalPrismaRepository) {}
@@ -32,31 +33,40 @@ class LocalService {
     return local;
   }
 
-  async update(id: number, dados: Prisma.LocalUncheckedUpdateInput): Promise<Local> {
+  async update(id: number, dados: UpdateLocal): Promise<Local> {
     await this.getById(id);
 
-    if (dados.nome && dados.campusId) {
-      const campusId = typeof dados.campusId === "string" ? parseInt(dados.campusId, 10) : dados.campusId as number;
-      const existente = await this._localRepository.findByNomeAndCampus(dados.nome as string, campusId);
-      if (existente && existente.id !== id) {
-        throw new Error("LOCAL_DUPLICADO");
-      }
+    const dadosAtualizados: Prisma.LocalUncheckedUpdateInput = {};
+
+    if (dados.nome) {
+      dadosAtualizados.nome = dados.nome;
     }
 
-    const local = await this._localRepository.update(id, dados);
-    if (!local) {
+    if (dados.descricao) {
+      dadosAtualizados.descricao = dados.descricao;
+    }
+
+    if (dados.campusId) {
+      dadosAtualizados.campusId = dados.campusId as number;
+    }
+
+    const localAtualizado = await this._localRepository.update(id, dadosAtualizados);
+
+    if (!localAtualizado) {
       throw new Error("ERRO_AO_ATUALIZAR");
     }
-    return local;
+
+    return localAtualizado;
   }
 
   async delete(id: number): Promise<Local> {
     await this.getById(id);
-    const local = await this._localRepository.delete(id);
-    if (!local) {
-      throw new Error("LOCAL_INEXISTENTE");
+    const localApagar = await this._localRepository.delete(id);
+
+    if (!localApagar) {
+      throw new Error("ERRO_AO_APAGAR_LOCAL");
     }
-    return local;
+    return localApagar;
   }
 }
 

@@ -126,6 +126,7 @@ model Inscricao {
   alunoId     String
   monitoriaId String
   criadoEm    DateTime @default(now())
+  presente    Boolean  @default(false)
 
   aluno     Aluno     @relation(fields: [alunoId], references: [id])
   monitoria Monitoria @relation(fields: [monitoriaId], references: [id])

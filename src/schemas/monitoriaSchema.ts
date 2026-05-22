@@ -7,6 +7,10 @@ export const monitoriaGetByIdSchema = yup.object({
   id: idSchema,
 }).noUnknown();
 
+export const monitoriaGetHistoricoSchema = yup.object({
+  monitorId: idSchema,
+}).noUnknown();
+
 export const monitoriaDeleteSchema = yup.object({
   id: idSchema,
 }).noUnknown();
@@ -15,6 +19,7 @@ export const monitoriaDeleteSchema = yup.object({
 export const monitoriaUpdateIdSchema = yup.object({
   id: idSchema,
 }).noUnknown();
+
 export const monitoriaUpdateSchema = yup.object({
   nome_monitoria: yup.string().optional(),
   data: yup.string().matches(/^\d{4}-\d{2}-\d{2}$/).optional(),
@@ -33,7 +38,7 @@ export const monitoriaCreateSchema = yup.object({
   hora_inicio: yup.string().matches(/^\d{2}:\d{2}$/).required(),
   hora_fim: yup.string().matches(/^\d{2}:\d{2}$/).required(),
   descricao: yup.string().max(200).optional(),
-  localId: yup.string().optional(),
+  localId: yup.string().required(),
   monitorId: yup.string().required(),
   disciplinaId: yup.string().required(),
 }).noUnknown();

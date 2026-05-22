@@ -14,6 +14,7 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 </head>
 
 <body>
@@ -59,16 +60,35 @@
                     </a>
                 </li>
                 <li>
+                    <a href="/pages/minhasInscricoes.html" id="linkMinhasInscricoes">
+                        <i class="ph ph-file-text" style="font-size: 22px;"></i>
+                        <span>Minhas inscrições</span>
+                    </a>
+                </li>
+                <li>
                     <a href="cadastrarMonitoria.html" id="linkCadastrarMonitoria">
                         <img src="../assets/img/iconeCadastrarMonitoria.png" alt="Icone Cadastrar Monitoria">
                         <span>Cadastrar Monitoria</span>
                     </a>
                 </li>
-                <li>
-                    <a href="/gerenciar-monitorias" id="linkGerenciarMonitoria">
-                        <img src="../assets/img/iconeGerenciarMonitorias.png" alt="Icone Gerenciar Monitorias">
-                        <span>Gerenciar Monitorias</span>
+                <li class="submenu">
+                    <a href="#" class="submenu-toggle" id="toggleMinhasMonitorias">
+                        <img src="../assets/img/iconeGerenciarMonitorias.png" alt="Icone Minhas Monitorias">
+                        <span>Minhas monitorias</span>
+                        <span class="seta-submenu">&#9662;</span>
                     </a>
+                    <ul class="submenu-lista">
+                        <li>
+                            <a href="/gerenciar-monitorias" id="linkGerenciarMonitoria">
+                                <span>Gerenciar Monitorias</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/pages/historicoMonitorias.html" id="linkHistoricoMonitorias">
+                                <span>Histórico de Monitorias</span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li>
                     <a href="/dashboard-admin" id="linkDashboardAdmin.html">

@@ -24,6 +24,23 @@ let locais = [];
 let acaoPendente = null;
 let localPendente = null;
 
+function mostrarToastSucesso(mensagem) {
+    let toast = document.getElementById("toastSucesso");
+    if (!toast) {
+        toast = document.createElement("div");
+        toast.id = "toastSucesso";
+        toast.className = "toast-sucesso";
+        document.body.appendChild(toast);
+    }
+
+    toast.innerHTML = `<i class="ph-fill ph-check-circle"></i> <span>${mensagem}</span>`;
+    toast.classList.add("toast-visivel");
+
+    setTimeout(() => {
+        toast.classList.remove("toast-visivel");
+    }, 4000);
+}
+
 async function carregarCampus() {
     try {
         const response = await fetch("/campus", {
@@ -124,9 +141,34 @@ function abrirModalCriar() {
 function fecharModalCriar() {
     modalCriarLocal.classList.remove("open");
     formCriarLocal.reset();
+    limparErrosCriarLocal();
+}
+
+function limparErrosCriarLocal() {
+    const campos = ["Nome", "Descricao", "Campus"];
+    campos.forEach(campo => {
+        const input = document.getElementById(`input${campo}Criar`) || document.getElementById(`campusSelectCriar`);
+        const erro = document.getElementById(`erro${campo}Criar`);
+        if (input) input.classList.remove("input-erro");
+        if (erro) {
+            erro.textContent = "";
+            erro.classList.remove("visivel");
+        }
+    });
+}
+
+function mostrarErroCampo(campo, mensagem) {
+    const input = document.getElementById(`input${campo}Criar`) || document.getElementById(`campusSelectCriar`);
+    const erro = document.getElementById(`erro${campo}Criar`);
+    if (input) input.classList.add("input-erro");
+    if (erro) {
+        erro.textContent = mensagem;
+        erro.classList.add("visivel");
+    }
 }
 
 function abrirModalEditar(local) {
+    limparErrosEditarLocal();
     idLocalEditar.value = local.id;
     nomeLocalEditar.value = local.nome;
     descricaoLocalEditar.value = local.descricao || "";
@@ -137,6 +179,30 @@ function abrirModalEditar(local) {
 function fecharModalEditar() {
     modalEditarLocal.classList.remove("open");
     formEditarLocal.reset();
+    limparErrosEditarLocal();
+}
+
+function limparErrosEditarLocal() {
+    const campos = ["Nome", "Descricao", "Campus"];
+    campos.forEach(campo => {
+        const input = document.getElementById(`${campo.toLowerCase()}LocalEditar`) || document.getElementById(`campusSelectEditar`);
+        const erro = document.getElementById(`erro${campo}Editar`);
+        if (input) input.classList.remove("input-erro");
+        if (erro) {
+            erro.textContent = "";
+            erro.classList.remove("visivel");
+        }
+    });
+}
+
+function mostrarErroCampoEditar(campo, mensagem) {
+    const input = document.getElementById(`${campo.toLowerCase()}LocalEditar`) || document.getElementById(`campusSelectEditar`);
+    const erro = document.getElementById(`erro${campo}Editar`);
+    if (input) input.classList.add("input-erro");
+    if (erro) {
+        erro.textContent = mensagem;
+        erro.classList.add("visivel");
+    }
 }
 
 async function criarLocal(e) {
@@ -163,9 +229,22 @@ async function criarLocal(e) {
         }
 
         fecharModalCriar();
+        mostrarToastSucesso("Local criado com sucesso!");
         carregarLocais();
     } catch (err) {
-        alert(err.message);
+        const msg = err.message;
+
+        if (msg === "LOCAL_DUPLICADO") {
+            mostrarErroCampo("Nome", "Local já existe neste campus");
+        } else if (msg === "CAMPUS_INEXISTENTE") {
+            mostrarErroCampo("Campus", "Campus não encontrado");
+        } else if (msg.includes("nome") && msg.includes("required")) {
+            mostrarErroCampo("Nome", "Nome é obrigatório");
+        } else if (msg.includes("campusId") && msg.includes("required")) {
+            mostrarErroCampo("Campus", "Campus é obrigatório");
+        } else {
+            alert(msg);
+        }
     }
 }
 
@@ -179,7 +258,7 @@ async function salvarEdicao(e) {
 
     try {
         const response = await fetch(`/locais/${id}`, {
-            method: "PUT",
+            method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
                 ...getAuthHeaders()
@@ -194,9 +273,22 @@ async function salvarEdicao(e) {
         }
 
         fecharModalEditar();
+        mostrarToastSucesso("Local atualizado com sucesso!");
         carregarLocais();
     } catch (err) {
-        alert(err.message);
+        const msg = err.message;
+
+        if (msg === "LOCAL_DUPLICADO") {
+            mostrarErroCampoEditar("Nome", "Local já existe neste campus");
+        } else if (msg === "CAMPUS_INEXISTENTE") {
+            mostrarErroCampoEditar("Campus", "Campus não encontrado");
+        } else if (msg.includes("nome") && msg.includes("required")) {
+            mostrarErroCampoEditar("Nome", "Nome é obrigatório");
+        } else if (msg.includes("campusId") && msg.includes("required")) {
+            mostrarErroCampoEditar("Campus", "Campus é obrigatório");
+        } else {
+            alert(msg);
+        }
     }
 }
 
@@ -237,6 +329,7 @@ async function executarAcao() {
         }
 
         fecharConfirmacao();
+        mostrarToastSucesso("Local excluído com sucesso!");
         carregarLocais();
     } catch (err) {
         alert(err.message);
@@ -265,6 +358,50 @@ modalCriarLocal.addEventListener("click", (e) => {
 
 modalEditarLocal.addEventListener("click", (e) => {
     if (e.target === modalEditarLocal) fecharModalEditar();
+});
+
+["Nome", "Descricao"].forEach(campo => {
+    document.getElementById(`input${campo}Criar`)?.addEventListener("input", () => {
+        const input = document.getElementById(`input${campo}Criar`);
+        const erro = document.getElementById(`erro${campo}Criar`);
+        if (input) input.classList.remove("input-erro");
+        if (erro) {
+            erro.textContent = "";
+            erro.classList.remove("visivel");
+        }
+    });
+});
+
+document.getElementById("campusSelectCriar")?.addEventListener("change", () => {
+    const input = document.getElementById("campusSelectCriar");
+    const erro = document.getElementById("erroCampusCriar");
+    if (input) input.classList.remove("input-erro");
+    if (erro) {
+        erro.textContent = "";
+        erro.classList.remove("visivel");
+    }
+});
+
+["Nome", "Descricao"].forEach(campo => {
+    document.getElementById(`${campo.toLowerCase()}LocalEditar`)?.addEventListener("input", () => {
+        const input = document.getElementById(`${campo.toLowerCase()}LocalEditar`);
+        const erro = document.getElementById(`erro${campo}Editar`);
+        if (input) input.classList.remove("input-erro");
+        if (erro) {
+            erro.textContent = "";
+            erro.classList.remove("visivel");
+        }
+    });
+});
+
+document.getElementById("campusSelectEditar")?.addEventListener("change", () => {
+    const input = document.getElementById("campusSelectEditar");
+    const erro = document.getElementById("erroCampusEditar");
+    if (input) input.classList.remove("input-erro");
+    if (erro) {
+        erro.textContent = "";
+        erro.classList.remove("visivel");
+    }
 });
 
 carregarCampus();

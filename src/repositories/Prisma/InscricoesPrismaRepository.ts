@@ -62,22 +62,90 @@ class InscricaoPrismaRepository {
     return inscricoes;
   }
 
-  async getById(id: number): Promise<Inscricao | null> {
-    const InscricaoId = await prisma.inscricao.findFirst({
+  async getById(id: number): Promise<any | null> {
+    const inscricaoId = await prisma.inscricao.findFirst({
       where: {
         id: id,
       },
+      include: {
+        monitoria: {
+          select: {
+            inicio: true,
+            fim: true,
+          },
+        },
+      },
     });
 
-    return InscricaoId;
-  }
+    console.log("Inscricao repository")
+    console.log(inscricaoId)
 
+    return inscricaoId;
+  }
+  
+  async getMinhasInscricoes(alunoId: string): Promise<any[]> {
+    const inscricoes = await prisma.inscricao.findMany({
+      where: {
+        alunoId,
+      },
+      select: {
+        id: true,
+        presente: true,
+        aluno: {
+          select: {
+            nome: true,
+          },
+        },
+        monitoria: {
+          select: {
+            nome_monitoria: true,
+            inicio: true,
+            fim: true,
+            descricao: true,
+            disciplina: {
+              select: {
+                nome: true,
+              },
+            },
+            local: {
+              select: {
+                nome: true,
+                campus: {
+                  select: {
+                    nome: true,
+                  },
+                },
+              },
+            },
+            monitor: {
+              select: {
+                nome: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    return inscricoes;
+  }
+  
   async create(data: Inscricao): Promise<Inscricao> {
     const novaInscricao = await prisma.inscricao.create({
       data,
     });
 
     return novaInscricao;
+  }
+  async salvarChamada(atualizacoes: { id: number; presente: boolean }[]): Promise<Inscricao[]> {
+    const resultados = await prisma.$transaction(
+      atualizacoes.map((a) =>
+        prisma.inscricao.update({
+          where: { id: a.id },
+          data: { presente: a.presente },
+        })
+      )
+    );
+    return resultados;
   }
 
   async delete(id: number): Promise<Inscricao> {
@@ -86,7 +154,7 @@ class InscricaoPrismaRepository {
         id: id,
       },
     });
-
+  
     return inscricaoApagado;
   }
 }

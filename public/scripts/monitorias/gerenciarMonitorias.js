@@ -14,6 +14,47 @@ function getAuthHeaders() {
     return headers;
 }
 
+async function salvarChamada(monitoriaId, inscricoes) {
+    try {
+        const response = await fetch(`/inscricoes/monitoria/${monitoriaId}/presenca`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                ...getAuthHeaders()
+            },
+            credentials: "same-origin",
+            body: JSON.stringify({ inscricoes })
+        });
+
+        if (!response.ok) {
+            const erro = await response.json();
+            throw new Error(erro.error || "ERRO_AO_SALVAR_CHAMADA");
+        }
+
+        return await response.json();
+    } catch (err) {
+        console.error("Erro ao salvar chamada:", err);
+        throw err;
+    }
+}
+
+function mostrarToastSucesso(mensagem) {
+    let toast = document.getElementById("toastSucessoChamada");
+    if (!toast) {
+        toast = document.createElement("div");
+        toast.id = "toastSucessoChamada";
+        toast.className = "toast-sucesso";
+        document.body.appendChild(toast);
+    }
+
+    toast.innerHTML = `<i class="ph-fill ph-check-circle"></i> <span>${mensagem}</span>`;
+    toast.classList.add("toast-visivel");
+
+    setTimeout(() => {
+        toast.classList.remove("toast-visivel");
+    }, 4000);
+}
+
 async function carregarCursos() {
     try {
         const response = await fetch("/cursos", {
@@ -133,15 +174,36 @@ async function carregarMonitorias() {
             return;
         }
 
+        const ordenacao = document.getElementById("ordenarMonitorias")?.value || "recente";
+        monitorias.sort((a, b) => {
+            const dataA = new Date(a.inicio).getTime();
+            const dataB = new Date(b.inicio).getTime();
+            return ordenacao === "recente" ? dataB - dataA : dataA - dataB;
+        });
+
         lista.innerHTML = "";
 
         monitorias.forEach((m) => {
             const li = document.createElement("li");
             li.classList.add("cardmonitoria");
 
+            const agora = new Date().getTime();
+            const dataInicio = new Date(m.inicio).getTime();
+            const status = dataInicio >= agora ? "agendada" : "antiga";
+            li.dataset.status = status;
+
             const qtdInscricoes = m._count?.inscricoes || 0;
 
+            const podeEditar = m.monitorId === idUsuario || perfilUsuario === "ADMIN";
+
             li.innerHTML = `
+            ${podeEditar ? `
+            <button class="btn-editar-card" title="Editar monitoria">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+            </button>` : ''}
             <div class="informacoesmonitoria">
                 <div class="nomemonitoria">${m.nome_monitoria}</div>
                 <div class="disciplinamonitoria">${m.disciplina.nome}</div>
@@ -152,6 +214,50 @@ async function carregarMonitorias() {
                 <div class="qtdinscricoes" style="color: #1e3a8a;">${qtdInscricoes} ${qtdInscricoes === 1 ? 'Inscrição' : 'Inscrições'}</div>
             </div>
             `;
+
+            // Ícone de lápis no canto superior direito
+            if (podeEditar) {
+                const btnEditarCard = li.querySelector(".btn-editar-card");
+                if (btnEditarCard) {
+                    btnEditarCard.addEventListener("click", (e) => {
+                        e.stopPropagation();
+
+                        const formUpdate = document.getElementById("formAtualizarMonitoria");
+                        const modalOverlay = document.getElementById("modalOverlay");
+
+                        document.getElementById("id_monitoria_hidden").value = m.id;
+
+                        formUpdate.querySelector('input[name="nome_monitoria"]').value = m.nome_monitoria;
+                        formUpdate.querySelector('textarea[name="descricao"]').value = m.descricao;
+                        formUpdate.querySelector('input[name="data"]').value = new Date(m.inicio).toISOString().split("T")[0];
+                        formUpdate.querySelector('input[name="hora_inicio"]').value = new Date(m.inicio).toTimeString().slice(0, 5);
+                        formUpdate.querySelector('input[name="hora_fim"]').value = new Date(m.fim).toTimeString().slice(0, 5);
+
+                        const selectCampus = document.getElementById("campus");
+                        const selectLocal = document.getElementById("locais");
+                        const selectCurso = document.getElementById("cursos");
+                        const selectDisciplina = document.getElementById("disciplinas");
+
+                        const campusId = m.local?.campusId;
+                        const cursoId = m.disciplina?.cursos?.[0]?.curso?.id;
+
+                        if (campusId) {
+                            selectCampus.value = campusId;
+                            filtrarLocaisPorCampus();
+                        }
+
+                        if (cursoId) {
+                            selectCurso.value = cursoId;
+                            filtrarDisciplinasPorCurso();
+                        }
+
+                        selectLocal.value = m.localId;
+                        selectDisciplina.value = m.disciplinaId;
+
+                        modalOverlay.classList.add("open");
+                    });
+                }
+            }
 
             // Popup de info
             const popupInfoMonitoria = document.getElementById("popupInfoMonitoria");
@@ -166,19 +272,6 @@ async function carregarMonitorias() {
                 if (e.target === popupInfoMonitoria) popupInfoMonitoria.classList.add("hidden");
             });
 
-            li.addEventListener("click", (e) => {
-                if (e.target.tagName.toLowerCase() === "button") return;
-
-                popupTitulo.textContent = m.nome_monitoria;
-                popupDisciplina.textContent = `Disciplina: ${m.disciplina.nome}`;
-                popupMonitor.textContent = `Monitor: ${m.monitor.nome}`;
-                popupLocal.textContent = `Local: ${m.local?.nome || 'Não informado'}`;
-                popupDataHora.textContent = `Data/Hora: ${new Date(m.inicio).toLocaleDateString()} - ${new Date(m.inicio).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-                popupDescricao.textContent = `Descrição: ${m.descricao || 'Sem descrição'}`;
-
-                popupInfoMonitoria.classList.remove("hidden");
-            });
-
             // Botões de ação
             const divBotao = document.createElement("div");
             divBotao.classList.add("divbotao");
@@ -189,7 +282,30 @@ async function carregarMonitorias() {
                 botaoDetalhes.textContent = "Detalhes";
                 botaoDetalhes.classList.add("btn-detalhes");
 
-                botaoDetalhes.addEventListener("click", async (e) => {
+                botaoDetalhes.addEventListener("click", (e) => {
+                    e.stopPropagation();
+
+                    popupTitulo.textContent = m.nome_monitoria;
+                    popupDisciplina.textContent = `Disciplina: ${m.disciplina.nome}`;
+                    popupMonitor.textContent = `Monitor: ${m.monitor.nome}`;
+                    const campusNome = m.local?.campus?.nome;
+popupLocal.textContent = `Local: ${m.local?.nome || 'Não informado'}${campusNome ? ' — ' + campusNome : ''}`;
+                    popupDataHora.textContent = `Data/Hora: ${new Date(m.inicio).toLocaleDateString()} - ${new Date(m.inicio).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+                    popupDescricao.textContent = `Descrição: ${m.descricao || 'Sem descrição'}`;
+
+                    popupInfoMonitoria.classList.remove("hidden");
+                });
+
+                divBotao.appendChild(botaoDetalhes);
+            }
+
+            // Botão lista de presença - apenas para o dono ou admin
+            if (podeEditar) {
+                const botaoListaPresenca = document.createElement("button");
+                botaoListaPresenca.textContent = "Lista de presença";
+                botaoListaPresenca.classList.add("btn-lista-presenca");
+
+                botaoListaPresenca.addEventListener("click", async (e) => {
                     e.stopPropagation();
 
                     const popupDetalhes = document.getElementById("popupDetalhesMonitoria");
@@ -197,10 +313,13 @@ async function carregarMonitorias() {
                     const descricao = document.getElementById("popupDetalhesDescricao");
                     const listaInscritos = document.getElementById("listaInscritos");
 
-                    titulo.textContent = m.nome_monitoria;
-                    descricao.textContent = m.descricao || "Sem descrição";
+                    titulo.textContent = `Chamada — ${m.nome_monitoria}`;
+                    descricao.textContent = `Data: ${new Date(m.inicio).toLocaleDateString()} — ${new Date(m.inicio).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
                     listaInscritos.innerHTML = "<li>Carregando inscritos...</li>";
                     popupDetalhes.classList.remove("hidden");
+
+                    // Estado temporário das presenças: Map<inscricaoId, true | false | undefined>
+                    const estadoPresenca = new Map();
 
                     try {
                         const response = await fetch(`/inscricoes/monitoria/${m.id}`, {
@@ -220,63 +339,148 @@ async function carregarMonitorias() {
                             listaInscritos.innerHTML = "";
                             inscricoes.forEach((insc) => {
                                 const li = document.createElement("li");
-                                li.textContent = `${insc.aluno.nome} - ${insc.aluno.matricula}`;
+                                li.classList.add("item-inscrito");
+                                li.dataset.inscricaoId = insc.id;
+
+                                const infoDiv = document.createElement("div");
+                                infoDiv.classList.add("info-inscrito");
+
+                                const nomeSpan = document.createElement("span");
+                                nomeSpan.classList.add("nome-inscrito");
+                                nomeSpan.textContent = insc.aluno.nome;
+
+                                const matriculaSpan = document.createElement("span");
+                                matriculaSpan.classList.add("matricula-inscrito");
+                                matriculaSpan.textContent = insc.aluno.matricula;
+
+                                const statusSpan = document.createElement("span");
+                                statusSpan.classList.add("status-presenca");
+
+                                infoDiv.appendChild(nomeSpan);
+                                infoDiv.appendChild(matriculaSpan);
+                                infoDiv.appendChild(statusSpan);
+                                li.appendChild(infoDiv);
+
+                                const controlesDiv = document.createElement("div");
+                                controlesDiv.classList.add("presenca-controles");
+
+                                const btnPresente = document.createElement("button");
+                                btnPresente.classList.add("btn-presenca", "btn-presenca-presente");
+                                btnPresente.innerHTML = '<i class="ph-fill ph-check-circle"></i>';
+                                btnPresente.title = "Presente";
+
+                                const btnAusente = document.createElement("button");
+                                btnAusente.classList.add("btn-presenca", "btn-presenca-ausente");
+                                btnAusente.innerHTML = '<i class="ph-fill ph-x-circle"></i>';
+                                btnAusente.title = "Ausente";
+
+                                function atualizarStatusPresenca() {
+                                    if (btnPresente.classList.contains("ativo")) {
+                                        statusSpan.textContent = "Presente";
+                                        statusSpan.classList.add("presente");
+                                        statusSpan.classList.remove("ausente");
+                                    } else if (btnAusente.classList.contains("ativo")) {
+                                        statusSpan.textContent = "Ausente";
+                                        statusSpan.classList.add("ausente");
+                                        statusSpan.classList.remove("presente");
+                                    } else {
+                                        statusSpan.textContent = "";
+                                        statusSpan.classList.remove("presente", "ausente");
+                                    }
+                                }
+
+                                // Estado inicial baseado no banco (null/undefined = nenhum ativo)
+                                if (insc.presente === true) {
+                                    btnPresente.classList.add("ativo");
+                                    estadoPresenca.set(insc.id, true);
+                                } else if (insc.presente === false) {
+                                    btnAusente.classList.add("ativo");
+                                    estadoPresenca.set(insc.id, false);
+                                }
+                                atualizarStatusPresenca();
+
+                                btnPresente.addEventListener("click", () => {
+                                    const jaAtivo = btnPresente.classList.contains("ativo");
+                                    if (jaAtivo) {
+                                        btnPresente.classList.remove("ativo");
+                                        estadoPresenca.delete(insc.id);
+                                    } else {
+                                        btnPresente.classList.add("ativo");
+                                        btnAusente.classList.remove("ativo");
+                                        estadoPresenca.set(insc.id, true);
+                                    }
+                                    atualizarStatusPresenca();
+                                });
+
+                                btnAusente.addEventListener("click", () => {
+                                    const jaAtivo = btnAusente.classList.contains("ativo");
+                                    if (jaAtivo) {
+                                        btnAusente.classList.remove("ativo");
+                                        estadoPresenca.delete(insc.id);
+                                    } else {
+                                        btnAusente.classList.add("ativo");
+                                        btnPresente.classList.remove("ativo");
+                                        estadoPresenca.set(insc.id, false);
+                                    }
+                                    atualizarStatusPresenca();
+                                });
+
+                                controlesDiv.appendChild(btnPresente);
+                                controlesDiv.appendChild(btnAusente);
+                                li.appendChild(controlesDiv);
                                 listaInscritos.appendChild(li);
                             });
+
+                            // Botão Salvar Chamada
+                            const btnSalvar = document.createElement("button");
+                            btnSalvar.textContent = "Salvar chamada";
+                            btnSalvar.classList.add("btn-salvar-chamada");
+                            btnSalvar.style.marginTop = "15px";
+                            btnSalvar.style.width = "100%";
+                            btnSalvar.style.padding = "10px";
+                            btnSalvar.style.background = "#1e3a8a";
+                            btnSalvar.style.color = "#fff";
+                            btnSalvar.style.border = "none";
+                            btnSalvar.style.borderRadius = "6px";
+                            btnSalvar.style.cursor = "pointer";
+                            btnSalvar.style.fontSize = "1em";
+
+                            btnSalvar.addEventListener("click", async () => {
+                                const atualizacoes = [];
+                                estadoPresenca.forEach((presente, id) => {
+                                    atualizacoes.push({ id, presente });
+                                });
+
+                                if (atualizacoes.length === 0) {
+                                    mostrarAviso("Nenhuma presença foi marcada.");
+                                    return;
+                                }
+
+                                try {
+                                    await salvarChamada(m.id, atualizacoes);
+                                    mostrarToastSucesso("Chamada salva com sucesso!");
+                                    popupDetalhes.classList.add("hidden");
+                                } catch (err) {
+                                    if (err.message === "MONITORIA_NAO_OCORREU") {
+                                        mostrarAviso("A monitoria ainda não ocorreu. A chamada só pode ser salva após a data da monitoria.");
+                                    } else if (err.message === "NAO_AUTORIZADO") {
+                                        mostrarAviso("Você não tem permissão para salvar esta chamada.");
+                                    } else if (err.message === "MONITORIA_NAO_ENCONTRADA") {
+                                        mostrarAviso("Monitoria não encontrada.");
+                                    } else {
+                                        mostrarAviso("Erro ao salvar chamada. Tente novamente.");
+                                    }
+                                }
+                            });
+
+                            listaInscritos.appendChild(btnSalvar);
                         }
                     } catch (err) {
                         listaInscritos.innerHTML = `<li class="sem-inscritos">Erro: ${err.message}</li>`;
                     }
                 });
 
-                divBotao.appendChild(botaoDetalhes);
-            }
-
-            // Botão atualizar - apenas para o dono ou admin
-            if (m.monitorId === idUsuario || perfilUsuario === "ADMIN") {
-                const botaoUpdate = document.createElement("button");
-                botaoUpdate.textContent = "Atualizar Monitoria";
-                botaoUpdate.classList.add("btn-update");
-
-                botaoUpdate.addEventListener("click", async (e) => {
-                    e.stopPropagation();
-
-                    const formUpdate = document.getElementById("formAtualizarMonitoria");
-                    const modalOverlay = document.getElementById("modalOverlay");
-
-                    document.getElementById("id_monitoria_hidden").value = m.id;
-
-                    formUpdate.querySelector('input[name="nome_monitoria"]').value = m.nome_monitoria;
-                    formUpdate.querySelector('textarea[name="descricao"]').value = m.descricao;
-                    formUpdate.querySelector('input[name="data"]').value = new Date(m.inicio).toISOString().split("T")[0];
-                    formUpdate.querySelector('input[name="hora_inicio"]').value = new Date(m.inicio).toTimeString().slice(0, 5);
-                    formUpdate.querySelector('input[name="hora_fim"]').value = new Date(m.fim).toTimeString().slice(0, 5);
-
-                    const selectCampus = document.getElementById("campus");
-                    const selectLocal = document.getElementById("locais");
-                    const selectCurso = document.getElementById("cursos");
-                    const selectDisciplina = document.getElementById("disciplinas");
-
-                    const campusId = m.local?.campusId;
-                    const cursoId = m.disciplina?.cursos?.[0]?.curso?.id;
-
-                    if (campusId) {
-                        selectCampus.value = campusId;
-                        filtrarLocaisPorCampus();
-                    }
-
-                    if (cursoId) {
-                        selectCurso.value = cursoId;
-                        await filtrarDisciplinasPorCurso();
-                    }
-
-                    selectLocal.value = m.localId;
-                    selectDisciplina.value = m.disciplinaId;
-
-                    modalOverlay.classList.add("open");
-                });
-
-                divBotao.appendChild(botaoUpdate);
+                divBotao.appendChild(botaoListaPresenca);
             }
 
             li.appendChild(divBotao);
@@ -301,6 +505,26 @@ async function carregarMonitorias() {
     }
 }
 
+function filtrarPorStatus(status) {
+    const cards = document.querySelectorAll(".cardmonitoria");
+    cards.forEach(card => {
+        const cardStatus = card.dataset.status;
+        const deveMostrar = status === "todas" || cardStatus === status;
+        card.style.display = deveMostrar ? "" : "none";
+    });
+}
+
+const tabsStatus = document.getElementById("tabsStatus");
+if (tabsStatus) {
+    tabsStatus.addEventListener("click", (e) => {
+        if (e.target.classList.contains("tab-btn")) {
+            tabsStatus.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+            e.target.classList.add("active");
+            filtrarPorStatus(e.target.dataset.status);
+        }
+    });
+}
+
 // === Listeners globais (fora de carregarMonitorias) ===
 
 function marcarErroHorario() {
@@ -317,12 +541,29 @@ function limparErroHorario() {
     horaFim.classList.remove("erro-horario");
 }
 
+function mostrarErroConflito(mensagem) {
+    const erro = document.getElementById("erroConflitoHorario");
+    if (erro) {
+        erro.textContent = mensagem;
+        erro.classList.add("visivel");
+    }
+}
+
+function limparErroConflito() {
+    const erro = document.getElementById("erroConflitoHorario");
+    if (erro) {
+        erro.textContent = "";
+        erro.classList.remove("visivel");
+    }
+}
+
 // Lógica de atualizar monitoria
 const formAtualizar = document.getElementById("formAtualizarMonitoria");
 if (formAtualizar) {
     formAtualizar.addEventListener("submit", async (e) => {
         e.preventDefault();
         limparErroHorario();
+        limparErroConflito();
 
         const idMonitoria = document.getElementById("id_monitoria_hidden").value;
         const formData = new FormData(formAtualizar);
@@ -332,7 +573,7 @@ if (formAtualizar) {
 
         try {
             const response = await fetch(`/monitorias/${idMonitoria}`, {
-                method: "PUT",
+                method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
                     ...getAuthHeaders()
@@ -354,6 +595,10 @@ if (formAtualizar) {
                 if (mensagemErro.startsWith("HORARIO_INVALIDO")) {
                     marcarErroHorario();
                 }
+                if (mensagemErro === "CONFLITO_MONITORIA_EXISTENTE") {
+                    mostrarErroConflito("Monitoria existente para esse horário");
+                    marcarErroHorario();
+                }
             }
         } catch (error) {
             console.log(error);
@@ -362,8 +607,8 @@ if (formAtualizar) {
 
     const horaInicioInput = formAtualizar.querySelector('input[name="hora_inicio"]');
     const horaFimInput = formAtualizar.querySelector('input[name="hora_fim"]');
-    if (horaInicioInput) horaInicioInput.addEventListener("input", limparErroHorario);
-    if (horaFimInput) horaFimInput.addEventListener("input", limparErroHorario);
+    if (horaInicioInput) horaInicioInput.addEventListener("input", () => { limparErroHorario(); limparErroConflito(); });
+    if (horaFimInput) horaFimInput.addEventListener("input", () => { limparErroHorario(); limparErroConflito(); });
 }
 
 // Fechar popup de sucesso
@@ -407,6 +652,40 @@ if (popupDetalhesMonitoria) {
         if (e.target === popupDetalhesMonitoria) {
             popupDetalhesMonitoria.classList.add("hidden");
         }
+    });
+}
+
+// Popup de aviso
+function mostrarAviso(mensagem) {
+    const popup = document.getElementById("popupAviso");
+    const texto = document.getElementById("popupAvisoMensagem");
+    if (popup && texto) {
+        texto.textContent = mensagem;
+        popup.classList.remove("hidden");
+    }
+}
+
+const btnFecharAviso = document.getElementById("btnFecharAviso");
+const popupAviso = document.getElementById("popupAviso");
+
+if (btnFecharAviso) {
+    btnFecharAviso.addEventListener("click", () => {
+        popupAviso.classList.add("hidden");
+    });
+}
+
+if (popupAviso) {
+    popupAviso.addEventListener("click", (e) => {
+        if (e.target === popupAviso) {
+            popupAviso.classList.add("hidden");
+        }
+    });
+}
+
+const ordenarMonitorias = document.getElementById("ordenarMonitorias");
+if (ordenarMonitorias) {
+    ordenarMonitorias.addEventListener("change", () => {
+        carregarMonitorias();
     });
 }
 

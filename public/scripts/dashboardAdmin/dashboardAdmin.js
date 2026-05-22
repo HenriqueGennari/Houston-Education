@@ -13,8 +13,11 @@ const btnFecharModalEditar = document.getElementById("btnFecharModalEditar");
 const formEditarPerfil = document.getElementById("formEditarPerfil");
 const idUsuarioEditar = document.getElementById("idUsuarioEditar");
 const nomeUsuarioEditar = document.getElementById("nomeUsuarioEditar");
+const emailUsuarioEditar = document.getElementById("emailUsuarioEditar");
+const matriculaUsuarioEditar = document.getElementById("matriculaUsuarioEditar");
 const perfilAtualEditar = document.getElementById("perfilAtualEditar");
 const novoPerfilEditar = document.getElementById("novoPerfilEditar");
+const senhaUsuarioEditar = document.getElementById("senhaUsuarioEditar");
 
 const btnAbrirModalCriar = document.getElementById("btnAbrirModalCriar");
 const modalCriarUsuario = document.getElementById("modalCriarUsuario");
@@ -24,6 +27,23 @@ const formCriarUsuario = document.getElementById("formCriarUsuario");
 let usuarios = [];
 let acaoPendente = null;
 let usuarioPendente = null;
+
+function mostrarToastSucesso(mensagem) {
+    let toast = document.getElementById("toastSucesso");
+    if (!toast) {
+        toast = document.createElement("div");
+        toast.id = "toastSucesso";
+        toast.className = "toast-sucesso";
+        document.body.appendChild(toast);
+    }
+
+    toast.innerHTML = `<i class="ph-fill ph-check-circle"></i> <span>${mensagem}</span>`;
+    toast.classList.add("toast-visivel");
+
+    setTimeout(() => {
+        toast.classList.remove("toast-visivel");
+    }, 4000);
+}
 
 async function carregarUsuarios() {
     tabelaBody.innerHTML = '<tr><td colspan="5">Carregando usuarios...</td></tr>';
@@ -109,42 +129,101 @@ function renderizarTabela() {
 }
 
 function abrirModalEditar(usuario) {
+    limparErrosEditar();
     idUsuarioEditar.value = usuario.id;
     nomeUsuarioEditar.value = usuario.nome;
+    emailUsuarioEditar.value = usuario.email;
+    matriculaUsuarioEditar.value = usuario.matricula;
     perfilAtualEditar.value = usuario.perfil?.nome || "ALUNO";
     novoPerfilEditar.value = String(usuario.perfilId || 3);
+    senhaUsuarioEditar.value = "";
     modalEditarPerfil.classList.add("open");
 }
 
 function fecharModalEditar() {
     modalEditarPerfil.classList.remove("open");
     formEditarPerfil.reset();
+    limparErrosEditar();
+}
+
+function limparErrosEditar() {
+    const campos = ["Nome", "Email", "Matricula", "Senha"];
+    campos.forEach(campo => {
+        const input = document.getElementById(`${campo.toLowerCase()}UsuarioEditar`);
+        const erro = document.getElementById(`erro${campo}Editar`);
+        if (input) input.classList.remove("input-erro");
+        if (erro) {
+            erro.textContent = "";
+            erro.classList.remove("visivel");
+        }
+    });
+}
+
+function mostrarErroEditar(campo, mensagem) {
+    const input = document.getElementById(`${campo.toLowerCase()}UsuarioEditar`);
+    const erro = document.getElementById(`erro${campo}Editar`);
+    if (input) input.classList.add("input-erro");
+    if (erro) {
+        erro.textContent = mensagem;
+        erro.classList.add("visivel");
+    }
 }
 
 async function salvarPerfil(e) {
     e.preventDefault();
 
     const id = idUsuarioEditar.value;
-    const perfilId = parseInt(novoPerfilEditar.value);
+    const dados = {
+        nome: nomeUsuarioEditar.value,
+        email: emailUsuarioEditar.value,
+        matricula: matriculaUsuarioEditar.value,
+        perfilId: parseInt(novoPerfilEditar.value)
+    };
+
+    if (senhaUsuarioEditar.value.trim() !== "") {
+        dados.senha = senhaUsuarioEditar.value;
+    }
 
     try {
-        const response = await fetch(`/alunos/${id}/perfil`, {
+        const response = await fetch(`/alunos/${id}/updateAluno`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
                 ...getAuthHeaders()
             },
-            body: JSON.stringify({ perfilId })
+            body: JSON.stringify(dados)
         });
 
         if (!response.ok) {
-            throw new Error("Erro ao atualizar perfil");
+            const erro = await response.json();
+            throw new Error(erro.erro || erro.error || "Erro ao atualizar usuário");
         }
 
         fecharModalEditar();
+        mostrarToastSucesso("Usuário atualizado com sucesso!");
         carregarUsuarios();
     } catch (err) {
-        alert(err.message);
+        const msg = err.message;
+
+        if (msg === "EMAIL_EXISTE") {
+            mostrarErroEditar("Email", "Email já em uso");
+        } else if (msg === "MATRICULA_EXISTE") {
+            mostrarErroEditar("Matricula", "Matrícula já em uso");
+        } else if (msg === "MATRICULA_OU_EMAIL_EM_USO") {
+            mostrarErroEditar("Email", "Email ou matrícula já em uso");
+        } else if (msg === "NOME_OBRIGATORIO") {
+            mostrarErroEditar("Nome", "Nome é obrigatório");
+        } else if (msg === "EMAIL_OBRIGATORIO") {
+            mostrarErroEditar("Email", "Email é obrigatório");
+        } else if (msg === "MATRICULA_INVALIDA") {
+            mostrarErroEditar("Matricula", "Matrícula deve conter 8 a 11 dígitos");
+        } else if (msg === "SENHA_OBRIGATORIA") {
+            mostrarErroEditar("Senha", "Senha não pode ser vazia");
+        } else if (msg === "ALUNO_INEXISTENTE") {
+            alert("Usuário não encontrado");
+        } else {
+            alert(msg);
+        }
     }
 }
 
@@ -185,6 +264,7 @@ async function executarAcao() {
         }
 
         fecharConfirmacao();
+        mostrarToastSucesso("Usuário excluído com sucesso!");
         carregarUsuarios();
     } catch (err) {
         alert(err.message);
@@ -199,10 +279,36 @@ function abrirModalCriar() {
 function fecharModalCriar() {
     modalCriarUsuario.classList.remove("open");
     formCriarUsuario.reset();
+    limparErrosCriarUsuario();
+}
+
+function limparErrosCriarUsuario() {
+    const campos = ["Nome", "Email", "Matricula", "Senha"];
+    campos.forEach(campo => {
+        const input = document.getElementById(`input${campo}Criar`);
+        const erro = document.getElementById(`erro${campo}Criar`);
+        if (input) input.classList.remove("input-erro");
+        if (erro) {
+            erro.textContent = "";
+            erro.classList.remove("visivel");
+        }
+    });
+}
+
+function mostrarErroCampo(campo, mensagem) {
+    const input = document.getElementById(`input${campo}Criar`);
+    const erro = document.getElementById(`erro${campo}Criar`);
+    if (input) input.classList.add("input-erro");
+    if (erro) {
+        erro.textContent = mensagem;
+        erro.classList.add("visivel");
+    }
 }
 
 async function criarUsuario(e) {
     e.preventDefault();
+
+    limparErrosCriarUsuario();
 
     const formData = new FormData(formCriarUsuario);
     const dados = Object.fromEntries(formData);
@@ -224,9 +330,31 @@ async function criarUsuario(e) {
         }
 
         fecharModalCriar();
+        mostrarToastSucesso("Usuário criado com sucesso!");
         carregarUsuarios();
     } catch (err) {
-        alert(err.message);
+        const msg = err.message;
+        console.log("Erro capturado:", msg);
+
+        if (msg === "EMAIL_EXISTE") {
+            mostrarErroCampo("Email", "Email já em uso");
+        } else if (msg === "MATRICULA_EXISTE") {
+            mostrarErroCampo("Matricula", "Matrícula já em uso");
+        } else if (msg.includes("nome") && msg.includes("required")) {
+            mostrarErroCampo("Nome", "Nome é obrigatório");
+        } else if (msg.includes("email") && msg.includes("required")) {
+            mostrarErroCampo("Email", "Email é obrigatório");
+        } else if (msg.includes("email") && msg.includes("valid")) {
+            mostrarErroCampo("Email", "Email inválido");
+        } else if (msg.includes("matricula") && msg.includes("required")) {
+            mostrarErroCampo("Matricula", "Matrícula é obrigatória");
+        } else if (msg.includes("matricula") && msg.includes("match")) {
+            mostrarErroCampo("Matricula", "Matrícula deve conter apenas números (8 a 11 dígitos)");
+        } else if (msg.includes("senha") && msg.includes("required")) {
+            mostrarErroCampo("Senha", "Senha é obrigatória");
+        } else {
+            alert(msg);
+        }
     }
 }
 
@@ -241,6 +369,18 @@ btnAbrirModalCriar.addEventListener("click", abrirModalCriar);
 btnFecharModalCriar.addEventListener("click", fecharModalCriar);
 formCriarUsuario.addEventListener("submit", criarUsuario);
 
+["Nome", "Email", "Matricula", "Senha"].forEach(campo => {
+    document.getElementById(`input${campo}Criar`)?.addEventListener("input", () => {
+        const input = document.getElementById(`input${campo}Criar`);
+        const erro = document.getElementById(`erro${campo}Criar`);
+        if (input) input.classList.remove("input-erro");
+        if (erro) {
+            erro.textContent = "";
+            erro.classList.remove("visivel");
+        }
+    });
+});
+
 popupConfirmacao.addEventListener("click", (e) => {
     if (e.target === popupConfirmacao) fecharConfirmacao();
 });
@@ -252,5 +392,36 @@ modalEditarPerfil.addEventListener("click", (e) => {
 modalCriarUsuario.addEventListener("click", (e) => {
     if (e.target === modalCriarUsuario) fecharModalCriar();
 });
+
+["Nome", "Email", "Matricula", "Senha"].forEach(campo => {
+    document.getElementById(`${campo.toLowerCase()}UsuarioEditar`)?.addEventListener("input", () => {
+        const input = document.getElementById(`${campo.toLowerCase()}UsuarioEditar`);
+        const erro = document.getElementById(`erro${campo}Editar`);
+        if (input) input.classList.remove("input-erro");
+        if (erro) {
+            erro.textContent = "";
+            erro.classList.remove("visivel");
+        }
+    });
+});
+
+// Toggle visibilidade da senha no modal de criar usuário
+const btnToggleSenhaCriar = document.getElementById("btnToggleSenhaCriar");
+const inputSenhaCriar = document.getElementById("inputSenhaCriar");
+
+if (btnToggleSenhaCriar && inputSenhaCriar) {
+    btnToggleSenhaCriar.addEventListener("click", () => {
+        const icone = btnToggleSenhaCriar.querySelector("i");
+        if (inputSenhaCriar.type === "password") {
+            inputSenhaCriar.type = "text";
+            icone.classList.remove("fa-eye");
+            icone.classList.add("fa-eye-slash");
+        } else {
+            inputSenhaCriar.type = "password";
+            icone.classList.remove("fa-eye-slash");
+            icone.classList.add("fa-eye");
+        }
+    });
+}
 
 carregarUsuarios();

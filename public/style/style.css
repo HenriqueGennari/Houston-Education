@@ -39,15 +39,21 @@ li {
 
 /* container da busca */
 .divBuscar {
-  position: relative;
   flex: 1;
   display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.input-busca-wrapper {
+  position: relative;
+  width: 45%;
 }
 
 /* campo de busca */
 #buscaMonitoria {
-  width: 60%;
+  width: 100%;
   padding: 10px 40px 10px 40px; /* espaço p/ a lupa */
   border: 1.5px solid #ccc;
   border-radius: 25px;
@@ -63,12 +69,35 @@ li {
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
 }
 
+.select-ordenar {
+  padding: 10px 16px;
+  border: 1.5px solid #ccc;
+  border-radius: 25px;
+  background: white;
+  color: #333;
+  font-size: 0.95rem;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23024059' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 40px;
+  transition: all 0.3s ease;
+}
+
+.select-ordenar:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+}
+
 /* Ícone de lupa */
 .icone-lupa {
   position: absolute;
-  left: calc(20% + 15px); /* Ajusta horizontalmente conforme a largura do input */
-  top: 50%; /* Centraliza verticalmente */
-  transform: translateY(-50%); /* Corrige o alinhamento no centro exato */
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
   width: 22px;
   height: 22px;
   opacity: 0.7;
@@ -76,9 +105,8 @@ li {
   transition: opacity 0.2s ease;
 }
 
-
-#buscaMonitoria:focus + .icone-lupa,
-.divBuscar:hover .icone-lupa {
+.input-busca-wrapper:hover .icone-lupa,
+.input-busca-wrapper:focus-within .icone-lupa {
   opacity: 1;
 }
 
@@ -133,6 +161,7 @@ h2#titulomonitorias{
   border-radius: 8px;
   width: 100%;
   min-height: 210px;
+  position: relative;
   transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s, display 0.3s allow-discrete;
 }
 
@@ -305,19 +334,25 @@ h2#titulomonitorias{
 
   .divBuscar {
     width: 100%;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .input-busca-wrapper {
+    width: 100%;
   }
 
   #buscaMonitoria {
-    width: 90%;
+    width: 100%;
     padding-left: 40px;
   }
 
-  .divBuscar::before {
-    left: 35px;
+  .select-ordenar {
+    width: 100%;
   }
 
   .icone-lupa {
-    left: 35px;
+    left: 15px;
   }
 }
 
@@ -352,6 +387,7 @@ h2#titulomonitorias{
 /* Classe que o JS vai adicionar para mostrar o modal */
 .modal-overlay.open {
     display: flex;
+    overflow-y: auto;
 }
 
 /* --- A CAIXA BRANCA (Modal Content) --- */
@@ -361,8 +397,10 @@ h2#titulomonitorias{
     border-radius: 10px;
     width: 90%;       /* Em celulares ocupa 90% da tela */
     max-width: 500px; /* Em PC nunca passa de 500px */
+    max-height: 90vh; /* Limita altura para permitir scroll interno */
+    overflow-y: auto; /* Scroll vertical quando conteúdo excede */
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Sombra suave */
-    
+
     /* Uma leve animação de entrada */
     animation: modalFadeIn 0.3s ease-out;
 }
@@ -440,6 +478,19 @@ h2#titulomonitorias{
 .campo-form-atualizar textarea.erro-horario {
     border-color: #e74c3c;
     background-color: #fdf2f2;
+}
+
+.mensagem-erro-conflito {
+    color: #e74c3c;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: none;
+    width: 100%;
+    text-align: center;
+}
+
+.mensagem-erro-conflito.visivel {
+    display: block;
 }
 
 /* --- LINHAS DO FORMULÁRIO --- */
@@ -615,6 +666,86 @@ transform: scale(1.05);
 
 .popup-sucesso-fechar:hover {
     color: #333;
+}
+
+/* Popup de Aviso */
+.popup-aviso {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.popup-aviso.hidden {
+    display: none;
+    opacity: 0;
+}
+
+.popup-aviso-content {
+    background: #ffffff;
+    padding: 35px 45px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+    max-width: 420px;
+    width: 90%;
+    animation: popupEntrada 0.25s ease-out;
+}
+
+@keyframes popupEntrada {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.popup-aviso-icone {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background: #fff3cd;
+    color: #856404;
+    border-radius: 50%;
+    font-size: 1.8rem;
+    margin-bottom: 18px;
+}
+
+.popup-aviso-content p {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: #333;
+    margin: 0 0 24px 0;
+    line-height: 1.5;
+}
+
+.popup-aviso-botao {
+    padding: 10px 32px;
+    background: #024059;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.popup-aviso-botao:hover {
+    background: #035a7d;
 }
 
 /* Popup de Detalhes da Monitoria */
@@ -944,7 +1075,8 @@ transform: scale(1.05);
 }
 
 /* Tabs de Campus */
-.tabs-campus {
+.tabs-campus,
+.tabs-status {
     display: flex;
     gap: 0;
     border-bottom: 2px solid #e2e8f0;
@@ -991,7 +1123,8 @@ transform: scale(1.05);
 }
 
 @media (max-width: 768px) {
-    .tabs-campus {
+    .tabs-campus,
+    .tabs-status {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
@@ -1010,7 +1143,7 @@ transform: scale(1.05);
 /* Grid para página de gerenciar monitorias */
 .pagina-gerenciar #listamonitorias {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 23px;
 }
 
@@ -1024,4 +1157,298 @@ transform: scale(1.05);
   .pagina-gerenciar #listamonitorias {
     grid-template-columns: 1fr;
   }
+}
+
+/* Destaque de monitoria compartilhada */
+.monitoria-destacada {
+    border: 3px solid #0d8bf2;
+    box-shadow: 0 0 20px rgba(13, 139, 242, 0.4);
+    animation: pulseDestaque 2s ease-in-out infinite;
+    border-radius: 12px;
+}
+
+@keyframes pulseDestaque {
+    0%, 100% { box-shadow: 0 0 20px rgba(13, 139, 242, 0.4); }
+    50% { box-shadow: 0 0 30px rgba(13, 139, 242, 0.7); }
+}
+
+.cardmonitoria {
+    position: relative;
+}
+
+.btn-compartilhar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    background: #f0f0f0;
+    color: #666;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 2;
+    padding: 0;
+}
+
+.btn-compartilhar:hover {
+    background: #024059;
+    color: white;
+    transform: scale(1.1);
+}
+
+.btn-compartilhar svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Toast de compartilhamento */
+.toast-compartilhar {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #024059;
+    color: white;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    box-shadow: 0 8px 24px rgba(2, 64, 89, 0.35);
+    z-index: 10000;
+    opacity: 0;
+    transition: all 0.4s ease;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.toast-compartilhar.toast-visivel {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+/* Toast de sucesso (canto superior direito) */
+.toast-sucesso {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    transform: translateX(100px);
+    background: #22c55e;
+    color: white;
+    padding: 14px 24px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    box-shadow: 0 8px 24px rgba(34, 197, 94, 0.35);
+    z-index: 10000;
+    opacity: 0;
+    transition: all 0.4s ease;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.toast-sucesso.toast-visivel {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.toast-sucesso i {
+    font-size: 1.2rem;
+}
+
+/* Responsividade da Modal */
+@media (max-width: 768px) {
+    .modal-overlay.open {
+        align-items: flex-start;
+        padding: 20px 0;
+    }
+
+    .modal-content {
+        max-height: calc(100vh - 40px);
+        margin: auto 0;
+    }
+}
+
+/* Popup de chamada (lista de presenca) — mais largo */
+#popupDetalhesMonitoria .popup-content {
+    width: 90vw;
+    max-width: 1200px;
+    height: 85vh;
+    max-height: 85vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+#popupDetalhesMonitoria .popup-body {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+#popupDetalhesMonitoria #listaInscritos {
+    flex: 1;
+    overflow-y: auto;
+    max-height: calc(85vh - 200px);
+}
+
+.chamada-aviso {
+    font-size: 0.85rem;
+    color: #666;
+    font-style: italic;
+    margin-top: -8px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+/* Icones de presenca no popup de chamada */
+.btn-presenca {
+    width: 36px;
+    height: 36px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: all 0.2s ease;
+}
+
+.btn-presenca:hover {
+    transform: scale(1.1);
+}
+
+.btn-presenca-presente {
+    border-color: #22c55e;
+    color: #22c55e;
+}
+
+.btn-presenca-presente.ativo {
+    background: #22c55e;
+    color: #fff;
+    border-color: #22c55e;
+}
+
+.btn-presenca-ausente {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+.btn-presenca-ausente.ativo {
+    background: #ef4444;
+    color: #fff;
+    border-color: #ef4444;
+}
+
+/* Layout do item de inscrito no modo chamada */
+.item-inscrito {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 12px;
+    border-bottom: 1px solid #eee;
+    gap: 20px;
+}
+
+.item-inscrito:last-child {
+    border-bottom: none;
+}
+
+.info-inscrito {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    flex: 1;
+    gap: 12px;
+}
+
+.nome-inscrito {
+    font-weight: 600;
+    color: #333;
+    line-height: 1.3;
+    font-size: 0.95rem;
+}
+
+.matricula-inscrito {
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.3;
+}
+
+.status-presenca {
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 12px;
+    min-width: 68px;
+    text-align: center;
+}
+
+.status-presenca.presente {
+    color: #15803d;
+    background: #dcfce7;
+}
+
+.status-presenca.ausente {
+    color: #b91c1c;
+    background: #fee2e2;
+}
+
+.presenca-controles {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    min-width: 74px;
+    justify-content: flex-end;
+}
+
+/* Icone de editar no canto superior direito do card */
+.btn-editar-card {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 26px;
+    height: 26px;
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1e3a8a;
+    transition: all 0.2s ease;
+    z-index: 2;
+}
+
+.btn-editar-card:hover {
+    background: #1e3a8a;
+    color: #fff;
+    transform: scale(1.1);
+}
+
+/* Botao lista de presenca */
+.btn-lista-presenca {
+    background: #1e3a8a;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.2s ease;
+}
+
+.btn-lista-presenca:hover {
+    background: #3b82f6;
 }

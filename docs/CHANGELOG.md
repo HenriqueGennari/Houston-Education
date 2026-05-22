@@ -1,5 +1,5 @@
 # Changelog Houston Education
-### Ferrari´s a 200 por hora.
+### Ferraris a 200 por hora.
 
 Todas as alterações notáveis deste projeto serão documentadas neste arquivo.
 
@@ -41,6 +41,76 @@ Exemplo de evolução de versão:
 ## Notes
 
 - **Versões mais antigas ficam sempre abaixo das versões mais recentes, seguindo o padrão estabelecido.**
+
+---
+
+## [1.3.0] - 2026-05-21
+
+### Added
+
+**Gerenciamento de Presença**
+- Adicionada validação por parte do monitor em relação à presença ou ausência de um aluno em uma monitoria.
+- Criado campo `presente` na tabela de inscrição.
+- Criado endpoint separado para atualização em lote de usuários em relação à sua presença em uma monitoria.
+
+**Histórico de Monitorias**
+- Criado endpoint separado para trazer as informações de histórico da monitoria de cada monitor.
+- Criado endpoint geral para o admin visualizar o histórico de todas as monitorias.
+- Criado endpoint para trazer as informações da chamada (presença dos alunos).
+
+**Minhas Inscrições**
+- Criada aba "Minhas inscrições" para os alunos visualizarem todas as suas inscrições em monitorias.
+- Adicionado ícone de compartilhamento de monitoria.
+
+**Abas de Gerenciamento de Monitorias**
+- Implementadas abas "Antigas" e "Agendadas" na tela de gerenciamento de monitorias.
+- Criado filtro para ordenar a aparição das monitorias na aba de gerenciamento e na home.
+
+**Dashboard Admin**
+- Adicionados mais campos de edição no painel do admin, permitindo a edição de todos os campos de um usuário.
+- Adicionadas mensagens de erro para o admin ao tentar atualizar ou criar qualquer entidade já existente no banco de dados.
+
+**Exportação de Presença**
+- Implementada funcionalidade de exportar alunos presentes para PDF.
+
+**Referência de Campus e Local**
+- Adicionada referência ao campus em relação ao local quando visualizados os detalhes de uma monitoria ou quando uma monitoria é clicada na home.
+
+**Preview de Senha**
+- Adicionado "olhinho" que permite ver o preview da senha. Implementado no cadastro, login e dashboard do admin.
+
+### Changed
+
+**Layout de Gerenciamento de Monitorias**
+- Aba de gerenciamento de monitorias agora passa a fazer parte da aba "Minhas monitorias".
+- Divisão das páginas de gerenciamento de monitorias e a nova página de histórico de monitorias.
+
+### Fixed
+
+**Tela de Atualização**
+- Corrigida tela de atualização quebrada, implementando scroll vertical.
+
+**Regra de negócio**
+- Implementada regra de negócio que barra a criação de uma monitoria em um mesmo local na mesma hora. 
+
+<details>
+<summary>🖼️ <b>Clique aqui para visualizar as telas desta versão</b></summary>
+
+<br>
+
+#### Home
+![Tela Home](./img/TELAS-V1.3.0/Home-V1.3.0.png)
+
+#### Minhas Inscrições
+![Tela Minhas Inscrições](./img/TELAS-V1.3.0/MINHASINSCRICOES-V1.3.0.png)
+
+#### Gerenciar Monitorias
+![Tela Gerenciar Monitorias](./img/TELAS-V1.3.0/GERENCIARMONITORIAS-V1.3.0.png)
+
+#### Histórico de Monitorias
+![Tela Histórico de Monitorias](./img/TELAS-V1.3.0/HISTORICOMONITORIAS-V1.3.0.png)
+
+</details>
 
 ---
 

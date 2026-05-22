@@ -17,7 +17,7 @@ router.post("/", validateSchema(schema.alunoCreateSchema), alunoController.creat
 
 router.put("/:id", autenticado, validateSchema(schema.alunoUpdateIdSchema, "params"), validateSchema(schema.alunoUpdateSchema, "body"), alunoController.update); // atualização que o aluno pode fazer
 
-router.patch("/:id/perfil", autenticado, autorizado(["ADMIN"]), validateSchema(schema.alunoUpdatePerfilSchema, "body"), alunoController.updatePerfilUsuario); // alteração exclusiva do perfil
+router.patch("/:id/updateAluno", autenticado, autorizado(["ADMIN"]), validateSchema(schema.alunoUpdatePerfilSchema, "body"), alunoController.updateUsuarioByAdmin); // atualização de perfil e dados do usuário
 
 router.delete("/:id", autenticado , autorizado(["ADMIN"]), validateSchema(schema.alunoDeleteSchema, "params"), alunoController.delete);
 

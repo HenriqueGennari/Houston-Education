@@ -1,5 +1,7 @@
-    import { Inscricao } from "@prisma/client";
+import { Inscricao } from "@prisma/client";
 import type InscricoesPrismaRepository from "../../repositories/Prisma/InscricoesPrismaRepository.js";
+import MonitoriaPrismaRepository from "../../repositories/Prisma/MonitoriaPrismaRepository.js";
+
 
 
 class InscricaosService{
@@ -22,6 +24,15 @@ class InscricaosService{
         return InscricaosDados;
     }
 
+    async getMinhasInscricoes(alunoId: string, user: { id: string; perfil: string }) : Promise<any[]>{
+        if (user.id !== alunoId) {
+            throw new Error("MONITORIAS_ALHEIAS");
+        }
+
+        const InscricaosDados = await this._inscricaoPrismaRepository.getMinhasInscricoes(alunoId)
+        return InscricaosDados;
+    }
+
     async create(dados : Inscricao) : Promise<Inscricao>{
         const existeInscricao = await this._inscricaoPrismaRepository.findAlunoMonitoria(dados.alunoId, dados.monitoriaId)
         
@@ -32,7 +43,7 @@ class InscricaosService{
         const dadosInscricaos = await this._inscricaoPrismaRepository.create(dados)
         return dadosInscricaos;
     }
-    async getById(id : number) : Promise <Inscricao>{
+    async getById(id : number) : Promise <any>{
         const InscricaoDados = await this._inscricaoPrismaRepository.getById(id)
 
         if (!InscricaoDados){
@@ -42,6 +53,14 @@ class InscricaosService{
     }
 
     async delete(id : number) : Promise <Inscricao>{
+        const inscricaoExistente = await this.getById(id)
+        
+        const agora = new Date()
+
+        if (new Date(inscricaoExistente.monitoria.inicio) <= agora){
+            throw new Error ("MONITORIA_JA_OCORREU")
+        }
+
         const InscricaoDados = await this._inscricaoPrismaRepository.delete(id)
 
         if (!InscricaoDados){
@@ -49,6 +68,32 @@ class InscricaosService{
         }
 
         return InscricaoDados;
+    }
+
+    async salvarChamada(
+        monitoriaId: string, atualizacoes: { id: number; presente: boolean }[], usuarioId: string, perfilUsuario: string ): Promise<Inscricao[]> {
+
+        const monitoriaRepository = new MonitoriaPrismaRepository();
+        const monitoria = await monitoriaRepository.getById(monitoriaId);
+
+        if (!monitoria) {
+            throw new Error("MONITORIA_NAO_ENCONTRADA");
+        }
+
+        const agora = new Date();
+        
+        if (new Date(monitoria.inicio) >= agora) {
+            throw new Error("MONITORIA_NAO_OCORREU");
+        }
+
+        if (perfilUsuario !== "ADMIN" && monitoria.monitorId !== usuarioId) {
+            throw new Error("NAO_AUTORIZADO");
+        }
+
+        const resultados = await this._inscricaoPrismaRepository.salvarChamada(atualizacoes);
+
+
+        return resultados;
     }
 }
 

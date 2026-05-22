@@ -29,7 +29,7 @@ class AlunoPrismaRepository {
         return alunos;
     }
 
-    async findByEmailAndMatricula(email: string, matricula: string): Promise<AlunoWithPerfil | null> {
+    async findByEmailAndMatricula(email: string, matricula: string): Promise<any | null> {
         const aluno = await prisma.aluno.findFirst({
             where: {
                 deletedAt: null,
@@ -38,8 +38,18 @@ class AlunoPrismaRepository {
                     { matricula: matricula }
                 ]
             },
-            include: {
-                perfil: true
+            select: {
+                id: true,
+                nome: true,
+                email: true,
+                matricula: true,
+                senha: true,
+                perfilId: true,
+                perfil: {
+                    select: {
+                        nome: true
+                    }
+                }
             }
         });
 
@@ -88,7 +98,7 @@ class AlunoPrismaRepository {
         return alunoApagado;
     }
 
-    async updatePerfil(id: string, perfilId: number): Promise<Aluno | null> {
+    async updateUsuarioByAdmin(id: string, perfilId: number): Promise<Aluno | null> {
         const alunoAtualizado = await prisma.aluno.update({
             data: { perfilId },
             where: { id }

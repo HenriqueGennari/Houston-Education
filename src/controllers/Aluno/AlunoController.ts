@@ -20,6 +20,18 @@ class AlunoController{
             return Res.status(500).json({error : err.message})
         }
     }
+
+    async getById(Req : Request, Res : Response){
+        try {
+            const {id} = Req.params;
+            const alunosDados = await alunoService.getById(id)
+
+            return Res.status(200).json(alunosDados)
+
+    } catch (err : any) {
+        return Res.status(400).json({error : err.message})
+    }
+    }
     async create(Req : Request, Res : Response){
         try {
             const dados = Req.body;
@@ -32,18 +44,6 @@ class AlunoController{
         }
     }
     
-    async getById(Req : Request, Res : Response){
-        try {
-            const {id} = Req.params;
-            const alunosDados = await alunoService.getById(id)
-
-            return Res.status(200).json(alunosDados)
-
-        } catch (err : any) {
-            return Res.status(400).json({error : err.message})
-        }
-    }
-
     async update(Req : Request, Res : Response){
         try {
             const {id} = Req.params
@@ -55,6 +55,34 @@ class AlunoController{
             return Res.status(200).json(alunoDados)
         } catch (err : any) {
             Res.status(400).json({error : err.message})
+        }
+    }
+    async updateUsuarioByAdmin(Req : Request, Res : Response){
+        try {
+            const { id } = Req.params;
+            const dados = { ...Req.body };
+
+            if (dados.perfilId !== undefined) {
+                dados.perfilId = parseInt(dados.perfilId, 10);
+            }
+
+            const alunoDados = await alunoService.updateUsuarioByAdmin(id, dados);
+
+            return Res.status(200).json(alunoDados);
+        } catch (err : any) {
+            if (err.message === "ALUNO_INEXISTENTE") {
+                return Res.status(404).json({ error: err.message });
+            }
+            if (err.message === "EMAIL_EXISTE") {
+                return Res.status(409).json({ erro: "EMAIL_EXISTE" });
+            }
+            if (err.message === "MATRICULA_EXISTE") {
+                return Res.status(409).json({ erro: "MATRICULA_EXISTE" });
+            }
+            if (err.message === "MATRICULA_OU_EMAIL_EM_USO") {
+                return Res.status(409).json({ erro: "MATRICULA_OU_EMAIL_EM_USO" });
+            }
+            return Res.status(400).json({ error: err.message });
         }
     }
     async delete(Req : Request, Res : Response){
@@ -70,21 +98,6 @@ class AlunoController{
         }
     }
 
-    async updatePerfilUsuario(Req : Request, Res : Response){
-        try {
-            const { id } = Req.params;
-            const { perfilId } = Req.body;
-
-            const alunoDados = await alunoService.updatePerfilUsuario(id, perfilId);
-
-            return Res.status(200).json(alunoDados);
-        } catch (err : any) {
-            if (err.message === "ALUNO_INEXISTENTE") {
-                return Res.status(404).json({ error: err.message });
-            }
-            return Res.status(400).json({ error: err.message });
-        }
-    }
 }
 
 

@@ -22,6 +22,23 @@ let cursos = [];
 let acaoPendente = null;
 let cursoPendente = null;
 
+function mostrarToastSucesso(mensagem) {
+    let toast = document.getElementById("toastSucesso");
+    if (!toast) {
+        toast = document.createElement("div");
+        toast.id = "toastSucesso";
+        toast.className = "toast-sucesso";
+        document.body.appendChild(toast);
+    }
+
+    toast.innerHTML = `<i class="ph-fill ph-check-circle"></i> <span>${mensagem}</span>`;
+    toast.classList.add("toast-visivel");
+
+    setTimeout(() => {
+        toast.classList.remove("toast-visivel");
+    }, 4000);
+}
+
 async function carregarCursos() {
     tabelaBody.innerHTML = '<tr><td colspan="3">Carregando cursos...</td></tr>';
 
@@ -101,9 +118,34 @@ function abrirModalCriar() {
 function fecharModalCriar() {
     modalCriarCurso.classList.remove("open");
     formCriarCurso.reset();
+    limparErrosCriarCurso();
+}
+
+function limparErrosCriarCurso() {
+    const campos = ["Nome", "Descricao"];
+    campos.forEach(campo => {
+        const input = document.getElementById(`input${campo}Criar`);
+        const erro = document.getElementById(`erro${campo}Criar`);
+        if (input) input.classList.remove("input-erro");
+        if (erro) {
+            erro.textContent = "";
+            erro.classList.remove("visivel");
+        }
+    });
+}
+
+function mostrarErroCampo(campo, mensagem) {
+    const input = document.getElementById(`input${campo}Criar`);
+    const erro = document.getElementById(`erro${campo}Criar`);
+    if (input) input.classList.add("input-erro");
+    if (erro) {
+        erro.textContent = mensagem;
+        erro.classList.add("visivel");
+    }
 }
 
 function abrirModalEditar(curso) {
+    limparErrosEditarCurso();
     idCursoEditar.value = curso.id;
     nomeCursoEditar.value = curso.nome;
     descricaoCursoEditar.value = curso.descricao || "";
@@ -113,6 +155,30 @@ function abrirModalEditar(curso) {
 function fecharModalEditar() {
     modalEditarCurso.classList.remove("open");
     formEditarCurso.reset();
+    limparErrosEditarCurso();
+}
+
+function limparErrosEditarCurso() {
+    const campos = ["Nome", "Descricao"];
+    campos.forEach(campo => {
+        const input = document.getElementById(`${campo.toLowerCase()}CursoEditar`);
+        const erro = document.getElementById(`erro${campo}Editar`);
+        if (input) input.classList.remove("input-erro");
+        if (erro) {
+            erro.textContent = "";
+            erro.classList.remove("visivel");
+        }
+    });
+}
+
+function mostrarErroCampoEditar(campo, mensagem) {
+    const input = document.getElementById(`${campo.toLowerCase()}CursoEditar`);
+    const erro = document.getElementById(`erro${campo}Editar`);
+    if (input) input.classList.add("input-erro");
+    if (erro) {
+        erro.textContent = mensagem;
+        erro.classList.add("visivel");
+    }
 }
 
 async function criarCurso(e) {
@@ -138,9 +204,18 @@ async function criarCurso(e) {
         }
 
         fecharModalCriar();
+        mostrarToastSucesso("Curso criado com sucesso!");
         carregarCursos();
     } catch (err) {
-        alert(err.message);
+        const msg = err.message;
+
+        if (msg === "CURSO_DUPLICADO") {
+            mostrarErroCampo("Nome", "Curso já existe");
+        } else if (msg.includes("nome") && msg.includes("required")) {
+            mostrarErroCampo("Nome", "Nome é obrigatório");
+        } else {
+            alert(msg);
+        }
     }
 }
 
@@ -168,9 +243,18 @@ async function salvarEdicao(e) {
         }
 
         fecharModalEditar();
+        mostrarToastSucesso("Curso atualizado com sucesso!");
         carregarCursos();
     } catch (err) {
-        alert(err.message);
+        const msg = err.message;
+
+        if (msg === "CURSO_DUPLICADO") {
+            mostrarErroCampoEditar("Nome", "Curso já existe");
+        } else if (msg.includes("nome") && msg.includes("required")) {
+            mostrarErroCampoEditar("Nome", "Nome é obrigatório");
+        } else {
+            alert(msg);
+        }
     }
 }
 
@@ -211,6 +295,7 @@ async function executarAcao() {
         }
 
         fecharConfirmacao();
+        mostrarToastSucesso("Curso excluído com sucesso!");
         carregarCursos();
     } catch (err) {
         alert(err.message);
@@ -239,6 +324,30 @@ modalCriarCurso.addEventListener("click", (e) => {
 
 modalEditarCurso.addEventListener("click", (e) => {
     if (e.target === modalEditarCurso) fecharModalEditar();
+});
+
+["Nome", "Descricao"].forEach(campo => {
+    document.getElementById(`input${campo}Criar`)?.addEventListener("input", () => {
+        const input = document.getElementById(`input${campo}Criar`);
+        const erro = document.getElementById(`erro${campo}Criar`);
+        if (input) input.classList.remove("input-erro");
+        if (erro) {
+            erro.textContent = "";
+            erro.classList.remove("visivel");
+        }
+    });
+});
+
+["Nome", "Descricao"].forEach(campo => {
+    document.getElementById(`${campo.toLowerCase()}CursoEditar`)?.addEventListener("input", () => {
+        const input = document.getElementById(`${campo.toLowerCase()}CursoEditar`);
+        const erro = document.getElementById(`erro${campo}Editar`);
+        if (input) input.classList.remove("input-erro");
+        if (erro) {
+            erro.textContent = "";
+            erro.classList.remove("visivel");
+        }
+    });
 });
 
 carregarCursos();

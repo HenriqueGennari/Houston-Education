@@ -7,7 +7,7 @@
     <title>Gerenciar Monitorias</title>
     <link rel="shortcut icon" href="../assets/img/iconeHoustonEducation.ico" type="image/x-icon">
 
-    <link rel="stylesheet" href="../style/style.css?v=2">
+    <link rel="stylesheet" href="../style/style.css?v=3">
     <link rel="stylesheet" href="../style/stylePopUp.css?v=2">
     <link rel="stylesheet" href="../style/styleNavMenuLateral.css?v=2">
     <script type="module" src="../scripts/menuLateral/menuLateral.js"></script>
@@ -16,6 +16,9 @@
     <!--Isso é para o picker quando atualizar as monitorias-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 </head>
 
 <body class="pagina-gerenciar">
@@ -61,16 +64,35 @@
                     </a>
                 </li>
                 <li>
+                    <a href="/pages/minhasInscricoes.html" id="linkMinhasInscricoes">
+                        <i class="ph ph-file-text" style="font-size: 22px;"></i>
+                        <span>Minhas inscrições</span>
+                    </a>
+                </li>
+                <li>
                     <a href="/pages/cadastrarMonitoria.html" id="linkCadastrarMonitoria">
                         <img src="../assets/img/iconeCadastrarMonitoria.png" alt="Icone Cadastrar Monitoria">
                         <span>Cadastrar Monitoria</span>
                     </a>
                 </li>
-                <li>
-                    <a href="/gerenciar-monitorias" id="linkGerenciarMonitoria">
-                        <img src="../assets/img/iconeGerenciarMonitorias.png" alt="Icone Gerenciar Monitorias">
-                        <span>Gerenciar Monitorias</span>
+                <li class="submenu">
+                    <a href="#" class="submenu-toggle" id="toggleMinhasMonitorias">
+                        <img src="../assets/img/iconeGerenciarMonitorias.png" alt="Icone Minhas Monitorias">
+                        <span>Minhas monitorias</span>
+                        <span class="seta-submenu">&#9662;</span>
                     </a>
+                    <ul class="submenu-lista">
+                        <li>
+                            <a href="/gerenciar-monitorias" id="linkGerenciarMonitoria">
+                                <span>Gerenciar Monitorias</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/pages/historicoMonitorias.html" id="linkHistoricoMonitorias">
+                                <span>Histórico de Monitorias</span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li>
                     <a href="/dashboard-admin" id="linkDashboardAdmin.html">
@@ -90,14 +112,25 @@
         </h1>
 
         <div class="divBuscar">
-            <img src="../assets/img/lupa.png" alt="" class="icone-lupa">
-            <input type="text" id="buscaMonitoria" placeholder="Buscar monitoria...">
+            <div class="input-busca-wrapper">
+                <img src="../assets/img/lupa.png" alt="" class="icone-lupa">
+                <input type="text" id="buscaMonitoria" placeholder="Buscar monitoria...">
+            </div>
+            <select id="ordenarMonitorias" class="select-ordenar">
+                <option value="recente">Mais recente</option>
+                <option value="antiga">Mais antiga</option>
+            </select>
         </div>
     </div>
 
     <section class="sectionmonitorias">
         <div class="exibirmonitorias">
             <h2 id="titulomonitorias">Suas monitorias</h2>
+            <div class="tabs-status" id="tabsStatus">
+                <button class="tab-btn active" data-status="todas">Todas</button>
+                <button class="tab-btn" data-status="agendada">Agendadas</button>
+                <button class="tab-btn" data-status="antiga">Antigas</button>
+            </div>
             <ul id="listamonitorias">
                 <li>Carregando monitorias...</li>
             </ul>
@@ -128,6 +161,15 @@
         </div>
     </div>
 
+    <!-- POPUP DE AVISO -->
+    <div id="popupAviso" class="popup-aviso hidden">
+        <div class="popup-aviso-content">
+            <div class="popup-aviso-icone">&#9888;</div>
+            <p id="popupAvisoMensagem"></p>
+            <button class="popup-aviso-botao" id="btnFecharAviso">OK</button>
+        </div>
+    </div>
+
     <!-- POPUP DE DETALHES DA MONITORIA -->
     <div id="popupDetalhesMonitoria" class="popup hidden">
         <div class="popup-content">
@@ -138,6 +180,7 @@
             <div class="popup-body">
                 <p id="popupDetalhesDescricao" class="popup-descricao"></p>
                 <h3>Alunos Inscritos</h3>
+                <p class="chamada-aviso">Não se preocupe, a chamada só será salva após a ocorrência da monitoria</p>
                 <ul id="listaInscritos"></ul>
             </div>
         </div>
@@ -183,6 +226,9 @@
                         <input type="text" class="timepicker" name="hora_fim">
                     </div>
                 </div>
+                <div class="form-row">
+                    <span id="erroConflitoHorario" class="mensagem-erro-conflito"></span>
+                </div>
 
                 <div class="form-row">
                     <div class="campo-form-atualizar">
@@ -221,7 +267,7 @@
 
 
     <script type="module" src="../scripts/carregarNomeUsuario.js?v=2"></script>
-    <script type="module" src="../scripts/monitorias/gerenciarMonitorias.js?v=2"></script>
+    <script type="module" src="../scripts/monitorias/gerenciarMonitorias.js?v=3"></script>
     <script type="module" src="../scripts/monitorias/autorizadoMonitorias.js?v=2"></script>
     <script src="../scripts/utils/pickerData&Hora.js?v=2" type="module"></script>
 
