@@ -38,7 +38,7 @@ body {
 .perfil-icone {
     width: 56px;
     height: 56px;
-    background: #e8f4f8;
+    background: #024059;
     border-radius: 16px;
     display: flex;
     align-items: center;
@@ -54,7 +54,7 @@ body {
 .perfil-header h2 {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #1a1a2e;
+    color: #024059;
 }
 
 /* Formulario */
@@ -87,7 +87,7 @@ body {
     border-radius: 12px;
     font-size: 1rem;
     color: #333;
-    background: white;
+    background: #e4e4e4;
     outline: none;
     transition: all 0.3s ease;
     font-family: inherit;
@@ -133,14 +133,14 @@ body {
 
 .btn-cancelar:hover {
     background: #f5f5f5;
-    border-color: #ccc;
+    border-color: #024059;
 }
 
 .btn-salvar {
     padding: 12px 24px;
     border: none;
     border-radius: 12px;
-    background: #0d8bf2;
+    background: #024059;
     color: white;
     font-size: 1rem;
     font-weight: 600;
@@ -151,7 +151,7 @@ body {
 }
 
 .btn-salvar:hover {
-    background: #0a7ad9;
+    background: #035a7d;
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(13, 139, 242, 0.4);
 }

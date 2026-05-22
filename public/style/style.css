@@ -25,7 +25,8 @@ li {
 }
 
 .boasvindas {
-  padding: 20px 40px;
+  /* A ordem é: Topo, Direita, Baixo, Esquerda */
+  padding: 30px 40px 10px 100px; 
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -62,10 +63,11 @@ li {
   outline: none;
   transition: all 0.3s ease;
   color: #333;
+  background-color: white;;
 }
 
 #buscaMonitoria:focus {
-  border-color: #007bff;
+  border-color: #024059;
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
 }
 
@@ -88,7 +90,7 @@ li {
 }
 
 .select-ordenar:focus {
-  border-color: #007bff;
+  border-color: #024059;
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
 }
 
@@ -127,7 +129,7 @@ h2#titulomonitorias{
   justify-content: center;
   align-items: center;
   flex-direction: column; 
-  padding: 40px 0;
+  padding: 10px 0 40px 0;
   color: #024059;
 }
 
@@ -250,7 +252,7 @@ h2#titulomonitorias{
   font-size: 1.6rem;
   color: #2c3e50;
   margin-bottom: 1rem;
-  border-bottom: 2px solid #3498db;
+  border-bottom: 2px solid #024059;
   padding-bottom: 0.4rem;
 }
 
@@ -320,7 +322,7 @@ h2#titulomonitorias{
 .qtdinscricoes {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #007bff;
+  color: #09696f;
   margin-top: 4px;
 }
 
@@ -448,7 +450,7 @@ h2#titulomonitorias{
 .campo-form-atualizar label {
     margin-bottom: 5px;
     font-weight: bold;
-    color: #333;
+    color: #024059;
     font-size: 0.9rem;
 }
 
@@ -465,6 +467,7 @@ h2#titulomonitorias{
     transition: border-color 0.2s;
     font-family: inherit;
     resize: vertical;
+    background-color: #e4e4e4;
 }
 
 .campo-form-atualizar input:focus,
@@ -1346,20 +1349,20 @@ transform: scale(1.05);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #1e3a8a;
+    color: #09696f;
     transition: all 0.2s ease;
     z-index: 2;
 }
 
 .btn-editar-card:hover {
-    background: #1e3a8a;
+    background: #0b8e98;
     color: #fff;
     transform: scale(1.1);
 }
 
 /* Botao lista de presenca */
 .btn-lista-presenca {
-    background: #1e3a8a;
+    background: #09696f;
     color: #fff;
     border: none;
     padding: 8px 16px;
@@ -1370,5 +1373,5 @@ transform: scale(1.05);
 }
 
 .btn-lista-presenca:hover {
-    background: #3b82f6;
+    background: #0b8e98;
 }
