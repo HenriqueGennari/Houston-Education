@@ -671,6 +671,86 @@ transform: scale(1.05);
     color: #333;
 }
 
+/* Popup de Aviso */
+.popup-aviso {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.popup-aviso.hidden {
+    display: none;
+    opacity: 0;
+}
+
+.popup-aviso-content {
+    background: #ffffff;
+    padding: 35px 45px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+    max-width: 420px;
+    width: 90%;
+    animation: popupEntrada 0.25s ease-out;
+}
+
+@keyframes popupEntrada {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.popup-aviso-icone {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background: #fff3cd;
+    color: #856404;
+    border-radius: 50%;
+    font-size: 1.8rem;
+    margin-bottom: 18px;
+}
+
+.popup-aviso-content p {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: #333;
+    margin: 0 0 24px 0;
+    line-height: 1.5;
+}
+
+.popup-aviso-botao {
+    padding: 10px 32px;
+    background: #024059;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.popup-aviso-botao:hover {
+    background: #035a7d;
+}
+
 /* Popup de Detalhes da Monitoria */
 .popup-header {
     display: flex;

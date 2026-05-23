@@ -5,10 +5,8 @@ import { autenticado } from "../../middlewares/autenticadoMiddleware.js";
 import { autorizado } from "../../middlewares/autorizadoMiddleware.js";
 
 import { Router } from "express";
-import { secureHeapUsed } from "crypto";
 
-
-
+            
 const router = Router();
 
 router.get("/", autenticado, MonitoriaController.getAll); // get de todas as monitorias

@@ -452,7 +452,7 @@ popupLocal.textContent = `Local: ${m.local?.nome || 'Não informado'}${campusNom
                                 });
 
                                 if (atualizacoes.length === 0) {
-                                    alert("Nenhuma presença foi marcada.");
+                                    mostrarAviso("Nenhuma presença foi marcada.");
                                     return;
                                 }
 
@@ -462,13 +462,13 @@ popupLocal.textContent = `Local: ${m.local?.nome || 'Não informado'}${campusNom
                                     popupDetalhes.classList.add("hidden");
                                 } catch (err) {
                                     if (err.message === "MONITORIA_NAO_OCORREU") {
-                                        alert("A monitoria ainda não ocorreu. A chamada só pode ser salva após a data da monitoria.");
+                                        mostrarAviso("A monitoria ainda não ocorreu. A chamada só pode ser salva após a data da monitoria.");
                                     } else if (err.message === "NAO_AUTORIZADO") {
-                                        alert("Você não tem permissão para salvar esta chamada.");
+                                        mostrarAviso("Você não tem permissão para salvar esta chamada.");
                                     } else if (err.message === "MONITORIA_NAO_ENCONTRADA") {
-                                        alert("Monitoria não encontrada.");
+                                        mostrarAviso("Monitoria não encontrada.");
                                     } else {
-                                        alert("Erro ao salvar chamada. Tente novamente.");
+                                        mostrarAviso("Erro ao salvar chamada. Tente novamente.");
                                     }
                                 }
                             });
@@ -651,6 +651,33 @@ if (popupDetalhesMonitoria) {
     popupDetalhesMonitoria.addEventListener("click", (e) => {
         if (e.target === popupDetalhesMonitoria) {
             popupDetalhesMonitoria.classList.add("hidden");
+        }
+    });
+}
+
+// Popup de aviso
+function mostrarAviso(mensagem) {
+    const popup = document.getElementById("popupAviso");
+    const texto = document.getElementById("popupAvisoMensagem");
+    if (popup && texto) {
+        texto.textContent = mensagem;
+        popup.classList.remove("hidden");
+    }
+}
+
+const btnFecharAviso = document.getElementById("btnFecharAviso");
+const popupAviso = document.getElementById("popupAviso");
+
+if (btnFecharAviso) {
+    btnFecharAviso.addEventListener("click", () => {
+        popupAviso.classList.add("hidden");
+    });
+}
+
+if (popupAviso) {
+    popupAviso.addEventListener("click", (e) => {
+        if (e.target === popupAviso) {
+            popupAviso.classList.add("hidden");
         }
     });
 }
