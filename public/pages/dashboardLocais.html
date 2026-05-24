@@ -37,8 +37,14 @@
                 <img src="../assets/img/iconeHoustonEducation.ico" alt="logo Houston Education">
             </a>
         </div>
-        <div class="menu-usuario">
-            <a href="/pages/logout.html" class="btn-sair">Sair</a>
+        <div class="menu-usuario-dropdown">
+            <button class="btn-icone-usuario" id="btnDropdownUsuario">
+                <img src="../assets/img/iconeUsuario.png" alt="Ícone do Usuário">
+            </button>
+            <div class="dropdown-conteudo" id="dropdownUsuario">
+                <a href="/pages/perfil.html">Atualizar Informações</a>
+                <a href="/pages/logout.html" class="texto-sair">Sair da Conta</a>
+            </div>
         </div>
     </nav>
 
@@ -52,15 +58,9 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/perfil" id="linkPerfil">
-                        <img src="../assets/img/iconeUsuario.png" alt="Icone Perfil">
-                        <span>Perfil</span>
-                    </a>
-                </li>
-                <li>
                     <a href="/pages/minhasInscricoes.html" id="linkMinhasInscricoes">
-                        <i class="ph ph-file-text" style="font-size: 22px;"></i>
-                        <span>Minhas inscrições</span>
+                        <img src="../assets/img/iconeMinhasInscricoes.png" alt="Icone Minhas Inscrições">
+                        <span>Minhas Inscrições</span>
                     </a>
                 </li>
                 <li>
@@ -102,11 +102,11 @@
 
     <div class="dashboard-header">
         <h1>Dashboard Admin</h1>
-        <p>Gerencie os locais das monitorias</p>
+        <p>Gerencie os Locais das Monitorias</p>
     </div>
 
     <nav class="dashboard-tabs">
-        <a href="/dashboard-admin">Usuarios</a>
+        <a href="/dashboard-admin">Usuários</a>
         <a href="/dashboard-locais" class="active">Locais</a>
         <a href="/dashboard-disciplinas">Disciplinas</a>
         <a href="/dashboard-cursos">Cursos</a>
@@ -132,14 +132,14 @@
                 <thead>
                     <tr>
                         <th>Nome</th>
-                        <th>Descricao</th>
+                        <th>Descrição</th>
                         <th>Campus</th>
-                        <th>Acoes</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="4">Carregando locais...</td>
+                        <td colspan="4">Carregando Locais...</td>
                     </tr>
                 </tbody>
             </table>
@@ -169,14 +169,14 @@
                     <span id="erroNomeCriar" class="mensagem-erro"></span>
                 </div>
                 <div class="campo-form-atualizar">
-                    <label>Descricao</label>
+                    <label>Descrição</label>
                     <input type="text" name="descricao" id="inputDescricaoCriar" placeholder="Descricao do local">
                     <span id="erroDescricaoCriar" class="mensagem-erro"></span>
                 </div>
                 <div class="campo-form-atualizar">
                     <label>Campus</label>
                     <select name="campusId" id="campusSelectCriar" required>
-                        <option value="" disabled selected>Selecione o campus...</option>
+                        <option value="" disabled selected>Selecione o Campus...</option>
                     </select>
                     <span id="erroCampusCriar" class="mensagem-erro"></span>
                 </div>
@@ -199,18 +199,18 @@
                     <span id="erroNomeEditar" class="mensagem-erro"></span>
                 </div>
                 <div class="campo-form-atualizar">
-                    <label>Descricao</label>
+                    <label>Descrição</label>
                     <input type="text" name="descricao" id="descricaoLocalEditar" placeholder="Descricao do local">
                     <span id="erroDescricaoEditar" class="mensagem-erro"></span>
                 </div>
                 <div class="campo-form-atualizar">
                     <label>Campus</label>
                     <select name="campusId" id="campusSelectEditar" required>
-                        <option value="" disabled selected>Selecione o campus...</option>
+                        <option value="" disabled selected>Selecione o Campus...</option>
                     </select>
                     <span id="erroCampusEditar" class="mensagem-erro"></span>
                 </div>
-                <button type="submit" id="btnSalvarEdicao" class="btn-salvar-modal">Salvar Alteracao</button>
+                <button type="submit" id="btnSalvarEdicao" class="btn-salvar-modal">Salvar Alteração</button>
             </form>
         </div>
     </div>

@@ -43,8 +43,14 @@
                 <img src="../assets/img/iconeHoustonEducation.ico" alt="logo Houston Education">
             </a>
         </div>
-        <div class="menu-usuario">
-            <a href="/pages/logout.html" class="btn-sair">Sair</a>
+        <div class="menu-usuario-dropdown">
+            <button class="btn-icone-usuario" id="btnDropdownUsuario">
+                <img src="../assets/img/iconeUsuario.png" alt="Ícone do Usuário">
+            </button>
+            <div class="dropdown-conteudo" id="dropdownUsuario">
+                <a href="/pages/perfil.html">Atualizar Informações</a>
+                <a href="/pages/logout.html" class="texto-sair">Sair da Conta</a>
+            </div>
         </div>
     </nav>
 
@@ -58,15 +64,9 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/perfil" id="linkPerfil">
-                        <img src="../assets/img/iconeUsuario.png" alt="Icone Perfil">
-                        <span>Perfil</span>
-                    </a>
-                </li>
-                <li>
                     <a href="/pages/minhasInscricoes.html" id="linkMinhasInscricoes">
-                        <i class="ph ph-file-text" style="font-size: 22px;"></i>
-                        <span>Minhas inscrições</span>
+                        <img src="../assets/img/iconeMinhasInscricoes.png" alt="Icone Minhas Inscrições">
+                        <span>Minhas Inscrições</span>
                     </a>
                 </li>
                 <li>
@@ -208,7 +208,8 @@
                 <div class="form-row">
                     <div class="campo-form-atualizar full-width">
                         <label>Descrição</label>
-                        <textarea name="descricao" rows="4" placeholder="Adicione detalhes, tópicos ou observações..."></textarea>
+                        <textarea name="descricao" rows="4"
+                            placeholder="Adicione detalhes, tópicos ou observações..."></textarea>
                     </div>
                 </div>
 
