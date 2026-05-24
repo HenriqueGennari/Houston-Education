@@ -44,6 +44,31 @@ Exemplo de evolução de versão:
 
 ---
 
+## [1.3.1] - 2026-05-24
+
+### Added
+
+
+**Nova logo**
+- Nova logo personalizada que reflete a Houston Education.
+
+### Changed
+
+**Layout de Gerenciamento de Monitorias**
+- Mudança nas cores de alguns botões e ajustes de responsividades em páginas, tornando a experiência fluida.
+
+
+<details>
+<summary>🖼️ <b>Clique aqui para visualizar a nova logo</b></summary>
+
+<br>
+
+#### Logo
+![Nova logo](./img/HoustonEducationLogo.png)
+
+</details>
+
+---
 ## [1.3.0] - 2026-05-21
 
 ### Added

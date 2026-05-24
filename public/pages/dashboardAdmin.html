@@ -32,13 +32,14 @@
                 <img src="../assets/img/iconeMenu.png" alt="icone menu">
             </a>
         </div>
-        <div class="logo">
-            <a href="/pages/home.html">
-                <img src="../assets/img/iconeHoustonEducation.ico" alt="logo Houston Education">
-            </a>
-        </div>
-        <div class="menu-usuario">
-            <a href="/pages/logout.html" class="btn-sair">Sair</a>
+        <div class="menu-usuario-dropdown">
+            <button class="btn-icone-usuario" id="btnDropdownUsuario">
+                <img src="../assets/img/iconeUsuario.png" alt="Ícone do Usuário">
+            </button>
+            <div class="dropdown-conteudo" id="dropdownUsuario">
+                <a href="/pages/perfil.html">Atualizar Informações</a>
+                <a href="/pages/logout.html" class="texto-sair">Sair da Conta</a>
+            </div>
         </div>
     </nav>
 
@@ -52,15 +53,9 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/perfil" id="linkPerfil">
-                        <img src="../assets/img/iconeUsuario.png" alt="Icone Perfil">
-                        <span>Perfil</span>
-                    </a>
-                </li>
-                <li>
                     <a href="/pages/minhasInscricoes.html" id="linkMinhasInscricoes">
-                        <i class="ph ph-file-text" style="font-size: 22px;"></i>
-                        <span>Minhas inscrições</span>
+                        <img src="../assets/img/iconeMinhasInscricoes.png" alt="Icone Minhas Inscrições">
+                        <span>Minhas Inscrições</span>
                     </a>
                 </li>
                 <li>
@@ -72,7 +67,7 @@
                 <li class="submenu">
                     <a href="#" class="submenu-toggle" id="toggleMinhasMonitorias">
                         <img src="../assets/img/iconeGerenciarMonitorias.png" alt="Icone Minhas Monitorias">
-                        <span>Minhas monitorias</span>
+                        <span>Minhas Monitorias</span>
                         <span class="seta-submenu">&#9662;</span>
                     </a>
                     <ul class="submenu-lista">
@@ -102,11 +97,11 @@
 
     <div class="dashboard-header">
         <h1>Dashboard Admin</h1>
-        <p>Gerencie usuarios, perfis e permissoes do sistema</p>
+        <p>Gerencie Usuários, Perfis e Permissões do Sistema</p>
     </div>
 
     <nav class="dashboard-tabs">
-        <a href="/dashboard-admin" class="active">Usuarios</a>
+        <a href="/dashboard-admin" class="active">Usuários</a>
         <a href="/dashboard-locais">Locais</a>
         <a href="/dashboard-disciplinas">Disciplinas</a>
         <a href="/dashboard-cursos">Cursos</a>
@@ -146,7 +141,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="5">Carregando usuários...</td>
+                        <td colspan="5">Carregando Usuários...</td>
                     </tr>
                 </tbody>
             </table>
@@ -227,7 +222,8 @@
                 </div>
                 <div class="campo-form-atualizar">
                     <label>Matrícula</label>
-                    <input type="text" name="matricula" id="inputMatriculaCriar" placeholder="Matrícula (8 a 11 dígitos)" required minlength="8" maxlength="11">
+                    <input type="text" name="matricula" id="inputMatriculaCriar"
+                        placeholder="Matrícula (8 a 11 dígitos)" required minlength="8" maxlength="11">
                     <span id="erroMatriculaCriar" class="mensagem-erro"></span>
                 </div>
                 <div class="campo-form-atualizar input-senha-wrapper">

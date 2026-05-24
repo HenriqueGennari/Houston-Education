@@ -30,3 +30,24 @@ if (submenuToggle) {
         submenuToggle.closest('.submenu').classList.toggle('aberto');
     });
 }
+
+// =========================================
+// LÓGICA DO DROPDOWN DO USUÁRIO
+// =========================================
+const btnDropdown = document.getElementById("btnDropdownUsuario");
+const menuDropdown = document.getElementById("dropdownUsuario");
+
+if (btnDropdown && menuDropdown) {
+    btnDropdown.addEventListener("click", (e) => {
+        e.stopPropagation();
+        menuDropdown.classList.toggle("mostrar");
+    });
+
+    window.addEventListener("click", (e) => {
+        if (!btnDropdown.contains(e.target) && !menuDropdown.contains(e.target)) {
+            if (menuDropdown.classList.contains("mostrar")) {
+                menuDropdown.classList.remove("mostrar");
+            }
+        }
+    });
+}

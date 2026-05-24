@@ -158,7 +158,7 @@ body {
 .btn-ver-chamada {
     display: inline-block;
     padding: 6px 16px;
-    background: #007bff;
+    background: #09696f;
     color: white;
     border: none;
     border-radius: 16px;
@@ -170,7 +170,7 @@ body {
 }
 
 .btn-ver-chamada:hover {
-    background: #0056b3;
+    background: #0b8e98;
 }
 
 .sem-chamada {
