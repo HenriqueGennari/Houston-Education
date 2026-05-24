@@ -59,6 +59,7 @@ nav {
   height: auto;
   cursor: pointer;
   display: block;
+  transition: transform 0.2s ease;
 }
 
 .iconeMenu {
@@ -229,8 +230,8 @@ nav {
     transition: transform 0.2s ease;
 }
 
-.btn-icone-usuario:hover, .iconeMenu a:hover img {
-    transform: scale(1.1); 
+.btn-icone-usuario:hover img, .iconeMenu a:hover img {
+    transform: scale(1.1);
 }
 
 /* O balãozinho do menu */
