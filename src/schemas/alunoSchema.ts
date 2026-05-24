@@ -17,7 +17,7 @@ export const alunoUpdateIdSchema = yup.object({
 export const alunoUpdateSchema = yup.object({
     nome : yup.string().optional(),
     email : yup.string().email().optional(),
-    matricula : yup.string().optional(),
+    matricula: yup.string().matches(/^\d{8,11}$/, "Matrícula deve conter entre 8 e 11 dígitos numéricos").optional(),
 }).noUnknown();
 
 export const alunoDeleteSchema = yup.object({
@@ -28,14 +28,14 @@ export const alunoCreateSchema = yup.object({
     nome : yup.string().required(),
     senha : yup.string().required(),
     email : yup.string().email().required(),
-    matricula : yup.string().matches(/^\d{8,11}$/).required(),
+    matricula : yup.string().matches(/^\d{8,11}$/, "Matrícula deve conter entre 8 e 11 dígitos numéricos").required(),
 }).noUnknown();
 
 export const alunoUpdatePerfilSchema = yup.object({
     perfilId: yup.number().integer().oneOf(perfisValidos).optional(),
     nome: yup.string().optional(),
     email: yup.string().email().optional(),
-    matricula: yup.string().matches(/^\d{8,11}$/).optional(),
+    matricula: yup.string().matches(/^\d{8,11}$/, "Matrícula deve conter entre 8 e 11 dígitos numéricos").optional(),
     senha: yup.string().optional(),
 }).noUnknown();
 

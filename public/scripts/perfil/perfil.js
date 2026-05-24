@@ -29,10 +29,17 @@ formPerfil.addEventListener("submit", async (e) => {
         return;
     }
 
+    const matricula = matriculaInput.value.trim();
+    const matriculaRegex = /^\d{8,11}$/;
+    if (matricula && !matriculaRegex.test(matricula)) {
+        alert("A matrícula deve conter entre 8 e 11 dígitos numéricos.");
+        return;
+    }
+
     const dados = {
         nome: nomeInput.value,
         email: emailInput.value,
-        matricula: matriculaInput.value
+        matricula: matricula
     };
 
     try {

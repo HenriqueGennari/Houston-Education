@@ -14,6 +14,13 @@ form.addEventListener("submit", async (e) => {
         return;
     }
 
+    const matriculaRegex = /^\d{8,11}$/;
+    if (!matriculaRegex.test(data.matricula)) {
+        mensagem.textContent = "A matrícula deve conter entre 8 e 11 dígitos numéricos.";
+        mensagem.style.color = "red";
+        return;
+    }
+
     try {
         const res = await fetch('/alunos', {
             method: "POST",
