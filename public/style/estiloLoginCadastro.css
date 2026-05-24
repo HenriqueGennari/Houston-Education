@@ -25,7 +25,7 @@ html, body {
 /* Estilo do Painel da Esquerda (Logo) */
 .painelLogo {
     flex: 1;
-    background-color: #024059;
+    background-color: #013E62;
     color: white;
     display: flex;
     flex-direction: column;
@@ -37,7 +37,7 @@ html, body {
 
 .painelLogo img {
     width: 100%;   
-    max-width: 700px;   
+    max-width: 800px;   
     height: auto;      
 }
 
@@ -124,13 +124,12 @@ input[type='number']:focus {
     padding: 4px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    opacity: 0.7;
+    justify-content: center; 
     transition: opacity 0.2s ease;
 }
 
 .btn-toggle-senha:hover {
-    opacity: 1;
+    color: #035a7d;
 }
 
 /* Remover contador do campo Matrícula */
@@ -198,6 +197,15 @@ button[type='submit'] .btn-spinner.hidden {
 #dadosLogin > p > a, /* Link "Cadastre-se!" */
 #dadosCadastro > p > a { /* Link "Faça seu login!" */
     color: #024059;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* Hover "Cadastre-se" e "Faça seu Login!" */
+#loginForm a:hover,
+#dadosLogin > p > a:hover, 
+#dadosCadastro > p > a:hover{ 
+    color: #035a7d;
     text-decoration: none;
     font-weight: 600;
 }

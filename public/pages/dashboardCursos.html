@@ -32,13 +32,14 @@
                 <img src="../assets/img/iconeMenu.png" alt="icone menu">
             </a>
         </div>
-        <div class="logo">
-            <a href="/pages/home.html">
-                <img src="../assets/img/iconeHoustonEducation.ico" alt="logo Houston Education">
-            </a>
-        </div>
-        <div class="menu-usuario">
-            <a href="/pages/logout.html" class="btn-sair">Sair</a>
+        <div class="menu-usuario-dropdown">
+            <button class="btn-icone-usuario" id="btnDropdownUsuario">
+                <img src="../assets/img/iconeUsuario.png" alt="Ícone do Usuário">
+            </button>
+            <div class="dropdown-conteudo" id="dropdownUsuario">
+                <a href="/pages/perfil.html">Atualizar Informações</a>
+                <a href="/pages/logout.html" class="texto-sair">Sair da Conta</a>
+            </div>
         </div>
     </nav>
 
@@ -52,15 +53,9 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/perfil" id="linkPerfil">
-                        <img src="../assets/img/iconeUsuario.png" alt="Icone Perfil">
-                        <span>Perfil</span>
-                    </a>
-                </li>
-                <li>
                     <a href="/pages/minhasInscricoes.html" id="linkMinhasInscricoes">
-                        <i class="ph ph-file-text" style="font-size: 22px;"></i>
-                        <span>Minhas inscrições</span>
+                        <img src="../assets/img/iconeMinhasInscricoes.png" alt="Icone Minhas Inscrições">
+                        <span>Minhas Inscrições</span>
                     </a>
                 </li>
                 <li>
@@ -72,7 +67,7 @@
                 <li class="submenu">
                     <a href="#" class="submenu-toggle" id="toggleMinhasMonitorias">
                         <img src="../assets/img/iconeGerenciarMonitorias.png" alt="Icone Minhas Monitorias">
-                        <span>Minhas monitorias</span>
+                        <span>Minhas Monitorias</span>
                         <span class="seta-submenu">&#9662;</span>
                     </a>
                     <ul class="submenu-lista">
@@ -102,11 +97,11 @@
 
     <div class="dashboard-header">
         <h1>Dashboard Admin</h1>
-        <p>Gerencie os cursos da instituicao</p>
+        <p>Gerencie os Cursos da Instituição</p>
     </div>
 
     <nav class="dashboard-tabs">
-        <a href="/dashboard-admin">Usuarios</a>
+        <a href="/dashboard-admin">Usuários</a>
         <a href="/dashboard-locais">Locais</a>
         <a href="/dashboard-disciplinas">Disciplinas</a>
         <a href="/dashboard-cursos" class="active">Cursos</a>
@@ -132,13 +127,13 @@
                 <thead>
                     <tr>
                         <th>Nome</th>
-                        <th>Descricao</th>
-                        <th>Acoes</th>
+                        <th>Descrição</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="3">Carregando cursos...</td>
+                        <td colspan="3">Carregando Cursos...</td>
                     </tr>
                 </tbody>
             </table>
@@ -168,7 +163,7 @@
                     <span id="erroNomeCriar" class="mensagem-erro"></span>
                 </div>
                 <div class="campo-form-atualizar">
-                    <label>Descricao</label>
+                    <label>Descrição</label>
                     <input type="text" name="descricao" id="inputDescricaoCriar" placeholder="Descricao do curso">
                     <span id="erroDescricaoCriar" class="mensagem-erro"></span>
                 </div>
@@ -191,11 +186,11 @@
                     <span id="erroNomeEditar" class="mensagem-erro"></span>
                 </div>
                 <div class="campo-form-atualizar">
-                    <label>Descricao</label>
+                    <label>Descrição</label>
                     <input type="text" name="descricao" id="descricaoCursoEditar" placeholder="Descricao do curso">
                     <span id="erroDescricaoEditar" class="mensagem-erro"></span>
                 </div>
-                <button type="submit" id="btnSalvarEdicao" class="btn-salvar-modal">Salvar Alteracao</button>
+                <button type="submit" id="btnSalvarEdicao" class="btn-salvar-modal">Salvar Alteração</button>
             </form>
         </div>
     </div>

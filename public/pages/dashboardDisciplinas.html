@@ -32,13 +32,14 @@
                 <img src="../assets/img/iconeMenu.png" alt="icone menu">
             </a>
         </div>
-        <div class="logo">
-            <a href="/pages/home.html">
-                <img src="../assets/img/iconeHoustonEducation.ico" alt="logo Houston Education">
-            </a>
-        </div>
-        <div class="menu-usuario">
-            <a href="/pages/logout.html" class="btn-sair">Sair</a>
+        <div class="menu-usuario-dropdown">
+            <button class="btn-icone-usuario" id="btnDropdownUsuario">
+                <img src="../assets/img/iconeUsuario.png" alt="Ícone do Usuário">
+            </button>
+            <div class="dropdown-conteudo" id="dropdownUsuario">
+                <a href="/pages/perfil.html">Atualizar Informações</a>
+                <a href="/pages/logout.html" class="texto-sair">Sair da Conta</a>
+            </div>
         </div>
     </nav>
 
@@ -52,15 +53,9 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/perfil" id="linkPerfil">
-                        <img src="../assets/img/iconeUsuario.png" alt="Icone Perfil">
-                        <span>Perfil</span>
-                    </a>
-                </li>
-                <li>
                     <a href="/pages/minhasInscricoes.html" id="linkMinhasInscricoes">
-                        <i class="ph ph-file-text" style="font-size: 22px;"></i>
-                        <span>Minhas inscrições</span>
+                        <img src="../assets/img/iconeMinhasInscricoes.png" alt="Icone Minhas Inscrições">
+                        <span>Minhas Inscrições</span>
                     </a>
                 </li>
                 <li>
@@ -102,11 +97,11 @@
 
     <div class="dashboard-header">
         <h1>Dashboard Admin</h1>
-        <p>Gerencie as disciplinas do sistema</p>
+        <p>Gerencie as Disciplinas do Sistema</p>
     </div>
 
     <nav class="dashboard-tabs">
-        <a href="/dashboard-admin">Usuarios</a>
+        <a href="/dashboard-admin">Usuários</a>
         <a href="/dashboard-locais">Locais</a>
         <a href="/dashboard-disciplinas" class="active">Disciplinas</a>
         <a href="/dashboard-cursos">Cursos</a>
@@ -133,12 +128,12 @@
                     <tr>
                         <th>Nome</th>
                         <th>Cursos</th>
-                        <th>Acoes</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="3">Carregando disciplinas...</td>
+                        <td colspan="3">Carregando Disciplinas...</td>
                     </tr>
                 </tbody>
             </table>
@@ -167,13 +162,13 @@
                     <input type="text" name="nome" placeholder="Nome da disciplina" required>
                 </div>
                 <div class="campo-form-atualizar">
-                    <label>Descricao</label>
+                    <label>Descrição</label>
                     <input type="text" name="descricao" placeholder="Descricao da disciplina">
                 </div>
                 <div class="campo-form-atualizar">
                     <label>Cursos</label>
                     <select name="cursoIds" id="cursosSelectCriar" multiple style="display:none">
-                        <option value="" disabled>Selecione os cursos...</option>
+                        <option value="" disabled>Selecione os Cursos...</option>
                     </select>
                     <div class="lista-cursos" id="listaCursosCriar"></div>
                     <div class="tags-selecionadas" id="tagsCriar"></div>
@@ -196,18 +191,19 @@
                     <input type="text" name="nome" id="nomeDisciplinaEditar" placeholder="Nome da disciplina" required>
                 </div>
                 <div class="campo-form-atualizar">
-                    <label>Descricao</label>
-                    <input type="text" name="descricao" id="descricaoDisciplinaEditar" placeholder="Descricao da disciplina">
+                    <label>Descrição</label>
+                    <input type="text" name="descricao" id="descricaoDisciplinaEditar"
+                        placeholder="Descricao da disciplina">
                 </div>
                 <div class="campo-form-atualizar">
                     <label>Cursos</label>
                     <select name="cursoIds" id="cursosSelectEditar" multiple style="display:none">
-                        <option value="" disabled>Selecione os cursos...</option>
+                        <option value="" disabled>Selecione os Cursos...</option>
                     </select>
                     <div class="lista-cursos" id="listaCursosEditar"></div>
                     <div class="tags-selecionadas" id="tagsEditar"></div>
                 </div>
-                <button type="submit" id="btnSalvarEdicao" class="btn-salvar-modal">Salvar Alteracao</button>
+                <button type="submit" id="btnSalvarEdicao" class="btn-salvar-modal">Salvar Alteração</button>
             </form>
         </div>
     </div>

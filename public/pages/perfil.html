@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil - Houston Education</title>
+    <title>Perfil</title>
     <link rel="shortcut icon" href="../assets/img/iconeHoustonEducation.ico" type="image/x-icon">
     <link rel="stylesheet" href="../style/styleNavMenuLateral.css?v=5">
     <link rel="stylesheet" href="../style/estiloPerfil.css?v=1">
@@ -29,13 +29,14 @@
                 <img src="../assets/img/iconeMenu.png" alt="icone menu">
             </a>
         </div>
-        <div class="logo">
-            <a href="/pages/home.html">
-                <img src="../assets/img/iconeHoustonEducation.ico" alt="logo Houston Education">
-            </a>
-        </div>
-        <div class="menu-usuario">
-            <a href="/pages/logout.html" class="btn-sair">Sair</a>
+        <div class="menu-usuario-dropdown">
+            <button class="btn-icone-usuario" id="btnDropdownUsuario">
+                <img src="../assets/img/iconeUsuario.png" alt="Ícone do Usuário">
+            </button>
+            <div class="dropdown-conteudo" id="dropdownUsuario">
+                <a href="/pages/perfil.html">Atualizar Informações</a>
+                <a href="/pages/logout.html" class="texto-sair">Sair da Conta</a>
+            </div>
         </div>
     </nav>
 
@@ -49,15 +50,9 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/perfil" class="active">
-                        <img src="../assets/img/iconeUsuario.png" alt="Icone Perfil">
-                        <span>Perfil</span>
-                    </a>
-                </li>
-                <li>
                     <a href="/pages/minhasInscricoes.html" id="linkMinhasInscricoes">
-                        <i class="ph ph-file-text" style="font-size: 22px;"></i>
-                        <span>Minhas inscrições</span>
+                        <img src="../assets/img/iconeMinhasInscricoes.png" alt="Icone Minhas Inscrições">
+                        <span>Minhas Inscrições</span>
                     </a>
                 </li>
                 <li>
@@ -101,7 +96,7 @@
         <div class="popup-sucesso-content">
             <button class="popup-sucesso-fechar" id="btnFecharPopup">×</button>
             <span class="popup-sucesso-icone">✔</span>
-            <p>Informacoes salvas com sucesso!</p>
+            <p>Informações Salvas Com Sucesso!</p>
         </div>
     </div>
 
@@ -121,21 +116,21 @@
                         <input type="text" id="nomeCompleto" name="nomeCompleto" value="">
                     </div>
                     <div class="campo-perfil">
-                        <label for="matricula">Matricula</label>
+                        <label for="matricula">Matrícula</label>
                         <input type="text" id="matricula" name="matricula" value="" inputmode="numeric" pattern="[0-9]*" minlength="8" maxlength="11" title="A matrícula deve conter entre 8 e 11 dígitos numéricos">
                     </div>
                 </div>
 
                 <div class="perfil-form-row">
                     <div class="campo-perfil full-width">
-                        <label for="email">E-mail <span class="obrigatorio">*</span></label>
+                        <label for="email">E-mail Institucional <span class="obrigatorio">*</span></label>
                         <input type="email" id="email" name="email" value="">
                     </div>
                 </div>
 
                 <div class="perfil-acoes">
                     <button type="button" class="btn-cancelar" id="btnCancelar">Cancelar</button>
-                    <button type="submit" class="btn-salvar">Salvar Alteracoes</button>
+                    <button type="submit" class="btn-salvar">Salvar Alterações</button>
                 </div>
             </form>
         </div>
