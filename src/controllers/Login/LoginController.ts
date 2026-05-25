@@ -12,7 +12,9 @@ class LoginController{
 
         try {            
             const dados = Req.body
-
+            
+            dados.senha = dados.senha?.trim();
+            dados.email = dados.email?.trim();
 
             if (!dados.email || !dados.senha){
                 return Res.json({erro : "Os dados devem ser preenchidos!"})
