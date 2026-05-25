@@ -1,6 +1,8 @@
-import { Aluno } from "@prisma/client"
+
 import AlunoPrismaRepository from "../../repositories/Prisma/AlunoPrismaRepository.js"
 import bcrypt from "bcrypt"
+import { getPepper } from "../../utils/security/pepper.js";
+
 
 class AuthService{
 
@@ -10,12 +12,15 @@ class AuthService{
 
         const user = await this.existeUser(email)
 
-        const senhaValida = await bcrypt.compare(senha, user.senha)
+        const admin = (user.perfil) ?.nome === "ADMIN"; //vendo se o usuário é admin
+        const senhaParaComparar = admin ? senha + getPepper() : senha; //se for, uso a senha vinda da req + o pepper salvo no .env para montar a senha completa
+
+        const senhaValida = await bcrypt.compare(senhaParaComparar, user.senha)
 
         if(!user || !senhaValida){
             throw new Error ("CREDENCIAIS_INVALIDAS");
         }
-        
+
         return user;
     }
 
@@ -29,5 +34,5 @@ class AuthService{
         return user;
     }
 }
- 
+
 export default AuthService;

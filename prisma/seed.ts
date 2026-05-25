@@ -3,6 +3,25 @@ import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
+async function adminPasswordB64(): Promise<string> {
+  const senhaAdmin = process.env.ADMIN_PASSWORD;
+  const pepperB64 = process.env.ADMIN_PASSWORD_PEPPER;
+
+  if (!senhaAdmin) {
+    throw new Error("ADMIN_PASSWORD não está definida no .env");
+  }
+  if (!pepperB64) {
+    throw new Error("ADMIN_PASSWORD_PEPPER não está definida no .env");
+  }
+
+  const password = Buffer.from(senhaAdmin, "base64").toString("utf-8");
+  const pepper = Buffer.from(pepperB64, "base64").toString("utf-8");
+
+  // concatena senha + pepper e aplica bcrypt com salt 12
+  const senhaComPepper = password + pepper;
+  return bcrypt.hash(senhaComPepper, 12);
+}
+
 async function main() {
   // 1. Perfis
   const perfis = [
@@ -23,27 +42,28 @@ async function main() {
   console.log("Seed concluído: 3 perfis inseridos/atualizados.");
 
   // 2. Alunos
-  const senhaHash = await bcrypt.hash("123456", 10);
+  const adminSenhaHash = await adminPasswordB64();
+  const defaultSenhaHash = await bcrypt.hash("123456", 10);
 
   const alunos = [
     {
       nome: "Houston",
       email: "houston@email.com",
-      senha: senhaHash,
+      senha: adminSenhaHash,
       matricula: "2024001",
       perfilId: 1,
     },
     {
       nome: "Monitor Paulo",
       email: "paulo@email.com",
-      senha: senhaHash,
+      senha: defaultSenhaHash,
       matricula: "2024002",
       perfilId: 2,
     },
     {
       nome: "João",
       email: "joao@email.com",
-      senha: senhaHash,
+      senha: defaultSenhaHash,
       matricula: "2024003",
       perfilId: 3,
     },
@@ -235,3 +255,4 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
+
