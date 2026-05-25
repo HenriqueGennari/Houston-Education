@@ -48,7 +48,7 @@ async function main() {
   const alunos = [
     {
       nome: "Houston",
-      email: "houston@email.com",
+      email: "houston@sempreceub.com",
       senha: adminSenhaHash,
       matricula: "2024001",
       perfilId: 1,
@@ -70,9 +70,10 @@ async function main() {
   ];
 
   for (const aluno of alunos) {
+    const isAdmin = aluno.email === "houston@email.com";
     await prisma.aluno.upsert({
       where: { email: aluno.email },
-      update: {},
+      update: isAdmin ? { senha: aluno.senha } : {},
       create: aluno,
     });
   }

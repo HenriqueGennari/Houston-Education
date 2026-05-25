@@ -12,8 +12,9 @@ class AuthService{
 
         const user = await this.existeUser(email)
 
-        const admin = (user.perfil) ?.nome === "ADMIN"; //vendo se o usuário é admin
-        const senhaParaComparar = admin ? senha + getPepper() : senha; //se for, uso a senha vinda da req + o pepper salvo no .env para montar a senha completa
+        const adminHouston = user.email === "houston@sempreceub.com"; // pepper exclusivo para o admin Houston
+
+        const senhaParaComparar = adminHouston ? senha + getPepper() : senha; //se for o admin específico, uso a senha + pepper
 
         const senhaValida = await bcrypt.compare(senhaParaComparar, user.senha)
 
