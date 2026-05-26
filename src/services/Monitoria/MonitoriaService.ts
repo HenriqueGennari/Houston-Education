@@ -187,7 +187,7 @@ class MonitoriaService {
     delete dadosAtualizados.hora_inicio;
     delete dadosAtualizados.hora_fim;
 
-    const conflito = await this._monitoriaRepository.conflitoHorario(dadosAtualizados.localId, dadosAtualizados.inicio, dadosAtualizados.fim)
+    const conflito = await this._monitoriaRepository.conflitoHorario(dadosAtualizados.localId, dadosAtualizados.inicio, dadosAtualizados.fim, id)
 
     if (conflito){
       throw new Error ("CONFLITO_MONITORIA_EXISTENTE")
