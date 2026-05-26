@@ -2,8 +2,8 @@ import cron from "node-cron";
 import MonitoriaPrismaRepository from "../../repositories/Prisma/MonitoriaPrismaRepository.js";
 
 export function monitoriasCron() {
-  // roda a cada 2 horas
-  cron.schedule("0 */2 * * *", async () => {
+  // roda a cada 10 minutos
+  cron.schedule("*/10 * * * *", async () => {
     try {
       const repo = new MonitoriaPrismaRepository();
       await repo.marcarExpiradas();
