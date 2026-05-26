@@ -45,6 +45,16 @@ class MonitoriaPrismaRepository {
     return dadosMonitoria;
   }
 
+  async marcarExpiradas(): Promise<void> {
+    await prisma.monitoria.updateMany({
+      where: {
+        expiredAt: null,
+        fim: { lt: new Date() },
+      },
+      data: { expiredAt: new Date() },
+    });
+  } // criei essa function para marcar como expiradas as monitorias no cron job 
+
   async getDisponiveis(): Promise<any[]> {
     const dadosMonitoria = await prisma.monitoria.findMany({
       where: {
@@ -229,8 +239,9 @@ class MonitoriaPrismaRepository {
   }
 
   async conflitoHorario( localId: number,inicio: Date, fim: Date, monitoriaExistenteId?: string): Promise<boolean> { // lembrar In < Fa and Ia < Fn - se ambos true - HÁ CONFLITO
-    const monitoriaExistente = await prisma.monitoria.findFirst({
+    const monitoria = await prisma.monitoria.findFirst({
       where: {
+        expiredAt : null,
         id: monitoriaExistenteId ? {not : monitoriaExistenteId} : undefined, // estou basicamente dizendo o seguinte: caso o id de uma monitoria exsitente venha, busque um id diferente desse mesmo, e, caso não venha, eu boto como undefined. Eu preciso disso pq na função de update, caso eu não passe o id da própria monitoria que estou atualizando, eu sempre teria um true dessa função. 
         localId,
         fim: { gt: inicio }, 
@@ -238,7 +249,7 @@ class MonitoriaPrismaRepository {
       },
     });
     
-    return !!monitoriaExistente;
+    return !!monitoria;
   }
 
   async create(data: Prisma.MonitoriaUncheckedCreateInput): Promise<Monitoria> {
@@ -261,10 +272,9 @@ class MonitoriaPrismaRepository {
   }
 
   async delete(id: string): Promise<Monitoria> {
-    const monitoriaApagada = await prisma.monitoria.delete({
-      where: {
-        id: id,
-      },
+    const monitoriaApagada = await prisma.monitoria.update({
+      where: { id },
+      data: { deletedAt: new Date() }
     });
 
     return monitoriaApagada;

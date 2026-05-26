@@ -85,6 +85,35 @@ class AlunoController{
             return Res.status(400).json({ error: err.message });
         }
     }
+    async updateSenha(Req: Request, Res: Response) {
+        try {
+            const { id } = Req.params;
+            const { senha, senhaConfirmada } = Req.body;
+
+            if (senha != senhaConfirmada){
+                throw new Error ("SENHAS_NAO_COINCIDEM")
+            }
+            
+            const usuario = (Req as any).user;
+
+            const alunoDados = await alunoService.updateSenha(id, senha, usuario.id);
+
+            return Res.status(200).json(alunoDados);
+            
+        } catch (err: any) {
+            if (err.message === "NAO_AUTORIZADO") {
+                return Res.status(403).json({ error: err.message });
+            }
+            if (err.message === "ALUNO_INEXISTENTE") {
+                return Res.status(404).json({ error: err.message });
+            }
+            if (err.message === "SENHA_OBRIGATORIA") {
+                return Res.status(400).json({ error: err.message });
+            }
+            return Res.status(400).json({ error: err.message });
+        }
+    }
+
     async delete(Req : Request, Res : Response){
         try {
 

@@ -17,12 +17,14 @@ export const alunoUpdateIdSchema = yup.object({
 export const alunoUpdateSchema = yup.object({
     nome : yup.string().optional(),
     email : yup.string().email().optional(),
-    matricula: yup.string().matches(/^\d{8,11}$/, "Matrícula deve conter entre 8 e 11 dígitos numéricos").optional(),
+    matricula: yup.string().matches(/^\d{8,11}$/, "Matrícula deve conter entre 8 e 11 dígitos numéricos").optional()
 }).noUnknown();
 
-export const alunoDeleteSchema = yup.object({
-    id : idSchema
+export const alunoUpdateSenha = yup.object({
+    senha : yup.string().required(),
+    senhaConfirmada : yup.string().oneOf([yup.ref('senha')], "SENHAS_NAO_COINCIDEM").required()
 }).noUnknown();
+
 
 export const alunoCreateSchema = yup.object({
     nome : yup.string().required(),
@@ -37,5 +39,9 @@ export const alunoUpdatePerfilSchema = yup.object({
     email: yup.string().email().optional(),
     matricula: yup.string().matches(/^\d{8,11}$/, "Matrícula deve conter entre 8 e 11 dígitos numéricos").optional(),
     senha: yup.string().optional(),
+}).noUnknown();
+
+export const alunoDeleteSchema = yup.object({
+    id : idSchema
 }).noUnknown();
 

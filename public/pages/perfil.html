@@ -130,7 +130,47 @@
 
                 <div class="perfil-acoes">
                     <button type="button" class="btn-cancelar" id="btnCancelar">Cancelar</button>
-                    <button type="submit" class="btn-salvar">Salvar Alterações</button>
+                    <button type="button" class="btn-alterar-senha" id="btnAbrirModalSenha">Alterar Senha</button>
+                    <button type="submit" class="btn-salvar">Salvar Alteracoes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalSenha" class="modal-senha hidden">
+        <div class="modal-senha-overlay"></div>
+        <div class="modal-senha-content">
+            <div class="modal-senha-header">
+                <div class="modal-senha-icone">
+                    <i class="ph ph-lock-key"></i>
+                </div>
+                <h2>Alterar Senha</h2>
+            </div>
+
+            <form id="formSenha">
+                <div class="campo-perfil full-width">
+                    <label for="novaSenha">Nova Senha <span class="obrigatorio">*</span></label>
+                    <div class="input-senha-wrapper">
+                        <input type="password" id="novaSenha" name="novaSenha" required>
+                        <button type="button" class="btn-toggle-senha" data-target="novaSenha">
+                            <i class="ph ph-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="campo-perfil full-width campo-senha-confirmar">
+                    <label for="confirmarSenha">Confirmar Nova Senha <span class="obrigatorio">*</span></label>
+                    <div class="input-senha-wrapper">
+                        <input type="password" id="confirmarSenha" name="confirmarSenha" required>
+                        <button type="button" class="btn-toggle-senha" data-target="confirmarSenha">
+                            <i class="ph ph-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="modal-senha-acoes">
+                    <button type="button" class="btn-cancelar" id="btnCancelarSenha">Cancelar</button>
+                    <button type="submit" class="btn-salvar">Salvar Senha</button>
                 </div>
             </form>
         </div>

@@ -4,17 +4,11 @@ import routes from "./routes/index.js";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
+import { monitoriasCron } from "./utils/cronjob/monitoriaCron.js";
 
 
 dotenv.config();
 const server = express();
-
-/*server.use(cors({
-  origin: "https://projetointegeradormonitoria.onrender.com",
-  methods: ["GET", "POST", "PUT", "DELETE"]
-}));*/
-
 
 
 server.use(cors({
@@ -29,8 +23,10 @@ server.use(express.static(path.join(process.cwd(), "public"))); // criando um ca
 
 server.use(routes);
 
+const cronjob = monitoriasCron(); // cron das monitorias para expirar elas a cada 2 horas 
 
 const PORT = Number(process.env.PORT) || 3000;
+
 
 server.listen(PORT, () => {
   console.log(`Server rodando na porta ${PORT}`);

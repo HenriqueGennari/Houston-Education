@@ -85,9 +85,32 @@ class AlunoPrismaRepository {
                 id : id
             }
         })
+        
+        return alunoAtualizado;
+        
+    }
+    async updateUsuarioByAdmin(id: string, perfilId: number): Promise<Aluno | null> {
+        const alunoAtualizado = await prisma.aluno.update({
+            data: { perfilId },
+            where: { id }
+        });
 
         return alunoAtualizado;
+    }
 
+    async updateSenha(id: string, senha: string): Promise<any> {
+        const alunoAtualizado = await prisma.aluno.update({
+            data: { senha },
+            where: { id },
+
+            select : {
+                id : true,
+                nome : true,
+                perfilId : true
+            }
+        });
+
+        return alunoAtualizado;
     }
     async delete(id: string): Promise<Aluno> {
         const alunoApagado = await prisma.aluno.update({
@@ -98,14 +121,7 @@ class AlunoPrismaRepository {
         return alunoApagado;
     }
 
-    async updateUsuarioByAdmin(id: string, perfilId: number): Promise<Aluno | null> {
-        const alunoAtualizado = await prisma.aluno.update({
-            data: { perfilId },
-            where: { id }
-        });
 
-        return alunoAtualizado;
-    }
 }
 
 export default AlunoPrismaRepository;
