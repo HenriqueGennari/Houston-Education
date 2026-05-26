@@ -45,6 +45,16 @@ class MonitoriaPrismaRepository {
     return dadosMonitoria;
   }
 
+  async marcarExpiradas(): Promise<void> {
+    await prisma.monitoria.updateMany({
+      where: {
+        expiredAt: null,
+        fim: { lt: new Date() },
+      },
+      data: { expiredAt: new Date() },
+    });
+  } // criei essa function para marcar como expiradas as monitorias a cada listagem do getAll (mudar isso)
+
   async getDisponiveis(): Promise<any[]> {
     const dadosMonitoria = await prisma.monitoria.findMany({
       where: {
