@@ -31,7 +31,6 @@ class MonitoriaService {
   constructor(private _monitoriaRepository: MonitoriaPrismaRepository) { }
 
   async getAll(): Promise<Monitoria[]> {
-    await this._monitoriaRepository.marcarExpiradas();
     const dadosmonitoria = await this._monitoriaRepository.getAll();
     return dadosmonitoria;
   } // get de todas as monitorias do sistema

@@ -53,7 +53,7 @@ class MonitoriaPrismaRepository {
       },
       data: { expiredAt: new Date() },
     });
-  } // criei essa function para marcar como expiradas as monitorias a cada listagem do getAll (mudar isso)
+  } // criei essa function para marcar como expiradas as monitorias no cron job 
 
   async getDisponiveis(): Promise<any[]> {
     const dadosMonitoria = await prisma.monitoria.findMany({
@@ -272,10 +272,9 @@ class MonitoriaPrismaRepository {
   }
 
   async delete(id: string): Promise<Monitoria> {
-    const monitoriaApagada = await prisma.monitoria.delete({
-      where: {
-        id: id,
-      },
+    const monitoriaApagada = await prisma.monitoria.update({
+      where: { id },
+      data: { deletedAt: new Date() }
     });
 
     return monitoriaApagada;
