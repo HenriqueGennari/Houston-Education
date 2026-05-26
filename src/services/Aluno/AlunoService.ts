@@ -145,13 +145,39 @@ class AlunosService{
 
         return alunoAtualizado;
     }
+    async updateSenha(id: string, senha: string, usuarioId: string): Promise<Aluno> {
+        const alunoExistente = await this._alunoPrismaRepository.getById(id);
+
+        if (!alunoExistente) {
+            throw new Error("ALUNO_INEXISTENTE");
+        }
+        
+        if (id !== usuarioId) {
+            throw new Error("NAO_AUTORIZADO");
+        }
+
+        if (senha.trim() === "") {
+            throw new Error("SENHA_OBRIGATORIA");
+        }
+
+        const senhaHash = await bcrypt.hash(senha, 10);
+
+        const alunoAtualizado = await this._alunoPrismaRepository.updateSenha(id, senhaHash);
+
+        if (!alunoAtualizado) {
+            throw new Error("ERRO_AO_ATUALIZAR_SENHA");
+        }
+
+        return alunoAtualizado;
+    }
+
     async delete(id : string) : Promise <Aluno>{
         const alunoDados = await this._alunoPrismaRepository.delete(id)
-        
+
         if (!alunoDados){
             throw new Error ("ALUNO_INEXISTENTE")
         }
-        
+
         return alunoDados;
     }
 }
