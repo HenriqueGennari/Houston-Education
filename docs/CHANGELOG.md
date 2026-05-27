@@ -44,6 +44,49 @@ Exemplo de evolução de versão:
 
 ---
 
+## [1.4.0] - 2026-05-25
+
+### Added
+
+**Expiração Automática de Monitorias**
+- Adicionados campos `deletedAt` e `expiredAt` na tabela de monitorias.
+- Criada função para marcar monitorias como expiradas após sua realização.
+- Implementado cron job que verifica e expira monitorias automaticamente a cada 10 minutos.
+
+**Alteração de Senha**
+- Adicionada funcionalidade de mudança de senha com endpoint separado.
+
+**Segurança da Senha do Admin**
+- Implementado `pepper` no hash da senha do administrador para camada extra de segurança.
+- Criada pasta `security` com utilitário para leitura da variável de ambiente.
+- Adicionado arquivo `.env.example` com as variáveis necessárias do projeto.
+
+### Changed
+
+**Responsividade**
+- Ajustes de CSS e melhorias de responsividade em diversas telas.
+
+**Máscara de Matrícula**
+- Adicionada máscara no campo de input de matrícula nas telas de cadastro e perfil.
+- Reforçada validação no schema Yup durante o update de aluno, garantindo integridade dos dados.
+
+### Fixed
+
+**Login do Administrador**
+- Corrigido erro que impedia o login com perfil admin.
+
+**Endpoint de Histórico**
+- Corrigida referência hardcoded para `localhost` no fetch do histórico de monitorias, ajustando para o ambiente correto.
+
+**Correção na função de update de monitoria**
+- Ajuste em bug que não permitia a atualização de uma monitoria por apitar um erro na função de conflito() que verifica se uma monitoria já existe em um horário e local específico. O erro era que o id da monitoria que estava sendo atualizada não era passado na função, fazendo com que a consulta não excluisse a mesma e estourava um conflito com a própria monitoria. 
+
+### Security
+
+- Adicionado `pepper` criptográfico ao hash de senha do administrador, aumentando a resistência contra vazamentos de banco de dados.
+
+---
+
 ## [1.3.1] - 2026-05-24
 
 ### Added
